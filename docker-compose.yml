@@ -1,0 +1,29 @@
+# Postgres local pour le développement de MissionOps.
+# Démarrer :  docker compose up -d
+# Arrêter  :  docker compose down
+# Réinitialiser complètement (efface les données) : docker compose down -v
+#
+# URL de connexion correspondante (à mettre dans .env) :
+#   DATABASE_URL="postgresql://missionops:missionops@localhost:5432/missionops"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: missionops-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: missionops
+      POSTGRES_PASSWORD: missionops
+      POSTGRES_DB: missionops
+    ports:
+      - "5432:5432"
+    volumes:
+      - missionops-pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U missionops"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  missionops-pg-data:
