@@ -1,6 +1,7 @@
 import { pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 import { timestamps } from "./columns";
+import { organisations } from "./organisations";
 
 /**
  * `users` — compte individuel, indépendant de l'organisation. Un même
@@ -19,6 +20,9 @@ export const users = pgTable(
     // Empreinte du mot de passe (scrypt) — voie de secours, ADR-005 B1.5.
     // Nul tant que l'utilisateur n'a défini que la connexion par lien magique.
     passwordHash: text("password_hash"),
+    // Organisation active, persistée entre les sessions (B1.6). La résolution
+    // vérifie toujours que l'utilisateur en est bien membre.
+    currentOrganisationId: uuid("current_organisation_id").references(() => organisations.id),
     // Langue préférée (i18n dès le socle, ADR-008) : « fr » ou « en ».
     locale: text("locale").notNull().default("fr"),
     ...timestamps,
