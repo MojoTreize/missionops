@@ -1,0 +1,29 @@
+# Configuration Fly.io — environnement de validation (staging, B1.12).
+#
+# Secrets à définir hors de ce fichier (jamais versionnés) :
+#   fly secrets set DATABASE_URL="postgres://…"          # Postgres managé
+#   fly secrets set NEXT_PUBLIC_APP_URL="https://missionops-staging.fly.dev"
+#
+# Les migrations sont jouées par le workflow de déploiement avant `fly deploy`,
+# pas par un release_command, afin de garder l'image d'exécution minimale.
+
+app = "missionops-staging"
+primary_region = "cdg"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "3000"
+  NEXT_TELEMETRY_DISABLED = "1"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

@@ -1,0 +1,13 @@
+# Contexte de build Docker (B1.12) — on exclut ce qui est régénéré ou inutile.
+**/node_modules
+**/.next
+**/.turbo
+**/dist
+**/coverage
+.git
+.github
+*.log
+docs
+.env
+.env.*
+!.env.example

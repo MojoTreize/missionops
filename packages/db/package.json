@@ -15,6 +15,7 @@
     "db:reset": "tsx src/reset.ts",
     "db:check": "tsx src/check.ts",
     "db:seed": "tsx src/seed.ts",
+    "db:seed:demo": "tsx src/seed-demo.ts",
     "db:studio": "drizzle-kit studio",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
