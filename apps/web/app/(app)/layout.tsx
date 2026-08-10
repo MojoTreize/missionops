@@ -8,6 +8,7 @@ import { Breadcrumbs } from "@/components/shell/breadcrumbs";
 import { GlobalSearch } from "@/components/shell/global-search";
 import { SidebarNav } from "@/components/shell/sidebar-nav";
 import { getCurrentUser } from "@/lib/auth/current-user";
+import { getT } from "@/lib/i18n/server";
 import { getActiveContext } from "@/lib/org/queries";
 
 import { logoutAction } from "../(auth)/actions";
@@ -31,6 +32,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
 
   const { active, memberships } = await getActiveContext(user.id);
   const userName = user.fullName ?? user.email;
+  const { t } = await getT();
 
   return (
     <div className="min-h-dvh bg-paper md:grid md:grid-cols-[16rem_1fr]">
@@ -46,7 +48,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
             <OrgSwitcher memberships={memberships} activeId={active.id} />
           ) : (
             <Link href="/organizations/new" className="text-sm text-field hover:underline">
-              Créer une organisation
+              {t("shell.createOrganization")}
             </Link>
           )}
         </div>
@@ -57,9 +59,12 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
           <p className="truncate px-1 text-sm text-muted" title={userName}>
             {userName}
           </p>
+          <Link href="/profile" className="mt-1 block px-1 text-sm text-field hover:underline">
+            {t("routes.profile")}
+          </Link>
           <form action={logoutAction} className="mt-2">
             <Button type="submit" variant="ghost" size="sm" className="w-full justify-start">
-              Se déconnecter
+              {t("shell.logout")}
             </Button>
           </form>
         </div>

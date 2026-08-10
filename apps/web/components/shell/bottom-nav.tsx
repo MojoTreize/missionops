@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/cn";
+import { useT } from "@/lib/i18n/client";
 import { isActivePath, NAV_ITEMS } from "@/lib/nav";
 
 /**
@@ -13,10 +14,11 @@ import { isActivePath, NAV_ITEMS } from "@/lib/nav";
  */
 export function BottomNav() {
   const pathname = usePathname();
+  const t = useT();
 
   return (
     <nav
-      aria-label="Navigation principale"
+      aria-label={t("shell.mainNav")}
       className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-border bg-surface pb-[env(safe-area-inset-bottom)] md:hidden"
     >
       {NAV_ITEMS.map((item) => {
@@ -33,7 +35,7 @@ export function BottomNav() {
             )}
           >
             <Icon className="size-5 shrink-0" aria-hidden />
-            <span className="truncate">{item.label}</span>
+            <span className="truncate">{t(item.labelKey)}</span>
           </Link>
         );
       })}

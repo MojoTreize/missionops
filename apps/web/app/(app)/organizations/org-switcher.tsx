@@ -2,6 +2,7 @@
 
 import { useRef, useTransition } from "react";
 
+import { useT } from "@/lib/i18n/client";
 import type { MembershipView } from "@/lib/org/queries";
 
 import { switchOrganisationAction } from "./actions";
@@ -17,6 +18,7 @@ export function OrgSwitcher({
   memberships: MembershipView[];
   activeId: string;
 }) {
+  const t = useT();
   const formRef = useRef<HTMLFormElement>(null);
   const [pending, startTransition] = useTransition();
 
@@ -28,7 +30,7 @@ export function OrgSwitcher({
   return (
     <form ref={formRef} action={switchOrganisationAction}>
       <label className="sr-only" htmlFor="org-switcher">
-        Organisation active
+        {t("organizations.switcher.label")}
       </label>
       <select
         id="org-switcher"

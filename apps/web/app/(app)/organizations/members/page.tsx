@@ -1,4 +1,5 @@
-import { ROLE_LABELS, isRole } from "@missionops/core";
+import { isRole } from "@missionops/core";
+import type { Metadata } from "next";
 
 import { Badge } from "@/components/ui/badge";
 import {
@@ -9,13 +10,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getT } from "@/lib/i18n/server";
+import type { Translator } from "@/lib/i18n/translate";
 import { getMembers, getPendingInvitations } from "@/lib/org/queries";
 import { can, requireCan } from "@/lib/policy";
 
 import { InviteMemberForm } from "./invite-member-form";
 
-function roleLabel(role: string): string {
-  return isRole(role) ? ROLE_LABELS[role] : role;
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getT();
+  return { title: `${t("meta.members")} — MissionOps` };
+}
+
+function roleLabel(t: Translator, role: string): string {
+  return isRole(role) ? t(`roles.${role}`) : role;
 }
 
 export default async function MembersPage() {
@@ -23,6 +31,7 @@ export default async function MembersPage() {
   // vers l'accueil / la connexion via la garde.
   const actor = await requireCan("read", "member");
   const canInvite = await can("create", "member");
+  const { t } = await getT();
 
   const [members, pending] = await Promise.all([
     getMembers(actor.organisationId),
@@ -32,17 +41,21 @@ export default async function MembersPage() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-8">
       <div className="flex flex-col gap-1">
-        <h1 className="text-xl font-semibold text-field">Membres — {actor.organisationName}</h1>
-        <p className="text-sm text-muted">Gérez les personnes ayant accès à cette organisation.</p>
+        <h1 className="text-xl font-semibold text-field">
+          {t("organizations.members.title", { name: actor.organisationName })}
+        </h1>
+        <p className="text-sm text-muted">{t("organizations.members.subtitle")}</p>
       </div>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-sm font-semibold text-field">Membres actifs</h2>
+        <h2 className="text-sm font-semibold text-field">
+          {t("organizations.members.activeMembers")}
+        </h2>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Membre</TableHead>
-              <TableHead>Rôle</TableHead>
+              <TableHead>{t("organizations.members.memberColumn")}</TableHead>
+              <TableHead>{t("organizations.members.roleColumn")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -51,7 +64,7 @@ export default async function MembersPage() {
                 <TableCell>{m.fullName ?? m.email}</TableCell>
                 <TableCell>
                   <Badge variant={m.role === "admin" ? "ledger" : "muted"}>
-                    {roleLabel(m.role)}
+                    {roleLabel(t, m.role)}
                   </Badge>
                 </TableCell>
               </TableRow>
@@ -62,12 +75,14 @@ export default async function MembersPage() {
 
       {pending.length > 0 ? (
         <section className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-field">Invitations en attente</h2>
+          <h2 className="text-sm font-semibold text-field">
+            {t("organizations.members.pendingInvitations")}
+          </h2>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>E-mail</TableHead>
-                <TableHead>Rôle</TableHead>
+                <TableHead>{t("organizations.members.emailColumn")}</TableHead>
+                <TableHead>{t("organizations.members.roleColumn")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -75,7 +90,7 @@ export default async function MembersPage() {
                 <TableRow key={inv.id}>
                   <TableCell>{inv.email}</TableCell>
                   <TableCell>
-                    <Badge variant="warning">{roleLabel(inv.role)}</Badge>
+                    <Badge variant="warning">{roleLabel(t, inv.role)}</Badge>
                   </TableCell>
                 </TableRow>
               ))}
@@ -86,7 +101,9 @@ export default async function MembersPage() {
 
       {canInvite ? (
         <section className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-field">Inviter un membre</h2>
+          <h2 className="text-sm font-semibold text-field">
+            {t("organizations.members.inviteTitle")}
+          </h2>
           <InviteMemberForm />
         </section>
       ) : null}

@@ -1,17 +1,23 @@
 import { ReceiptText } from "lucide-react";
+import type { Metadata } from "next";
 
 import { EmptyState } from "@/components/ui/empty-state";
+import { getT } from "@/lib/i18n/server";
 
-export const metadata = { title: "Dépenses — MissionOps" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getT();
+  return { title: `${t("meta.expenses")} — MissionOps` };
+}
 
-export default function ExpensesPage() {
+export default async function ExpensesPage() {
+  const { t } = await getT();
   return (
     <div className="mx-auto max-w-3xl">
-      <h1 className="mb-6 text-2xl font-semibold text-ink">Dépenses</h1>
+      <h1 className="mb-6 text-2xl font-semibold text-ink">{t("sections.expenses.title")}</h1>
       <EmptyState
         icon={<ReceiptText aria-hidden />}
-        title="Aucune dépense pour l'instant"
-        description="La saisie et la validation des dépenses arriveront dans un prochain bloc."
+        title={t("sections.expenses.emptyTitle")}
+        description={t("sections.expenses.emptyDescription")}
       />
     </div>
   );

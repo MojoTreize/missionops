@@ -2,11 +2,12 @@
 
 import { useActionState } from "react";
 
-import { ROLES, ROLE_LABELS } from "@missionops/core";
+import { ROLES } from "@missionops/core";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useT } from "@/lib/i18n/client";
 
 import { inviteMemberAction } from "../actions";
 import { initialActionState } from "../action-state";
@@ -14,23 +15,24 @@ import { FormMessage } from "../form-message";
 
 /** Formulaire d'invitation d'un membre par e-mail (administrateurs). */
 export function InviteMemberForm() {
+  const t = useT();
   const [state, action, pending] = useActionState(inviteMemberAction, initialActionState);
 
   return (
     <form action={action} className="flex flex-col gap-3" noValidate>
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="invite-email">Adresse e-mail</Label>
+        <Label htmlFor="invite-email">{t("auth.emailLabel")}</Label>
         <Input
           id="invite-email"
           name="email"
           type="email"
           inputMode="email"
           required
-          placeholder="collegue@organisation.org"
+          placeholder={t("organizations.members.inviteEmailPlaceholder")}
         />
       </div>
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="invite-role">Rôle</Label>
+        <Label htmlFor="invite-role">{t("organizations.members.roleLabel")}</Label>
         <select
           id="invite-role"
           name="role"
@@ -39,13 +41,15 @@ export function InviteMemberForm() {
         >
           {ROLES.map((role) => (
             <option key={role} value={role}>
-              {ROLE_LABELS[role]}
+              {t(`roles.${role}`)}
             </option>
           ))}
         </select>
       </div>
       <Button type="submit" disabled={pending}>
-        {pending ? "Envoi…" : "Inviter"}
+        {pending
+          ? t("organizations.members.inviteSending")
+          : t("organizations.members.inviteSubmit")}
       </Button>
       <FormMessage state={state} />
     </form>

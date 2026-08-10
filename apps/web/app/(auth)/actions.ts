@@ -11,11 +11,10 @@ import { hashPassword, verifyPassword } from "@/lib/auth/password";
 import { baseUrl, clientIp, loginRateLimiter, normalizeEmail } from "@/lib/auth/server";
 import { createSession, destroySession } from "@/lib/auth/session";
 import { getDb } from "@/lib/db";
+import { getT } from "@/lib/i18n/server";
 import { sendMagicLinkEmail, sendPasswordResetEmail } from "@/lib/mail";
 
 import type { ActionState } from "./action-state";
-
-const GENERIC_SENT = "Si un compte correspond à cette adresse, un e-mail vient d'être envoyé.";
 
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -35,9 +34,10 @@ export async function requestMagicLinkAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  const { t } = await getT();
   const email = normalizeEmail(String(formData.get("email") ?? ""));
   if (!isValidEmail(email)) {
-    return { status: "error", message: "Adresse e-mail invalide." };
+    return { status: "error", message: t("auth.messages.emailInvalid") };
   }
 
   const user = await findActiveUserByEmail(email);
@@ -47,7 +47,7 @@ export async function requestMagicLinkAction(
     await sendMagicLinkEmail(email, url);
   }
 
-  return { status: "success", message: GENERIC_SENT };
+  return { status: "success", message: t("auth.messages.genericSent") };
 }
 
 /** Connexion par mot de passe (voie de secours), avec limitation de débit. */
@@ -55,18 +55,19 @@ export async function loginWithPasswordAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  const { t } = await getT();
   const email = normalizeEmail(String(formData.get("email") ?? ""));
   const password = String(formData.get("password") ?? "");
 
   if (!isValidEmail(email) || password.length === 0) {
-    return { status: "error", message: "Adresse e-mail ou mot de passe invalide." };
+    return { status: "error", message: t("auth.messages.credentialsInvalid") };
   }
 
   const key = `${email}:${await clientIp()}`;
   if (loginRateLimiter.isLimited(key)) {
     return {
       status: "error",
-      message: "Trop de tentatives. Réessayez dans quelques minutes.",
+      message: t("auth.messages.rateLimited"),
     };
   }
 
@@ -75,7 +76,7 @@ export async function loginWithPasswordAction(
 
   if (!ok || !user) {
     loginRateLimiter.record(key);
-    return { status: "error", message: "Adresse e-mail ou mot de passe incorrect." };
+    return { status: "error", message: t("auth.messages.credentialsIncorrect") };
   }
 
   loginRateLimiter.reset(key);
@@ -88,9 +89,10 @@ export async function requestPasswordResetAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  const { t } = await getT();
   const email = normalizeEmail(String(formData.get("email") ?? ""));
   if (!isValidEmail(email)) {
-    return { status: "error", message: "Adresse e-mail invalide." };
+    return { status: "error", message: t("auth.messages.emailInvalid") };
   }
 
   const user = await findActiveUserByEmail(email);
@@ -104,7 +106,7 @@ export async function requestPasswordResetAction(
     await sendPasswordResetEmail(email, url);
   }
 
-  return { status: "success", message: GENERIC_SENT };
+  return { status: "success", message: t("auth.messages.genericSent") };
 }
 
 /** Définit un nouveau mot de passe à partir d'un jeton de réinitialisation. */
@@ -112,20 +114,21 @@ export async function resetPasswordAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  const { t } = await getT();
   const token = String(formData.get("token") ?? "");
   const password = String(formData.get("password") ?? "");
   const confirm = String(formData.get("passwordConfirm") ?? "");
 
   if (password.length < 8) {
-    return { status: "error", message: "Le mot de passe doit faire au moins 8 caractères." };
+    return { status: "error", message: t("auth.messages.passwordTooShort") };
   }
   if (password !== confirm) {
-    return { status: "error", message: "Les deux mots de passe ne correspondent pas." };
+    return { status: "error", message: t("auth.messages.passwordMismatch") };
   }
 
   const userId = await consumeAuthToken(token, AUTH_TOKEN_TYPES.passwordReset);
   if (!userId) {
-    return { status: "error", message: "Lien invalide ou expiré. Refaites une demande." };
+    return { status: "error", message: t("auth.messages.resetLinkInvalid") };
   }
 
   const passwordHash = await hashPassword(password);

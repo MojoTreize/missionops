@@ -6,6 +6,7 @@ import { Search } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
+import { useT } from "@/lib/i18n/client";
 
 /**
  * Recherche globale (B1.10). Un déclencheur dans l'en-tête et un raccourci
@@ -15,6 +16,7 @@ import { Input } from "@/components/ui/input";
  */
 export function GlobalSearch() {
   const [open, setOpen] = useState(false);
+  const t = useT();
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -32,12 +34,12 @@ export function GlobalSearch() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        aria-label="Recherche globale"
+        aria-label={t("shell.searchLabel")}
         aria-keyshortcuts="Control+K"
         className="flex h-9 items-center gap-2 rounded-md border border-border bg-surface px-2.5 text-sm text-muted transition-colors hover:text-ink md:min-w-56"
       >
         <Search className="size-4 shrink-0" aria-hidden />
-        <span className="hidden md:inline">Rechercher…</span>
+        <span className="hidden md:inline">{t("shell.searchButton")}</span>
         <kbd className="ml-auto hidden rounded border border-border px-1.5 py-0.5 text-xs text-subtle md:inline">
           Ctrl K
         </kbd>
@@ -46,18 +48,18 @@ export function GlobalSearch() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="top-24 translate-y-0">
           <DialogHeader>
-            <DialogTitle>Recherche globale</DialogTitle>
+            <DialogTitle>{t("shell.searchLabel")}</DialogTitle>
           </DialogHeader>
           <Input
             autoFocus
             type="search"
-            placeholder="Rechercher une mission, une dépense, un membre…"
-            aria-label="Terme de recherche"
+            placeholder={t("shell.searchPlaceholder")}
+            aria-label={t("shell.searchTerm")}
           />
           <EmptyState
             icon={<Search aria-hidden />}
-            title="Rien à rechercher pour l'instant"
-            description="La recherche portera sur les missions, les dépenses et les membres dès que des données existeront."
+            title={t("shell.searchEmptyTitle")}
+            description={t("shell.searchEmptyDescription")}
           />
         </DialogContent>
       </Dialog>

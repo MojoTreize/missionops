@@ -5,6 +5,7 @@ import { TriangleAlert } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { useT } from "@/lib/i18n/client";
 
 /**
  * Frontière d'erreur de l'espace authentifié (B1.10). Capture les erreurs de
@@ -17,6 +18,8 @@ export default function AppError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const t = useT();
+
   useEffect(() => {
     // Trace côté client ; l'observabilité serveur viendra avec le monitoring.
     console.error(error);
@@ -26,11 +29,11 @@ export default function AppError({
     <div className="mx-auto max-w-md py-12">
       <EmptyState
         icon={<TriangleAlert aria-hidden />}
-        title="Une erreur est survenue"
-        description="Quelque chose s'est mal passé de notre côté. Vous pouvez réessayer."
+        title={t("error.title")}
+        description={t("error.description")}
         action={
           <Button type="button" onClick={reset}>
-            Réessayer
+            {t("common.retry")}
           </Button>
         }
       />

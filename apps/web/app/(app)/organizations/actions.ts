@@ -7,6 +7,7 @@ import { isRole } from "@missionops/core";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { baseUrl, normalizeEmail } from "@/lib/auth/server";
 import { generateToken } from "@/lib/auth/tokens";
+import { getT } from "@/lib/i18n/server";
 import { sendInvitationEmail } from "@/lib/mail";
 import { can, getActor } from "@/lib/policy";
 import { createInvitation, createOrganisation, setCurrentOrganisation } from "@/lib/org/queries";
@@ -30,7 +31,8 @@ export async function createOrganisationAction(
   const name = String(formData.get("name") ?? "").trim();
   const country = String(formData.get("country") ?? "").trim();
   if (name.length < 2) {
-    return { status: "error", message: "Le nom de l'organisation est trop court." };
+    const { t } = await getT();
+    return { status: "error", message: t("organizations.new.nameTooShort") };
   }
 
   await createOrganisation(user.id, { name, country: country || null });
@@ -60,13 +62,14 @@ export async function inviteMemberAction(
   if (!actor) {
     redirect("/login");
   }
+  const { t } = await getT();
   if (!(await can("create", "member"))) {
-    return { status: "error", message: "Votre rôle ne permet pas d'inviter des membres." };
+    return { status: "error", message: t("organizations.invite.denied") };
   }
 
   const email = normalizeEmail(String(formData.get("email") ?? ""));
   if (!isValidEmail(email)) {
-    return { status: "error", message: "Adresse e-mail invalide." };
+    return { status: "error", message: t("auth.messages.emailInvalid") };
   }
 
   const requestedRole = String(formData.get("role") ?? "collaborateur");
@@ -84,5 +87,5 @@ export async function inviteMemberAction(
   const url = `${await baseUrl()}/organizations/invitations/accept?token=${encodeURIComponent(rawToken)}`;
   await sendInvitationEmail(email, url, actor.organisationName);
 
-  return { status: "success", message: `Invitation envoyée à ${email}.` };
+  return { status: "success", message: t("organizations.invite.sent", { email }) };
 }
