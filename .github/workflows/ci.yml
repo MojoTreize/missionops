@@ -25,6 +25,21 @@ jobs:
     runs-on: ubuntu-latest
     # Garde-fou : le plan impose une CI sous les 10 minutes.
     timeout-minutes: 10
+    # Postgres jetable pour appliquer les migrations sur une base vierge à chaque PR.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: missionops
+          POSTGRES_PASSWORD: missionops
+          POSTGRES_DB: missionops_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U missionops"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Récupérer le code
         uses: actions/checkout@v4
@@ -49,6 +64,11 @@ jobs:
 
       - name: Lint (ESLint)
         run: pnpm lint
+
+      - name: Migrations sur base vierge
+        run: pnpm db:migrate
+        env:
+          DATABASE_URL: postgres://missionops:missionops@localhost:5432/missionops_test
 
       - name: Tests unitaires (Vitest)
         run: pnpm test

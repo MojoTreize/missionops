@@ -15,7 +15,12 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "format": "prettier --write \"**/*.{ts,tsx,js,mjs,json,md,css}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,js,mjs,json,md,css}\""
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,mjs,json,md,css}\"",
+    "db:generate": "pnpm --filter @missionops/db db:generate",
+    "db:migrate": "pnpm --filter @missionops/db db:migrate",
+    "db:reset": "pnpm --filter @missionops/db db:reset",
+    "db:check": "pnpm --filter @missionops/db db:check",
+    "db:studio": "pnpm --filter @missionops/db db:studio"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
