@@ -10,7 +10,8 @@ interdit d'importer `postgres`, Drizzle ou PGlite hors de ce paquet.
 - `src/schema/` — tables et types (`organisations`, `users`, …).
 - `src/client.ts` — fabrique du client (`createDbClient`).
 - `src/tenant.ts` — couche d'accès multi-tenant (`withTenant`) : ouvre une
-  transaction et fixe `app.current_org` pour la Row Level Security (B1.7).
+  transaction et fixe `app.current_org` pour la Row Level Security (B1.7), ainsi
+  que `app.current_actor` / `app.current_ip` pour le journal d'audit (B1.9).
 - `src/migrate.ts` — applique les migrations en attente.
 - `src/reset.ts` — réinitialise le schéma public puis rejoue les migrations
   (développement et CI uniquement).
@@ -57,3 +58,7 @@ pnpm db:reset                 # reconstruit la base depuis zéro
   `SELECT enable_org_rls('ma_table');` dans sa migration, et toute requête passe
   par `withTenant`. Le test d'isolation générique (`tests/isolation.test.ts`)
   échoue si une table métier oublie `organisation_id` ou la politique.
+- Journal d'audit (B1.9) : chaque nouvelle table métier appelle aussi
+  `SELECT enable_audit('ma_table');` dans sa migration. Le déclencheur écrit une
+  ligne dans `audit_log` (en écriture seule) à chaque mutation, avec l'acteur et
+  l'IP transmis par `withTenant`.

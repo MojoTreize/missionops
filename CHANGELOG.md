@@ -50,3 +50,11 @@ conformément à la définition de « terminé » du plan (section 4.3).
   côté interface, invitation de membre soumise au droit `member:create` avec les
   six rôles assignables, table de vérité exhaustive rôle × ressource × action
   testée intégralement (293 cas).
+- B1.9 — Journal d'audit : table `audit_log` en écriture seule (ADR-004),
+  déclencheur PostgreSQL générique `audit_row_change` attaché aux tables métier
+  via `enable_audit`, capture des valeurs avant/après en JSONB, contexte acteur
+  et adresse IP transmis par `withTenant` (`app.current_actor`,
+  `app.current_ip`), isolation multi-tenant du journal, immutabilité garantie
+  par déclencheur et retrait des droits `UPDATE`/`DELETE`, tests d'intégration
+  (PGlite) : chaque mutation produit une ligne correcte, une modification directe
+  en SQL est journalisée, toute altération du journal échoue.

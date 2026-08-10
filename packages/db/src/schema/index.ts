@@ -6,3 +6,4 @@ export * from "./sessions";
 export * from "./auth_tokens";
 export * from "./memberships";
 export * from "./invitations";
+export * from "./audit_log";
