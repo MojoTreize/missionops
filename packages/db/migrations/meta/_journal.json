@@ -15,6 +15,13 @@
       "when": 1786379948688,
       "tag": "0001_first_young_avengers",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1786381508292,
+      "tag": "0002_gray_talkback",
+      "breakpoints": true
     }
   ]
 }

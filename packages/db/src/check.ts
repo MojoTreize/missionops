@@ -22,7 +22,14 @@ const result = await client.query<{ table_name: string }>(
 const tables = result.rows.map((row) => row.table_name);
 console.log("Tables créées :", tables.join(", "));
 
-const expected = ["organisations", "users", "sessions", "auth_tokens"];
+const expected = [
+  "organisations",
+  "users",
+  "sessions",
+  "auth_tokens",
+  "memberships",
+  "invitations",
+];
 const missing = expected.filter((table) => !tables.includes(table));
 if (missing.length > 0) {
   throw new Error(`Tables manquantes après migration : ${missing.join(", ")}`);

@@ -34,3 +34,15 @@ export function sendPasswordResetEmail(to: string, url: string): Promise<void> {
     text: `Définissez un nouveau mot de passe via ce lien (valable 1 heure) :\n${url}`,
   });
 }
+
+export function sendInvitationEmail(
+  to: string,
+  url: string,
+  organisationName: string,
+): Promise<void> {
+  return sendMail({
+    to,
+    subject: `Invitation à rejoindre ${organisationName} sur MissionOps`,
+    text: `Vous avez été invité à rejoindre « ${organisationName} ». Acceptez via ce lien :\n${url}`,
+  });
+}

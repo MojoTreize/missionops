@@ -29,3 +29,10 @@ conformément à la définition de « terminé » du plan (section 4.3).
   middleware et garde serveur des routes `(app)`, écrans `/login`,
   `/forgot-password`, `/reset-password`, script `db:seed`, tests unitaires
   (Vitest) de la logique d'auth.
+- B1.6 — Organisations et appartenances : tables `memberships` et `invitations`,
+  colonne `users.current_organisation_id` pour l'organisation active persistée,
+  création d'organisation (avec adhésion administrateur), invitation d'un membre
+  par e-mail à usage unique et acceptation, sélecteur d'organisation dans
+  l'en-tête, résolution serveur de l'organisation active, écrans
+  `/organizations/new` et `/organizations/members`, tests unitaires du slug et de
+  la résolution de l'organisation active.
