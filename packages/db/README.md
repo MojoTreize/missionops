@@ -20,12 +20,13 @@ Drizzle hors de ce paquet.
 
 Depuis la racine du dépôt :
 
-| Commande           | Effet                                                    |
-| ------------------ | -------------------------------------------------------- |
-| `pnpm db:generate` | Génère une migration SQL à partir du schéma (hors ligne) |
-| `pnpm db:migrate`  | Applique les migrations en attente                       |
-| `pnpm db:reset`    | Réinitialise la base puis rejoue toutes les migrations   |
-| `pnpm db:studio`   | Ouvre Drizzle Studio                                     |
+| Commande           | Effet                                                            |
+| ------------------ | ---------------------------------------------------------------- |
+| `pnpm db:generate` | Génère une migration SQL à partir du schéma (hors ligne)         |
+| `pnpm db:migrate`  | Applique les migrations en attente                               |
+| `pnpm db:reset`    | Réinitialise la base puis rejoue toutes les migrations           |
+| `pnpm db:check`    | Reconstruit la base depuis zéro en mémoire (PGlite), sans Docker |
+| `pnpm db:studio`   | Ouvre Drizzle Studio                                             |
 
 ## Base locale
 

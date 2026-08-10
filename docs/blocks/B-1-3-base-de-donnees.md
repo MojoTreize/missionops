@@ -27,13 +27,15 @@ reconstruit la base depuis zéro sans erreur.
 
 ## Tests
 
+- Hors ligne : `pnpm db:check` reconstruit la base depuis zéro en mémoire
+  (PGlite, PostgreSQL 16 WASM) — aucune infrastructure requise.
 - CI : `pnpm db:migrate` s'exécute sur un Postgres jetable à chaque PR.
 - Local : `docker compose up -d` puis `pnpm db:reset` reconstruit la base.
 
 ## Fini quand
 
-`pnpm db:reset && pnpm db:migrate` reconstruit la base depuis zéro sans erreur,
-sur un Postgres vierge.
+`pnpm db:check` reconstruit la base depuis zéro sans erreur (validé), et
+`pnpm db:reset && pnpm db:migrate` fait de même sur un Postgres vierge.
 
 ## Hors périmètre de ce bloc
 

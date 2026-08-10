@@ -15,5 +15,6 @@ conformément à la définition de « terminé » du plan (section 4.3).
   contrôle requis sur `main`.
 - B1.3 — Base de données et migrations : Drizzle ORM dans `packages/db`,
   première migration (`organisations`, `users`), scripts `db:generate` /
-  `db:migrate` / `db:reset` / `db:studio`, Postgres local (`docker-compose`) et
-  en service dans la CI, conventions de nommage documentées.
+  `db:migrate` / `db:reset` / `db:check` / `db:studio`, Postgres local
+  (`docker-compose`) et en service dans la CI, validation hors ligne via PGlite,
+  conventions de nommage documentées.
