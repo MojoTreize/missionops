@@ -1,0 +1,43 @@
+name: Déploiement staging
+
+# Sur fusion dans main : on applique les migrations puis on déploie sur Fly.io.
+# Inactif tant que les secrets ne sont pas configurés (voir docs du bloc B1.12) :
+#   - STAGING_DATABASE_URL : chaîne de connexion Postgres du staging
+#   - FLY_API_TOKEN        : jeton de déploiement Fly.io
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Migrations puis déploiement
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Installation des dépendances
+        run: pnpm install --frozen-lockfile
+
+      - name: Migrations de la base staging
+        run: pnpm db:migrate
+        env:
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Déploiement Fly.io
+        run: flyctl deploy --remote-only --config fly.toml
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

@@ -74,3 +74,14 @@ conformément à la définition de « terminé » du plan (section 4.3).
   d'action serveur, règle ESLint `react/jsx-no-literals` interdisant les chaînes
   littérales dans le JSX de l'application web, test de parité garantissant
   l'absence de clé manquante entre les deux langues.
+- B1.12 — Seed de démonstration et staging : script `db:seed:demo`
+  (`packages/db/src/seed-demo.ts`) reconstruisant en une commande une base
+  réaliste ancrée dans le contexte guinéen — deux organisations (dont une
+  seconde pour éprouver l'isolation), douze utilisateurs couvrant les six rôles,
+  appartenances et invitations en attente — idempotente et utilisable via
+  `pnpm db:reset && pnpm db:seed:demo` ; sortie autonome Next.js conditionnelle
+  (`BUILD_STANDALONE`), `Dockerfile` multi-étage et `.dockerignore`, `fly.toml`
+  (staging Fly.io, région UE) et workflow `deploy.yml` (migrations puis
+  déploiement sur fusion dans `main`), documentation des secrets dans
+  `.env.example`. Le déploiement reste inactif tant que la facturation CI et les
+  secrets Fly ne sont pas configurés.
