@@ -18,3 +18,8 @@ conformément à la définition de « terminé » du plan (section 4.3).
   `db:migrate` / `db:reset` / `db:check` / `db:studio`, Postgres local
   (`docker-compose`) et en service dans la CI, validation hors ligne via PGlite,
   conventions de nommage documentées.
+- B1.4 — Jetons de design et primitives : Tailwind CSS avec palette, typographie,
+  espacement, rayons et ombres en variables CSS ; primitives Button, Input,
+  Select, Dialog, Sheet, Table, Badge, Toast, EmptyState, Skeleton et
+  MoneyDisplay ; page `/kitchen-sink` responsive (375px et 1440px), navigable au
+  clavier.
