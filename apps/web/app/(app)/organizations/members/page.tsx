@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { ROLE_LABELS, isRole } from "@missionops/core";
 
 import { Badge } from "@/components/ui/badge";
 import {
@@ -9,32 +9,30 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getCurrentUser } from "@/lib/auth/current-user";
-import { getActiveContext, getMembers, getPendingInvitations } from "@/lib/org/queries";
+import { getMembers, getPendingInvitations } from "@/lib/org/queries";
+import { can, requireCan } from "@/lib/policy";
 
 import { InviteMemberForm } from "./invite-member-form";
 
-export default async function MembersPage() {
-  const user = await getCurrentUser();
-  if (!user) {
-    redirect("/login");
-  }
+function roleLabel(role: string): string {
+  return isRole(role) ? ROLE_LABELS[role] : role;
+}
 
-  const { active } = await getActiveContext(user.id);
-  if (!active) {
-    redirect("/organizations/new");
-  }
+export default async function MembersPage() {
+  // Tout membre peut consulter la liste ; l'absence d'organisation renvoie
+  // vers l'accueil / la connexion via la garde.
+  const actor = await requireCan("read", "member");
+  const canInvite = await can("create", "member");
 
   const [members, pending] = await Promise.all([
-    getMembers(active.id),
-    getPendingInvitations(active.id),
+    getMembers(actor.organisationId),
+    getPendingInvitations(actor.organisationId),
   ]);
-  const isAdmin = active.role === "admin";
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-8">
       <div className="flex flex-col gap-1">
-        <h1 className="text-xl font-semibold text-field">Membres — {active.name}</h1>
+        <h1 className="text-xl font-semibold text-field">Membres — {actor.organisationName}</h1>
         <p className="text-sm text-muted">Gérez les personnes ayant accès à cette organisation.</p>
       </div>
 
@@ -52,7 +50,9 @@ export default async function MembersPage() {
               <TableRow key={m.userId}>
                 <TableCell>{m.fullName ?? m.email}</TableCell>
                 <TableCell>
-                  <Badge variant={m.role === "admin" ? "ledger" : "muted"}>{m.role}</Badge>
+                  <Badge variant={m.role === "admin" ? "ledger" : "muted"}>
+                    {roleLabel(m.role)}
+                  </Badge>
                 </TableCell>
               </TableRow>
             ))}
@@ -75,7 +75,7 @@ export default async function MembersPage() {
                 <TableRow key={inv.id}>
                   <TableCell>{inv.email}</TableCell>
                   <TableCell>
-                    <Badge variant="warning">{inv.role}</Badge>
+                    <Badge variant="warning">{roleLabel(inv.role)}</Badge>
                   </TableCell>
                 </TableRow>
               ))}
@@ -84,7 +84,7 @@ export default async function MembersPage() {
         </section>
       ) : null}
 
-      {isAdmin ? (
+      {canInvite ? (
         <section className="flex flex-col gap-3">
           <h2 className="text-sm font-semibold text-field">Inviter un membre</h2>
           <InviteMemberForm />

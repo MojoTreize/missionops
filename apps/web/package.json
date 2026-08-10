@@ -11,6 +11,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@missionops/core": "workspace:*",
     "@missionops/db": "workspace:*",
     "@radix-ui/react-dialog": "^1.1.23",
     "@radix-ui/react-select": "^2.3.7",
