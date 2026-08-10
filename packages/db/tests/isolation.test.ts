@@ -64,12 +64,12 @@ beforeAll(async () => {
   // On amorce des données pour chaque organisation, en passant par la couche
   // d'accès. La session bascule sur le rôle applicatif.
   await client.exec("set role app_tenant");
-  await withTenant(db, ORG_A, (tx) =>
+  await withTenant(db, { organisationId: ORG_A }, (tx) =>
     tx.execute(
       sql`insert into demo_widgets (organisation_id, label) values (${ORG_A}, 'widget A')`,
     ),
   );
-  await withTenant(db, ORG_B, (tx) =>
+  await withTenant(db, { organisationId: ORG_B }, (tx) =>
     tx.execute(
       sql`insert into demo_widgets (organisation_id, label) values (${ORG_B}, 'widget B')`,
     ),
@@ -126,10 +126,10 @@ describe("garantie fonctionnelle", () => {
   it("chaque organisation ne voit que ses propres lignes", async () => {
     await client.exec("set role app_tenant");
     try {
-      const seenByA = await withTenant(db, ORG_A, (tx) =>
+      const seenByA = await withTenant(db, { organisationId: ORG_A }, (tx) =>
         tx.execute(sql`select organisation_id from demo_widgets`),
       );
-      const seenByB = await withTenant(db, ORG_B, (tx) =>
+      const seenByB = await withTenant(db, { organisationId: ORG_B }, (tx) =>
         tx.execute(sql`select organisation_id from demo_widgets`),
       );
 
@@ -157,7 +157,7 @@ describe("garantie fonctionnelle", () => {
     await client.exec("set role app_tenant");
     try {
       await expect(
-        withTenant(db, ORG_A, (tx) =>
+        withTenant(db, { organisationId: ORG_A }, (tx) =>
           tx.execute(
             sql`insert into demo_widgets (organisation_id, label) values (${ORG_B}, 'intrus')`,
           ),

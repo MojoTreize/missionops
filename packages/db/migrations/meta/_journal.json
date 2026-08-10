@@ -29,6 +29,20 @@
       "when": 1786382450472,
       "tag": "0003_org_rls_isolation",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1786383951329,
+      "tag": "0004_normal_kinsey_walden",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1786383960992,
+      "tag": "0005_audit_log",
+      "breakpoints": true
     }
   ]
 }
