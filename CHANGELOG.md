@@ -36,3 +36,10 @@ conformément à la définition de « terminé » du plan (section 4.3).
   l'en-tête, résolution serveur de l'organisation active, écrans
   `/organizations/new` et `/organizations/members`, tests unitaires du slug et de
   la résolution de l'organisation active.
+- B1.7 — Isolation multi-tenant : Row Level Security en base (fonction
+  réutilisable `enable_org_rls`, politique `org_isolation` fondée sur le
+  paramètre de session `app.current_org`), couche d'accès `withTenant` exigeant
+  un `orgId` obligatoire, règle ESLint interdisant l'instanciation du client de
+  base hors de `packages/db`, et test d'intégration générique (PGlite) vérifiant,
+  sous un rôle non privilégié, qu'aucune organisation ne voit ni n'écrit les
+  données d'une autre.
