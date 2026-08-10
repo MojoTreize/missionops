@@ -20,6 +20,7 @@
     "db:migrate": "pnpm --filter @missionops/db db:migrate",
     "db:reset": "pnpm --filter @missionops/db db:reset",
     "db:check": "pnpm --filter @missionops/db db:check",
+    "db:seed": "pnpm --filter @missionops/db db:seed",
     "db:studio": "pnpm --filter @missionops/db db:studio"
   },
   "devDependencies": {

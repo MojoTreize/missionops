@@ -23,3 +23,9 @@ conformément à la définition de « terminé » du plan (section 4.3).
   Select, Dialog, Sheet, Table, Badge, Toast, EmptyState, Skeleton et
   MoneyDisplay ; page `/kitchen-sink` responsive (375px et 1440px), navigable au
   clavier.
+- B1.5 — Authentification et session : connexion par lien magique et par mot de
+  passe (scrypt), sessions en cookies `httpOnly` (jetons hachés en base),
+  réinitialisation de mot de passe, limitation de débit de la connexion,
+  middleware et garde serveur des routes `(app)`, écrans `/login`,
+  `/forgot-password`, `/reset-password`, script `db:seed`, tests unitaires
+  (Vitest) de la logique d'auth.
