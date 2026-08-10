@@ -2,24 +2,20 @@
 
 import { redirect } from "next/navigation";
 
+import { isRole } from "@missionops/core";
+
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { baseUrl, normalizeEmail } from "@/lib/auth/server";
 import { generateToken } from "@/lib/auth/tokens";
 import { sendInvitationEmail } from "@/lib/mail";
-import {
-  createInvitation,
-  createOrganisation,
-  getActiveContext,
-  setCurrentOrganisation,
-} from "@/lib/org/queries";
+import { can, getActor } from "@/lib/policy";
+import { createInvitation, createOrganisation, setCurrentOrganisation } from "@/lib/org/queries";
 
 import type { ActionState } from "./action-state";
 
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
-
-const ASSIGNABLE_ROLES = ["admin", "collaborateur"] as const;
 
 /** Crée une organisation et la rend active (l'utilisateur en devient admin). */
 export async function createOrganisationAction(
@@ -55,22 +51,17 @@ export async function switchOrganisationAction(formData: FormData): Promise<void
   redirect("/dashboard");
 }
 
-/** Invite un membre par e-mail (réservé aux administrateurs). */
+/** Invite un membre par e-mail (droit `member:create`, cf. matrice B1.8). */
 export async function inviteMemberAction(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const user = await getCurrentUser();
-  if (!user) {
+  const actor = await getActor();
+  if (!actor) {
     redirect("/login");
   }
-
-  const { active } = await getActiveContext(user.id);
-  if (!active) {
-    return { status: "error", message: "Aucune organisation active." };
-  }
-  if (active.role !== "admin") {
-    return { status: "error", message: "Seuls les administrateurs peuvent inviter." };
+  if (!(await can("create", "member"))) {
+    return { status: "error", message: "Votre rôle ne permet pas d'inviter des membres." };
   }
 
   const email = normalizeEmail(String(formData.get("email") ?? ""));
@@ -79,21 +70,19 @@ export async function inviteMemberAction(
   }
 
   const requestedRole = String(formData.get("role") ?? "collaborateur");
-  const role = (ASSIGNABLE_ROLES as readonly string[]).includes(requestedRole)
-    ? requestedRole
-    : "collaborateur";
+  const role = isRole(requestedRole) ? requestedRole : "collaborateur";
 
   const rawToken = generateToken();
   await createInvitation({
-    organisationId: active.id,
-    invitedBy: user.id,
+    organisationId: actor.organisationId,
+    invitedBy: actor.userId,
     email,
     role,
     rawToken,
   });
 
   const url = `${await baseUrl()}/organizations/invitations/accept?token=${encodeURIComponent(rawToken)}`;
-  await sendInvitationEmail(email, url, active.name);
+  await sendInvitationEmail(email, url, actor.organisationName);
 
   return { status: "success", message: `Invitation envoyée à ${email}.` };
 }

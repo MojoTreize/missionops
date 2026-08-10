@@ -2,6 +2,8 @@
 
 import { useActionState } from "react";
 
+import { ROLES, ROLE_LABELS } from "@missionops/core";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,8 +37,11 @@ export function InviteMemberForm() {
           defaultValue="collaborateur"
           className="rounded-md border border-border bg-surface px-2 py-2 text-sm text-field focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          <option value="collaborateur">Collaborateur</option>
-          <option value="admin">Administrateur</option>
+          {ROLES.map((role) => (
+            <option key={role} value={role}>
+              {ROLE_LABELS[role]}
+            </option>
+          ))}
         </select>
       </div>
       <Button type="submit" disabled={pending}>

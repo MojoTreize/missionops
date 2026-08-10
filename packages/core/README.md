@@ -11,6 +11,7 @@ Sous-domaines prévus (voir [plan](../../docs/plan.md), section 3.1) :
 - `mission/` — machine à états, règles de validation (B2.2)
 - `expense/` — règles de dépense (B3.5)
 - `reconciliation/` — calcul de solde d'avance (B3.8)
-- `policy/` — rôles et permissions (B1.8)
+- `policy/` — rôles et permissions (B1.8) — **livré** : six rôles, matrice de
+  permissions et `can(acteur, action, ressource)`.
 
 Objectif de couverture : **90 %**.

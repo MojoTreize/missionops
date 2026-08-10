@@ -43,3 +43,10 @@ conformément à la définition de « terminé » du plan (section 4.3).
   base hors de `packages/db`, et test d'intégration générique (PGlite) vérifiant,
   sous un rôle non privilégié, qu'aucune organisation ne voit ni n'écrit les
   données d'une autre.
+- B1.8 — Rôles et permissions : six rôles de base (Collaborateur, Manager,
+  Logisticien, Finance, Directeur pays, Administrateur), matrice de permissions
+  et fonction pure `can(user, action, resource)` dans `@missionops/core/policy`,
+  garde serveur (`requireCan`, `getActor`) avec page `/forbidden` et masquage
+  côté interface, invitation de membre soumise au droit `member:create` avec les
+  six rôles assignables, table de vérité exhaustive rôle × ressource × action
+  testée intégralement (293 cas).
