@@ -16,6 +16,9 @@ export const users = pgTable(
     email: text("email").notNull(),
     // Nom complet affiché.
     fullName: text("full_name"),
+    // Empreinte du mot de passe (scrypt) — voie de secours, ADR-005 B1.5.
+    // Nul tant que l'utilisateur n'a défini que la connexion par lien magique.
+    passwordHash: text("password_hash"),
     // Langue préférée (i18n dès le socle, ADR-008) : « fr » ou « en ».
     locale: text("locale").notNull().default("fr"),
     ...timestamps,

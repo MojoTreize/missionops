@@ -12,6 +12,7 @@ Drizzle hors de ce paquet.
 - `src/migrate.ts` — applique les migrations en attente.
 - `src/reset.ts` — réinitialise le schéma public puis rejoue les migrations
   (développement et CI uniquement).
+- `src/seed.ts` — insère un jeu de démonstration (organisation + utilisateur).
 - `migrations/` — SQL versionné généré par Drizzle Kit. **Ne jamais éditer à la
   main** : modifier le schéma puis régénérer.
 - `drizzle.config.ts` — configuration Drizzle Kit.
@@ -26,6 +27,7 @@ Depuis la racine du dépôt :
 | `pnpm db:migrate`  | Applique les migrations en attente                               |
 | `pnpm db:reset`    | Réinitialise la base puis rejoue toutes les migrations           |
 | `pnpm db:check`    | Reconstruit la base depuis zéro en mémoire (PGlite), sans Docker |
+| `pnpm db:seed`     | Insère un jeu de démonstration (organisation + utilisateur)      |
 | `pnpm db:studio`   | Ouvre Drizzle Studio                                             |
 
 ## Base locale
