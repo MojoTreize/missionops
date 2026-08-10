@@ -1,14 +1,16 @@
 # @missionops/db
 
 Seule couche autorisée à parler à PostgreSQL. Drizzle ORM : schéma, migrations,
-client. À partir du bloc B1.7, chaque fonction d'accès exigera un `orgId` typé,
-non optionnel (ADR-001), et une règle ESLint interdira d'importer `postgres` ou
-Drizzle hors de ce paquet.
+client. Depuis le bloc B1.7, chaque requête métier passe par `withTenant(orgId,
+…)` qui exige un `orgId` typé, non optionnel (ADR-001), et une règle ESLint
+interdit d'importer `postgres`, Drizzle ou PGlite hors de ce paquet.
 
 ## Contenu
 
 - `src/schema/` — tables et types (`organisations`, `users`, …).
 - `src/client.ts` — fabrique du client (`createDbClient`).
+- `src/tenant.ts` — couche d'accès multi-tenant (`withTenant`) : ouvre une
+  transaction et fixe `app.current_org` pour la Row Level Security (B1.7).
 - `src/migrate.ts` — applique les migrations en attente.
 - `src/reset.ts` — réinitialise le schéma public puis rejoue les migrations
   (développement et CI uniquement).
@@ -51,3 +53,7 @@ pnpm db:reset                 # reconstruit la base depuis zéro
   `organisation_id`, `created_at`, `created_by`, `updated_at`, `updated_by`,
   `deleted_at`, avec l'index `(organisation_id, created_at desc) where deleted_at is null`.
 - `organisations` et `users` sont des tables fondatrices : pas d'`organisation_id`.
+- Isolation multi-tenant (B1.7) : chaque nouvelle table métier appelle
+  `SELECT enable_org_rls('ma_table');` dans sa migration, et toute requête passe
+  par `withTenant`. Le test d'isolation générique (`tests/isolation.test.ts`)
+  échoue si une table métier oublie `organisation_id` ou la politique.

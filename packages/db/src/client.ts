@@ -17,7 +17,8 @@ export interface DbHandle {
  *
  * Toute la couche d'accès aux données passe par `packages/db` : aucune autre
  * partie du code n'importe `postgres` ni Drizzle directement. Cette frontière
- * sera imposée par une règle ESLint au bloc B1.7 (isolation multi-tenant).
+ * est imposée par une règle ESLint (B1.7, isolation multi-tenant) qui interdit
+ * d'instancier le client de base hors de ce paquet.
  */
 export function createDbClient(connectionString: string, options?: PostgresOptions): DbHandle {
   const client = postgres(connectionString, options);
