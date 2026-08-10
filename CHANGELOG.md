@@ -58,3 +58,10 @@ conformément à la définition de « terminé » du plan (section 4.3).
   par déclencheur et retrait des droits `UPDATE`/`DELETE`, tests d'intégration
   (PGlite) : chaque mutation produit une ligne correcte, une modification directe
   en SQL est journalisée, toute altération du journal échoue.
+- B1.10 — Coque applicative : navigation adaptée à l'appareil à partir d'une
+  configuration unique (`lib/nav`) — barre latérale, fil d'Ariane et recherche
+  globale (Ctrl/⌘ + K) sur ordinateur ; en-tête compact, barre d'onglets basse à
+  quatre entrées et menu compte sur mobile ; pages `/missions`, `/expenses`,
+  `/reports` (états vides), états de chargement (`loading`), frontière d'erreur
+  (`error`) et page 404 globale (`not-found`) ; test unitaire de la
+  configuration de navigation et du fil d'Ariane.
