@@ -65,3 +65,12 @@ conformément à la définition de « terminé » du plan (section 4.3).
   `/reports` (états vides), états de chargement (`loading`), frontière d'erreur
   (`error`) et page 404 globale (`not-found`) ; test unitaire de la
   configuration de navigation et du fil d'Ariane.
+- B1.11 — Internationalisation : bibliothèque i18n légère et sans dépendance
+  (catalogues français et anglais typés, traducteur à clés « à points » avec
+  interpolation, formats de date et de nombre via `Intl`), français par défaut,
+  langue mémorisée dans un cookie lu côté serveur (`I18nProvider`, `getT`,
+  `useT`), sélecteur de langue dans le profil (`/profile`), refonte des libellés
+  de navigation en clés de traduction, traduction de tous les écrans et messages
+  d'action serveur, règle ESLint `react/jsx-no-literals` interdisant les chaînes
+  littérales dans le JSX de l'application web, test de parité garantissant
+  l'absence de clé manquante entre les deux langues.

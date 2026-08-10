@@ -5,24 +5,26 @@ import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useT } from "@/lib/i18n/client";
 
 import { resetPasswordAction } from "../actions";
 import { initialActionState } from "../action-state";
 import { FormMessage } from "../form-message";
 
 export function ResetPasswordForm({ token }: { token: string }) {
+  const t = useT();
   const [state, action, pending] = useActionState(resetPasswordAction, initialActionState);
 
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h2 className="text-lg font-semibold text-ink">Nouveau mot de passe</h2>
-        <p className="mt-1 text-sm text-muted">Au moins 8 caractères.</p>
+        <h2 className="text-lg font-semibold text-ink">{t("auth.reset.title")}</h2>
+        <p className="mt-1 text-sm text-muted">{t("auth.reset.hint")}</p>
       </div>
       <form action={action} className="flex flex-col gap-3" noValidate>
         <input type="hidden" name="token" value={token} />
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="password">Mot de passe</Label>
+          <Label htmlFor="password">{t("auth.reset.passwordLabel")}</Label>
           <Input
             id="password"
             name="password"
@@ -33,7 +35,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="passwordConfirm">Confirmer le mot de passe</Label>
+          <Label htmlFor="passwordConfirm">{t("auth.reset.confirmLabel")}</Label>
           <Input
             id="passwordConfirm"
             name="passwordConfirm"
@@ -44,7 +46,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
           />
         </div>
         <Button type="submit" disabled={pending}>
-          {pending ? "Enregistrement…" : "Définir le mot de passe"}
+          {pending ? t("auth.reset.saving") : t("auth.reset.submit")}
         </Button>
         <FormMessage state={state} />
       </form>

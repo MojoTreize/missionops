@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/cn";
+import { useT } from "@/lib/i18n/client";
 import { isActivePath, NAV_ITEMS } from "@/lib/nav";
 
 /**
@@ -11,9 +12,10 @@ import { isActivePath, NAV_ITEMS } from "@/lib/nav";
  */
 export function SidebarNav() {
   const pathname = usePathname();
+  const t = useT();
 
   return (
-    <nav aria-label="Navigation principale" className="flex flex-col gap-1">
+    <nav aria-label={t("shell.mainNav")} className="flex flex-col gap-1">
       {NAV_ITEMS.map((item) => {
         const active = isActivePath(pathname, item.href);
         const Icon = item.icon;
@@ -28,7 +30,7 @@ export function SidebarNav() {
             )}
           >
             <Icon className="size-5 shrink-0" aria-hidden />
-            {item.label}
+            {t(item.labelKey)}
           </Link>
         );
       })}

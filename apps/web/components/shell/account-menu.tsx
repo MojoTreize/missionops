@@ -6,6 +6,7 @@ import { CircleUser, LogOut, Users } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useT } from "@/lib/i18n/client";
 import type { MembershipView } from "@/lib/org/queries";
 
 import { logoutAction } from "@/app/(auth)/actions";
@@ -26,13 +27,14 @@ export function AccountMenu({
   activeId: string | null;
 }) {
   const [open, setOpen] = useState(false);
+  const t = useT();
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <button
           type="button"
-          aria-label="Compte et organisation"
+          aria-label={t("shell.accountMenu")}
           className="flex size-9 items-center justify-center rounded-md text-muted transition-colors hover:text-ink"
         >
           <CircleUser className="size-5" aria-hidden />
@@ -40,7 +42,7 @@ export function AccountMenu({
       </SheetTrigger>
       <SheetContent side="right">
         <SheetHeader>
-          <SheetTitle>Compte</SheetTitle>
+          <SheetTitle>{t("shell.account")}</SheetTitle>
           <p className="truncate text-sm text-muted" title={userName}>
             {userName}
           </p>
@@ -49,7 +51,7 @@ export function AccountMenu({
         {activeId ? (
           <div className="flex flex-col gap-2">
             <span className="text-xs font-medium uppercase tracking-wide text-subtle">
-              Organisation
+              {t("shell.organization")}
             </span>
             <OrgSwitcher memberships={memberships} activeId={activeId} />
           </div>
@@ -59,7 +61,7 @@ export function AccountMenu({
             onClick={() => setOpen(false)}
             className="text-sm text-field hover:underline"
           >
-            Créer une organisation
+            {t("shell.createOrganization")}
           </Link>
         )}
 
@@ -69,13 +71,22 @@ export function AccountMenu({
           className="flex items-center gap-3 rounded-md px-1 py-2 text-sm font-medium text-muted hover:text-ink"
         >
           <Users className="size-5 shrink-0" aria-hidden />
-          Membres
+          {t("shell.members")}
+        </Link>
+
+        <Link
+          href="/profile"
+          onClick={() => setOpen(false)}
+          className="flex items-center gap-3 rounded-md px-1 py-2 text-sm font-medium text-muted hover:text-ink"
+        >
+          <CircleUser className="size-5 shrink-0" aria-hidden />
+          {t("routes.profile")}
         </Link>
 
         <form action={logoutAction} className="mt-auto">
           <Button type="submit" variant="ghost" size="sm" className="w-full justify-start gap-3">
             <LogOut className="size-5 shrink-0" aria-hidden />
-            Se déconnecter
+            {t("shell.logout")}
           </Button>
         </form>
       </SheetContent>

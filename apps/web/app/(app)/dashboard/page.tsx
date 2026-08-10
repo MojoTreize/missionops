@@ -1,10 +1,15 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { getCurrentUser } from "@/lib/auth/current-user";
+import { getT } from "@/lib/i18n/server";
 import { getActiveContext } from "@/lib/org/queries";
 
-export const metadata = { title: "Tableau de bord — MissionOps" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getT();
+  return { title: `${t("meta.dashboard")} — MissionOps` };
+}
 
 /**
  * Page d'accueil de l'espace authentifié. Redirige vers la création d'une
@@ -22,16 +27,19 @@ export default async function DashboardPage() {
     redirect("/organizations/new");
   }
 
+  const { t } = await getT();
+
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="text-2xl font-semibold text-ink">Bonjour {user.fullName ?? user.email}</h1>
+      <h1 className="text-2xl font-semibold text-ink">
+        {t("dashboard.greeting", { name: user.fullName ?? user.email })}
+      </h1>
       <p className="mt-2 text-muted">
-        Organisation active : <span className="font-medium text-field">{active.name}</span>. Les
-        missions apparaîtront ici bientôt.
+        {t("dashboard.activeOrganization", { name: active.name })} {t("dashboard.missionsSoon")}
       </p>
       <p className="mt-4 text-sm">
         <Link href="/organizations/members" className="text-field hover:underline">
-          Gérer les membres
+          {t("dashboard.manageMembers")}
         </Link>
       </p>
     </div>

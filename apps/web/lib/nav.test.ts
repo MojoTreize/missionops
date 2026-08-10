@@ -7,10 +7,10 @@ describe("NAV_ITEMS", () => {
     expect(NAV_ITEMS).toHaveLength(4);
   });
 
-  it("chaque entrée a un href absolu, un libellé et une icône", () => {
+  it("chaque entrée a un href absolu, une clé de libellé et une icône", () => {
     for (const item of NAV_ITEMS) {
       expect(item.href.startsWith("/")).toBe(true);
-      expect(item.label.length).toBeGreaterThan(0);
+      expect(item.labelKey.length).toBeGreaterThan(0);
       expect(item.icon).toBeTypeOf("object");
     }
   });
@@ -42,20 +42,33 @@ describe("isActivePath", () => {
 describe("buildBreadcrumbs", () => {
   it("retourne un seul maillon pour une route de premier niveau", () => {
     const crumbs = buildBreadcrumbs("/dashboard");
-    expect(crumbs).toEqual([{ href: "/dashboard", label: "Tableau de bord", isLast: true }]);
+    expect(crumbs).toEqual([
+      { href: "/dashboard", labelKey: "nav.dashboard", fallback: "Dashboard", isLast: true },
+    ]);
   });
 
   it("accumule les maillons et marque le dernier", () => {
     const crumbs = buildBreadcrumbs("/organizations/members");
     expect(crumbs).toEqual([
-      { href: "/organizations", label: "Organisation", isLast: false },
-      { href: "/organizations/members", label: "Membres", isLast: true },
+      {
+        href: "/organizations",
+        labelKey: "routes.organization",
+        fallback: "Organizations",
+        isLast: false,
+      },
+      {
+        href: "/organizations/members",
+        labelKey: "routes.members",
+        fallback: "Members",
+        isLast: true,
+      },
     ]);
   });
 
-  it("capitalise un segment inconnu", () => {
+  it("laisse un segment inconnu sans clé, avec un repli capitalisé", () => {
     const crumbs = buildBreadcrumbs("/missions/nouvelle-mission");
-    expect(crumbs[1]?.label).toBe("Nouvelle mission");
+    expect(crumbs[1]?.labelKey).toBeNull();
+    expect(crumbs[1]?.fallback).toBe("Nouvelle mission");
   });
 
   it("retourne une liste vide à la racine", () => {

@@ -1,6 +1,7 @@
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 import prettier from "eslint-config-prettier";
+import reactPlugin from "eslint-plugin-react";
 import globals from "globals";
 
 export default tseslint.config(
@@ -54,6 +55,27 @@ export default tseslint.config(
     files: ["packages/db/**"],
     rules: {
       "no-restricted-imports": "off",
+    },
+  },
+  // Internationalisation (B1.11) : aucune chaîne littérale dans le JSX de
+  // l'application web. Tout texte visible passe par le traducteur (`t(...)`).
+  // Les libellés d'attributs (placeholder, aria-label, title) restent traduits
+  // par discipline ; la règle ne couvre que le contenu textuel des éléments.
+  {
+    files: ["apps/web/**/*.tsx"],
+    plugins: { react: reactPlugin },
+    rules: {
+      "react/jsx-no-literals": [
+        "error",
+        { allowedStrings: ["—", "·", "•", "MissionOps", "Ctrl K"] },
+      ],
+    },
+  },
+  {
+    // Vitrine de composants (développement) : littéraux tolérés.
+    files: ["apps/web/app/kitchen-sink/**"],
+    rules: {
+      "react/jsx-no-literals": "off",
     },
   },
   prettier,

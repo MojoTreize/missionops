@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
+
+import { getT } from "@/lib/i18n/server";
+
 import { LoginForm } from "./login-form";
 
-export const metadata = { title: "Connexion — MissionOps" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getT();
+  return { title: `${t("meta.login")} — MissionOps` };
+}
 
 /**
  * Page de connexion. `error=lien-invalide` provient d'un lien magique expiré,
@@ -12,13 +19,14 @@ export default async function LoginPage({
   searchParams: Promise<{ error?: string }>;
 }) {
   const { error } = await searchParams;
+  const { t } = await getT();
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-lg font-semibold text-ink">Se connecter</h2>
+      <h2 className="text-lg font-semibold text-ink">{t("auth.login.title")}</h2>
       {error === "lien-invalide" ? (
         <p role="alert" className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger">
-          Ce lien de connexion est invalide ou a expiré. Demandez-en un nouveau.
+          {t("auth.login.linkInvalid")}
         </p>
       ) : null}
       <LoginForm />
