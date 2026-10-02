@@ -126,3 +126,13 @@ conformément à la définition de « terminé » du plan (section 4.3).
 - Tests : 600+ tests unitaires du domaine, tests d'intégration PGlite de la
   boucle complète sous RLS, 7 parcours Playwright dont la boucle complète hors
   ligne ; job E2E en CI.
+- Compléments : bande de mission à l'écran et dans les documents (B5.4) ;
+  demande de modification et validation par lot (B2.6) ; recherche insensible
+  aux accents (B6.5) ; couverture 100 % bloquante et tests de propriétés sur
+  l'argent, règle ESLint « jamais de number pour un montant » (B3.1) ;
+  axe-core bloquant et contrastes AA (B8.2) ; budget JavaScript bloquant
+  (B8.1) ; campagne hors ligne automatisée (B4.8).
+- Sécurité : Next.js 15.5.27, drizzle-orm 0.45, surcharges sharp, postcss,
+  nanoid (`pnpm audit --prod` propre) ; CodeQL et audit en CI ; limitation de
+  débit des routes de synchronisation ; remontée d'erreurs Sentry sans SDK ;
+  tâche planifiée déclenchée par GitHub Actions.
