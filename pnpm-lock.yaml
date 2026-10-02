@@ -53,6 +53,9 @@ importers:
       '@missionops/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@missionops/notifications':
+        specifier: workspace:*
+        version: link:../../packages/notifications
       '@missionops/services':
         specifier: workspace:*
         version: link:../../packages/services
@@ -196,6 +199,21 @@ importers:
       pdf-lib:
         specifier: ^1.17.1
         version: 1.17.1
+    devDependencies:
+      '@missionops/config':
+        specifier: workspace:*
+        version: link:../config
+      '@types/node':
+        specifier: ^22.9.0
+        version: 22.20.1
+      typescript:
+        specifier: ^5.6.3
+        version: 5.9.3
+      vitest:
+        specifier: ^4.1.10
+        version: 4.1.10(@types/node@22.20.1)(vite@8.2.1(@types/node@22.20.1)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.5))
+
+  packages/notifications:
     devDependencies:
       '@missionops/config':
         specifier: workspace:*

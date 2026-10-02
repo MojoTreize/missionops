@@ -26,6 +26,14 @@ import {
   recordSettlement,
   submitReconciliation,
   validateReconciliation,
+  accountingExport,
+  archiveMissions,
+  auditLogPage,
+  costReport,
+  dashboard,
+  generateMissionDocument,
+  globalSearch,
+  organisationExport,
   type BlobStore,
   type ServiceContext,
 } from "../src";
@@ -304,5 +312,113 @@ describe("boucle demande → validation → avance → dépenses → réconcilia
     await expect(getMission(t.db, ctx("outsider"), missionId)).rejects.toMatchObject({
       code: "not_found",
     });
+  });
+});
+
+describe("rapports, audit, exports et documents (Phases 5-6)", () => {
+  it("tableau de bord et rapport de coûts en devise de base", async () => {
+    const stats = await dashboard(t.db, ctx("finance", new Date("2026-10-20T08:00:00Z")));
+    expect(stats.byStatus.CLOTUREE).toBe(1);
+    expect(stats.receiptCoverageBp).toBe(5000);
+    const report = await costReport(t.db, ctx("director"), {
+      from: "2026-10-01",
+      to: "2026-10-31",
+    });
+    expect(report.total.amountMinor).toBe(10_200_000n);
+    expect(report.byCategory.map((c) => c.category)).toEqual(["transport", "hebergement"]);
+    expect(report.byDestination[0]?.destination).toBe("Kindia");
+    await expect(
+      costReport(t.db, ctx("agent"), { from: "2026-10-01", to: "2026-10-31" }),
+    ).rejects.toMatchObject({ code: "forbidden" });
+  });
+
+  it("export comptable CSV avec taux figés", async () => {
+    const csv = await accountingExport(
+      t.db,
+      ctx("finance"),
+      { from: "2026-10-01", to: "2026-10-31" },
+      {
+        category: (c) => c,
+        headers: [
+          "date",
+          "type",
+          "mission",
+          "cat",
+          "desc",
+          "who",
+          "amount",
+          "cur",
+          "rate",
+          "rateDate",
+          "base",
+          "baseCur",
+          "receipts",
+          "id",
+        ],
+      },
+    );
+    const lines = csv.trim().split("\r\n");
+    expect(lines).toHaveLength(4); // en-tête + 2 dépenses + 1 avance
+    expect(csv).toContain("1100.00;EUR;9350");
+    expect(csv).toContain("Hôtel Kindia 3 nuits;agent;1200000;GNF;1;2026-10-14;1200000;GNF;1;");
+  });
+
+  it("recherche globale et journal d'audit", async () => {
+    const hits = await globalSearch(t.db, ctx("manager"), "kindia");
+    expect(hits.some((h) => h.type === "mission")).toBe(true);
+    expect(await globalSearch(t.db, ctx("outsider"), "kindia")).toEqual([]);
+    const audit = await auditLogPage(t.db, ctx("director"), { table: "missions" });
+    expect(audit.entries.length).toBeGreaterThan(0);
+    expect(audit.entries[0]?.changedFields.length).toBeGreaterThan(0);
+    await expect(auditLogPage(t.db, ctx("manager"))).rejects.toMatchObject({ code: "forbidden" });
+  });
+
+  it("documents versionnés et immuables", async () => {
+    const files = new Map<string, Uint8Array>();
+    const docs = {
+      put: async (k: string, b: Uint8Array) => void files.set(k, b),
+      get: async (k: string) => files.get(k) ?? null,
+    };
+    const tr = (key: string) => key;
+    const [missionId] = (await t.admin("select id from missions where status = 'CLOTUREE'")) as {
+      id: string;
+    }[];
+    const first = await generateMissionDocument(
+      t.db,
+      ctx("finance"),
+      docs,
+      missionId!.id,
+      "closure_pack",
+      tr,
+      "fr",
+    );
+    const again = await generateMissionDocument(
+      t.db,
+      ctx("finance", new Date("2026-11-01T00:00:00Z")),
+      docs,
+      missionId!.id,
+      "closure_pack",
+      tr,
+      "fr",
+    );
+    expect(again.version).toBe(first.version);
+    expect(again.sha256).toBe(first.sha256);
+    expect(Buffer.from(first.bytes.slice(0, 5)).toString()).toBe("%PDF-");
+  });
+
+  it("archivage et export intégral", async () => {
+    expect(await archiveMissions(t.db, ctx("outsider"), 30)).toBe(0);
+    await expect(archiveMissions(t.db, ctx("finance"), 30)).rejects.toMatchObject({
+      code: "forbidden",
+    });
+    const exported = JSON.parse(
+      await organisationExport(t.db, {
+        ...ctx("director"),
+        actor: { userId: people.director!.id, role: "admin" },
+      }),
+    );
+    expect(exported.format).toBe("missionops-export");
+    expect(exported.missions).toHaveLength(1);
+    expect(exported.auditLog.length).toBeGreaterThan(10);
   });
 });
