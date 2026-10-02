@@ -101,3 +101,16 @@ historique, empreintes SHA-256 et annexe des justificatifs).
   d'écran, exercice de restauration.
 - Vérification du référentiel géographique contre COD-AB ; relecture juridique
   des documents de conformité.
+
+## Lancer l'application sur son ordinateur
+
+Sans Docker et sans droits administrateur (sauf sous Linux, où PostgreSQL
+s'installe via `apt`). Le script installe ce qui manque, charge la démo et ouvre
+http://localhost:3000.
+
+- Windows : double-cliquer sur `scripts\demarrer.cmd`
+- macOS / Linux : `bash scripts/demarrer.sh`
+
+Options : `-Reinitialiser` / `--reinitialiser` (remet la démo à zéro),
+`-Dev` / `--dev` (mode développement). Mot de passe des comptes de démo :
+`motdepasse-demo`.
