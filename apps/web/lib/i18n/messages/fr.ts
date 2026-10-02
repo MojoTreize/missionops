@@ -5,7 +5,10 @@
  * (`en.ts`) doit avoir exactement les mêmes clés, ce que TypeScript vérifie à la
  * compilation et le test de parité vérifie à l'exécution.
  */
+import { domainFr } from "./domain.fr";
+
 export const fr = {
+  ...domainFr,
   app: {
     name: "MissionOps",
     tagline: "Le système d'exploitation des missions terrain",
@@ -20,6 +23,15 @@ export const fr = {
     missions: "Missions",
     expenses: "Dépenses",
     reports: "Rapports",
+    terrain: "Terrain",
+    approvals: "À valider",
+    finance: "Finance",
+    notifications: "Notifications",
+    locations: "Lieux",
+    approvalFlow: "Circuit de validation",
+    audit: "Journal d'audit",
+    settings: "Paramètres",
+    admin: "Administration",
   },
   routes: {
     organization: "Organisation",

@@ -67,7 +67,22 @@ export default tseslint.config(
     rules: {
       "react/jsx-no-literals": [
         "error",
-        { allowedStrings: ["—", "·", "•", "MissionOps", "Ctrl K"] },
+        {
+          allowedStrings: [
+            "—",
+            "·",
+            "•",
+            "×",
+            "/",
+            "(",
+            ")",
+            "%",
+            "+",
+            ":",
+            "MissionOps",
+            "Ctrl K",
+          ],
+        },
       ],
     },
   },

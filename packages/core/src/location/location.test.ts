@@ -41,6 +41,7 @@ describe("référentiel national", () => {
   it("construit le chemin d'affichage", () => {
     expect(displayPath("GN-CO")).toBe("Coyah · Kindia");
     expect(displayPath("GN-D")).toBe("Kindia");
+    expect(displayPath("GN-KD")).toBe("Kindia");
     expect(displayPath("GN-BK-KAMSAR")).toBe("Kamsar · Boké");
     expect(displayPath("inconnu")).toBe("inconnu");
     expect(ancestry("GN-BK-KAMSAR").map((l) => l.code)).toEqual(["GN-BK-KAMSAR", "GN-BK", "GN-B"]);

@@ -177,12 +177,12 @@ export function ancestry(code: string): NationalLocation[] {
 
 /**
  * Libellé d'affichage avec contexte (« Coyah · Kindia »). La région est omise
- * pour une région (elle est sa propre racine), et le parent immédiat suffit à
- * distinguer les homonymes (Kindia région / Kindia préfecture).
+ * pour une région (elle est sa propre racine) et quand le parent porte le même
+ * nom (préfecture chef-lieu de sa région : « Kindia »).
  */
 export function displayPath(code: string): string {
   const chain = ancestry(code);
   const [self, parent] = chain;
   if (!self) return code;
-  return parent ? `${self.name} · ${parent.name}` : self.name;
+  return parent && parent.name !== self.name ? `${self.name} · ${parent.name}` : self.name;
 }

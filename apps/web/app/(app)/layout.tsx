@@ -10,6 +10,9 @@ import { SidebarNav } from "@/components/shell/sidebar-nav";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { getT } from "@/lib/i18n/server";
 import { getActiveContext } from "@/lib/org/queries";
+import { SECONDARY_ITEMS } from "@/lib/nav";
+import { isPlatformAdmin } from "@/lib/admin";
+import { can, isRole } from "@missionops/core";
 
 import { logoutAction } from "../(auth)/actions";
 import { OrgSwitcher } from "./organizations/org-switcher";
@@ -31,6 +34,13 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   }
 
   const { active, memberships } = await getActiveContext(user.id);
+  const role = active && isRole(active.role) ? active.role : "collaborateur";
+  const secondary = SECONDARY_ITEMS.filter((item) =>
+    item.href === "/admin"
+      ? isPlatformAdmin(user.email)
+      : !item.permission ||
+        (active ? can({ role }, item.permission[0], item.permission[1]) : false),
+  ).map((item) => item.href);
   const userName = user.fullName ?? user.email;
   const { t } = await getT();
 
@@ -53,7 +63,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
           )}
         </div>
         <div className="flex-1 overflow-y-auto p-3">
-          <SidebarNav />
+          <SidebarNav secondary={secondary} />
         </div>
         <div className="border-t border-border p-3">
           <p className="truncate px-1 text-sm text-muted" title={userName}>
@@ -89,6 +99,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
                 userName={userName}
                 memberships={memberships}
                 activeId={active?.id ?? null}
+                secondary={secondary}
               />
             </div>
           </div>

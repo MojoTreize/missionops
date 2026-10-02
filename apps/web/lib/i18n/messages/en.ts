@@ -1,3 +1,4 @@
+import { domainEn } from "./domain.en";
 import type { Messages } from "./fr";
 
 /**
@@ -6,6 +7,7 @@ import type { Messages } from "./fr";
  * compilation.
  */
 export const en: Messages = {
+  ...domainEn,
   app: {
     name: "MissionOps",
     tagline: "The operating system for field missions",
@@ -20,6 +22,15 @@ export const en: Messages = {
     missions: "Missions",
     expenses: "Expenses",
     reports: "Reports",
+    terrain: "Field",
+    approvals: "To approve",
+    finance: "Finance",
+    notifications: "Notifications",
+    locations: "Places",
+    approvalFlow: "Approval workflow",
+    audit: "Audit log",
+    settings: "Settings",
+    admin: "Administration",
   },
   routes: {
     organization: "Organization",

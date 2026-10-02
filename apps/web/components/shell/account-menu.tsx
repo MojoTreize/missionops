@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { CircleUser, LogOut, Users } from "lucide-react";
+import { CircleUser, LogOut } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useT } from "@/lib/i18n/client";
+import { SECONDARY_ITEMS } from "@/lib/nav";
 import type { MembershipView } from "@/lib/org/queries";
 
 import { logoutAction } from "@/app/(auth)/actions";
@@ -21,10 +22,12 @@ export function AccountMenu({
   userName,
   memberships,
   activeId,
+  secondary = [],
 }: {
   userName: string;
   memberships: MembershipView[];
   activeId: string | null;
+  secondary?: string[];
 }) {
   const [open, setOpen] = useState(false);
   const t = useT();
@@ -65,14 +68,20 @@ export function AccountMenu({
           </Link>
         )}
 
-        <Link
-          href="/organizations/members"
-          onClick={() => setOpen(false)}
-          className="flex items-center gap-3 rounded-md px-1 py-2 text-sm font-medium text-muted hover:text-ink"
-        >
-          <Users className="size-5 shrink-0" aria-hidden />
-          {t("shell.members")}
-        </Link>
+        {SECONDARY_ITEMS.filter((item) => secondary.includes(item.href)).map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 rounded-md px-1 py-2 text-sm font-medium text-muted hover:text-ink"
+            >
+              <Icon className="size-5 shrink-0" aria-hidden />
+              {t(item.labelKey)}
+            </Link>
+          );
+        })}
 
         <Link
           href="/profile"

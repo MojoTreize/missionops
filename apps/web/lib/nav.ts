@@ -1,4 +1,21 @@
-import { BarChart3, Compass, LayoutDashboard, ReceiptText, type LucideIcon } from "lucide-react";
+import {
+  BarChart3,
+  Bell,
+  CheckSquare,
+  Compass,
+  GitBranch,
+  Landmark,
+  LayoutDashboard,
+  MapPin,
+  ReceiptText,
+  ScrollText,
+  Settings,
+  Shield,
+  Smartphone,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
+import type { Action, Resource } from "@missionops/core";
 
 import type { MessageKey } from "./i18n/translate";
 
@@ -20,8 +37,54 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard", labelKey: "nav.dashboard", icon: LayoutDashboard },
   { href: "/missions", labelKey: "nav.missions", icon: Compass },
+  { href: "/terrain", labelKey: "nav.terrain", icon: Smartphone },
   { href: "/expenses", labelKey: "nav.expenses", icon: ReceiptText },
-  { href: "/reports", labelKey: "nav.reports", icon: BarChart3 },
+];
+
+/**
+ * Entrées secondaires (barre latérale et menu compte), chacune soumise à un
+ * droit de la matrice : on n'affiche que ce que le rôle peut ouvrir.
+ */
+export interface SecondaryNavItem extends NavItem {
+  permission: [Action, Resource] | null;
+}
+
+export const SECONDARY_ITEMS: SecondaryNavItem[] = [
+  {
+    href: "/approvals",
+    labelKey: "nav.approvals",
+    icon: CheckSquare,
+    permission: ["approve", "mission"],
+  },
+  { href: "/finance", labelKey: "nav.finance", icon: Landmark, permission: ["approve", "expense"] },
+  { href: "/reports", labelKey: "nav.reports", icon: BarChart3, permission: ["read", "report"] },
+  { href: "/notifications", labelKey: "nav.notifications", icon: Bell, permission: null },
+  {
+    href: "/organizations/members",
+    labelKey: "routes.members",
+    icon: Users,
+    permission: ["read", "member"],
+  },
+  {
+    href: "/organizations/locations",
+    labelKey: "nav.locations",
+    icon: MapPin,
+    permission: ["read", "location"],
+  },
+  {
+    href: "/organizations/approval-flow",
+    labelKey: "nav.approvalFlow",
+    icon: GitBranch,
+    permission: ["update", "approvalFlow"],
+  },
+  { href: "/audit", labelKey: "nav.audit", icon: ScrollText, permission: ["read", "auditLog"] },
+  {
+    href: "/organizations/settings",
+    labelKey: "nav.settings",
+    icon: Settings,
+    permission: ["update", "organisation"],
+  },
+  { href: "/admin", labelKey: "nav.admin", icon: Shield, permission: null },
 ];
 
 /**
@@ -41,6 +104,18 @@ export const ROUTE_LABEL_KEYS: Record<string, MessageKey> = {
   "/missions": "nav.missions",
   "/expenses": "nav.expenses",
   "/reports": "nav.reports",
+  "/terrain": "nav.terrain",
+  "/approvals": "nav.approvals",
+  "/finance": "nav.finance",
+  "/finance/rates": "rates.title",
+  "/notifications": "nav.notifications",
+  "/missions/new": "missions.newMission",
+  "/missions/calendar": "missions.calendarView",
+  "/organizations/locations": "nav.locations",
+  "/organizations/approval-flow": "nav.approvalFlow",
+  "/organizations/settings": "nav.settings",
+  "/audit": "nav.audit",
+  "/admin": "nav.admin",
   "/organizations": "routes.organization",
   "/organizations/new": "routes.newOrganization",
   "/organizations/members": "routes.members",

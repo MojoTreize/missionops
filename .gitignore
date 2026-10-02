@@ -37,3 +37,6 @@ Thumbs.db
 coverage/
 playwright-report/
 test-results/
+
+# Fichiers stockés localement (justificatifs, documents générés)
+.data/
