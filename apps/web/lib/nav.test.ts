@@ -75,3 +75,16 @@ describe("buildBreadcrumbs", () => {
     expect(buildBreadcrumbs("/")).toEqual([]);
   });
 });
+
+describe("buildBreadcrumbs — identifiants", () => {
+  it("remplace un UUID par « Fiche » et nomme les sous-pages", () => {
+    const crumbs = buildBreadcrumbs(
+      "/missions/0da25f14-726d-4e8a-ad8f-a6d1f2662e1a/reconciliation",
+    );
+    expect(crumbs.map((c) => c.labelKey)).toEqual([
+      "nav.missions",
+      "routes.detail",
+      "missions.detail.reconciliation",
+    ]);
+  });
+});

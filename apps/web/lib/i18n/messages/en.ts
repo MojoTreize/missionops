@@ -34,6 +34,7 @@ export const en: Messages = {
     admin: "Administration",
   },
   routes: {
+    detail: "Details",
     organization: "Organization",
     newOrganization: "New organization",
     members: "Members",

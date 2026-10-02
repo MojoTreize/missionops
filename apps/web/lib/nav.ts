@@ -113,6 +113,9 @@ export const ROUTE_LABEL_KEYS: Record<string, MessageKey> = {
   "/notifications": "nav.notifications",
   "/missions/new": "missions.newMission",
   "/missions/calendar": "missions.calendarView",
+  "/missions/:id/edit": "missions.detail.edit",
+  "/missions/:id/reconciliation": "missions.detail.reconciliation",
+  "/missions/:id/report": "missions.detail.report",
   "/organizations/locations": "nav.locations",
   "/organizations/approval-flow": "nav.approvalFlow",
   "/organizations/settings": "nav.settings",
@@ -150,9 +153,17 @@ export function buildBreadcrumbs(pathname: string): Crumb[] {
   let href = "";
   for (let i = 0; i < segments.length; i += 1) {
     href += `/${segments[i]}`;
+    // Un identifiant technique (UUID) n'est jamais montré : « Fiche ».
+    const isId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      segments[i] ?? "",
+    );
     crumbs.push({
       href,
-      labelKey: ROUTE_LABEL_KEYS[href] ?? null,
+      labelKey: isId
+        ? "routes.detail"
+        : (ROUTE_LABEL_KEYS[href] ??
+          ROUTE_LABEL_KEYS[href.replace(/\/[0-9a-f-]{36}/gi, "/:id")] ??
+          null),
       fallback: titleCase(segments[i] ?? ""),
       isLast: i === segments.length - 1,
     });

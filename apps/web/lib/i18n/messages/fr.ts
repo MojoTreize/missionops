@@ -35,6 +35,7 @@ export const fr = {
     admin: "Administration",
   },
   routes: {
+    detail: "Fiche",
     organization: "Organisation",
     newOrganization: "Nouvelle organisation",
     members: "Membres",
