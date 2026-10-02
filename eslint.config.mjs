@@ -51,6 +51,26 @@ export default tseslint.config(
       ],
     },
   },
+  // L'argent n'est jamais un `number` (B3.1, ADR-002) : un champ ou une
+  // variable nommé montant, prix, budget ou coût doit être un `Money`, un
+  // `bigint` en unités mineures ou une chaîne saisie.
+  {
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector:
+            "TSPropertySignature[key.name=/^(amount|price|budget|cost)/i] > TSTypeAnnotation > TSNumberKeyword",
+          message: "Un montant n'est jamais un number : utilisez Money (packages/core/money).",
+        },
+        {
+          selector:
+            "Identifier[name=/^(amount|price|budget|cost)/i] > TSTypeAnnotation > TSNumberKeyword",
+          message: "Un montant n'est jamais un number : utilisez Money (packages/core/money).",
+        },
+      ],
+    },
+  },
   {
     files: ["packages/db/**"],
     rules: {
@@ -67,7 +87,22 @@ export default tseslint.config(
     rules: {
       "react/jsx-no-literals": [
         "error",
-        { allowedStrings: ["—", "·", "•", "MissionOps", "Ctrl K"] },
+        {
+          allowedStrings: [
+            "—",
+            "·",
+            "•",
+            "×",
+            "/",
+            "(",
+            ")",
+            "%",
+            "+",
+            ":",
+            "MissionOps",
+            "Ctrl K",
+          ],
+        },
       ],
     },
   },

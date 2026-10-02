@@ -8,6 +8,8 @@ import { users } from "@missionops/db";
 import { consumeAuthToken, issueAuthToken } from "@/lib/auth/auth-tokens";
 import { AUTH_TOKEN_TYPES, MAGIC_LINK_TTL_MS, PASSWORD_RESET_TTL_MS } from "@/lib/auth/config";
 import { hashPassword, verifyPassword } from "@/lib/auth/password";
+import { loginInput } from "@missionops/contracts";
+
 import { baseUrl, clientIp, loginRateLimiter, normalizeEmail } from "@/lib/auth/server";
 import { createSession, destroySession } from "@/lib/auth/session";
 import { getDb } from "@/lib/db";
@@ -56,15 +58,18 @@ export async function loginWithPasswordAction(
   formData: FormData,
 ): Promise<ActionState> {
   const { t } = await getT();
-  const email = normalizeEmail(String(formData.get("email") ?? ""));
-  const password = String(formData.get("password") ?? "");
-
-  if (!isValidEmail(email) || password.length === 0) {
+  const parsed = loginInput.safeParse({
+    email: String(formData.get("email") ?? ""),
+    password: String(formData.get("password") ?? ""),
+  });
+  if (!parsed.success) {
     return { status: "error", message: t("auth.messages.credentialsInvalid") };
   }
+  const { email, password } = parsed.data;
 
-  const key = `${email}:${await clientIp()}`;
-  if (loginRateLimiter.isLimited(key)) {
+  const limiter = loginRateLimiter();
+  const key = `login:${email}:${await clientIp()}`;
+  if (await limiter.isLimited(key)) {
     return {
       status: "error",
       message: t("auth.messages.rateLimited"),
@@ -75,11 +80,11 @@ export async function loginWithPasswordAction(
   const ok = user?.passwordHash ? await verifyPassword(password, user.passwordHash) : false;
 
   if (!ok || !user) {
-    loginRateLimiter.record(key);
+    await limiter.record(key);
     return { status: "error", message: t("auth.messages.credentialsIncorrect") };
   }
 
-  loginRateLimiter.reset(key);
+  await limiter.reset(key);
   await createSession(user.id);
   redirect("/dashboard");
 }

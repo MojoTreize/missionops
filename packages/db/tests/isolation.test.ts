@@ -28,6 +28,9 @@ const SYSTEM_TABLES = new Set([
   "auth_tokens",
   "memberships",
   "invitations",
+  // Compteurs de limitation de débit (B8.3) : clés de connexion, antérieures
+  // à toute organisation.
+  "rate_limits",
 ]);
 
 const ORG_A = "11111111-1111-1111-1111-111111111111";

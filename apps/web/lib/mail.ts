@@ -1,10 +1,11 @@
 import "server-only";
 
+import { getChannels } from "@/lib/server/notify";
+
 /**
- * Envoi d'e-mails. Aucune passerelle réelle n'est câblée à ce stade : le
- * transport par défaut journalise le message (et l'URL du lien) côté serveur.
- * Un vrai transport (Resend, SMTP…) sera branché en remplaçant `sendMail` sans
- * toucher aux appelants.
+ * Envoi d'e-mails transactionnels (B7.2) : passe par le canal e-mail de
+ * `@missionops/notifications` (Resend si `RESEND_API_KEY` et `MAIL_FROM` sont
+ * définis, sinon journalisation console).
  */
 
 export interface Mail {
@@ -14,9 +15,7 @@ export interface Mail {
 }
 
 export async function sendMail(mail: Mail): Promise<void> {
-  // Transport de développement : trace lisible dans les journaux du serveur.
-  console.info(`[mail] → ${mail.to} : ${mail.subject}\n${mail.text}`);
-  return Promise.resolve();
+  await getChannels().email.send({ to: mail.to, subject: mail.subject, text: mail.text });
 }
 
 export function sendMagicLinkEmail(to: string, url: string): Promise<void> {

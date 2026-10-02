@@ -12,6 +12,10 @@ export const RESOURCES = [
   "organisation",
   "approvalFlow",
   "auditLog",
+  "location",
+  "fxRate",
+  "report",
+  "missionEvent",
 ] as const;
 
 export type Resource = (typeof RESOURCES)[number];

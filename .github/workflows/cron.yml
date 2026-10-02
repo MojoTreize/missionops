@@ -1,0 +1,30 @@
+name: Tâches planifiées
+
+# B7.5 : déclenche toutes les 5 minutes la tâche planifiée de l'application
+# (rappels du jour, envoi de la boîte d'envoi). Inactif tant que les secrets
+# APP_URL et CRON_SECRET ne sont pas définis pour l'environnement.
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    name: Rappels et envoi
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Appeler /api/cron
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$APP_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "Secrets APP_URL / CRON_SECRET absents : tâche ignorée."
+            exit 0
+          fi
+          curl --fail --silent --show-error --max-time 60 \
+            -X POST -H "Authorization: Bearer $CRON_SECRET" "$APP_URL/api/cron"

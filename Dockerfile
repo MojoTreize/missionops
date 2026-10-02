@@ -30,6 +30,11 @@ ENV HOSTNAME=0.0.0.0
 # Utilisateur non privilégié.
 RUN addgroup -S nodejs && adduser -S nextjs -G nodejs
 
+# Justificatifs et documents générés : volume persistant monté sur /data
+# (fly.toml, section [mounts]) en attendant le stockage objet S3 en région UE.
+ENV STORAGE_DIR=/data/storage
+RUN mkdir -p /data/storage && chown -R nextjs:nodejs /data
+
 # Sortie autonome : serveur + dépendances tracées, fichiers statiques, public.
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static

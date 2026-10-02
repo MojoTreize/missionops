@@ -7,7 +7,8 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./schema": "./src/schema/index.ts"
+    "./schema": "./src/schema/index.ts",
+    "./testing": "./src/testing.ts"
   },
   "scripts": {
     "db:generate": "drizzle-kit generate",
@@ -22,14 +23,14 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "drizzle-orm": "^0.36.4",
+    "drizzle-orm": "^0.45.3",
     "postgres": "^3.4.5"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.4",
     "@missionops/config": "workspace:*",
     "dotenv": "^16.4.5",
-    "drizzle-kit": "^0.28.1",
+    "drizzle-kit": "^0.31.11",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3",
     "vitest": "^4.1.10"

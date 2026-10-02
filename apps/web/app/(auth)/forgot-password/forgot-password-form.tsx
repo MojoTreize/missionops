@@ -19,7 +19,9 @@ export function ForgotPasswordForm() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h2 className="text-lg font-semibold text-ink">{t("auth.forgot.title")}</h2>
+        <h1 className="text-[1.75rem] font-semibold leading-tight tracking-tight text-ink">
+          {t("auth.forgot.title")}
+        </h1>
         <p className="mt-1 text-sm text-muted">{t("auth.forgot.description")}</p>
       </div>
       <form action={action} className="flex flex-col gap-3" noValidate>

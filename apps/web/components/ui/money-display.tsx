@@ -25,7 +25,7 @@ export function MoneyDisplay({
   return (
     <span
       className={cn(
-        "font-mono tabular-nums whitespace-nowrap",
+        "tabular whitespace-nowrap font-medium",
         accent && "font-semibold text-ledger",
         negative && "text-danger",
         className,

@@ -18,8 +18,12 @@ if (!url) {
 
 const client = postgres(url, { max: 1 });
 try {
-  // ATTENTION : opération destructive. Supprime toutes les tables du schéma public.
-  await client.unsafe("drop schema if exists public cascade; create schema public;");
+  // ATTENTION : opération destructive. Supprime toutes les tables du schéma
+  // public ET le journal des migrations de Drizzle (schéma `drizzle`) : sans
+  // cela, les migrations seraient jugées déjà appliquées et rien ne serait recréé.
+  await client.unsafe(
+    "drop schema if exists drizzle cascade; drop schema if exists public cascade; create schema public;",
+  );
   await migrate(drizzle(client), { migrationsFolder });
   console.log("Base réinitialisée et migrations appliquées.");
 } finally {

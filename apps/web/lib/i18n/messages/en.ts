@@ -1,3 +1,5 @@
+import { domainEn } from "./domain.en";
+import { landingEn } from "./landing.en";
 import type { Messages } from "./fr";
 
 /**
@@ -6,6 +8,8 @@ import type { Messages } from "./fr";
  * compilation.
  */
 export const en: Messages = {
+  ...domainEn,
+  landing: landingEn,
   app: {
     name: "MissionOps",
     tagline: "The operating system for field missions",
@@ -16,12 +20,23 @@ export const en: Messages = {
     loading: "Loading…",
   },
   nav: {
+    help: "Help",
     dashboard: "Dashboard",
     missions: "Missions",
     expenses: "Expenses",
     reports: "Reports",
+    terrain: "Field",
+    approvals: "To approve",
+    finance: "Finance",
+    notifications: "Notifications",
+    locations: "Places",
+    approvalFlow: "Approval workflow",
+    audit: "Audit log",
+    settings: "Settings",
+    admin: "Administration",
   },
   routes: {
+    detail: "Details",
     organization: "Organization",
     newOrganization: "New organization",
     members: "Members",
@@ -29,6 +44,10 @@ export const en: Messages = {
     profile: "Profile",
   },
   shell: {
+    groupOperations: "Operations",
+    groupManagement: "Management",
+    notifications: "Notifications",
+    skipToContent: "Skip to content",
     mainNav: "Main navigation",
     breadcrumb: "Breadcrumb",
     searchLabel: "Global search",
@@ -54,10 +73,17 @@ export const en: Messages = {
     admin: "Administrator",
   },
   auth: {
+    backHome: "Back to home",
+    panelTitle: "From request to closure pack, with nothing lost along the way.",
+    panelPoint1: "Offline expense capture in the field",
+    panelPoint2: "Multi-currency GNF, EUR and USD at locked rates",
+    panelPoint3: "Auditable closure pack in one click",
+    panelFoot: "Hosted in the European Union · data isolated per organisation",
     tagline: "The operating system for field missions",
     emailLabel: "Email address",
     emailPlaceholder: "you@organization.org",
     login: {
+      subtitle: "Welcome back. Sign in to get back to your missions.",
       title: "Sign in",
       magicSubmit: "Get a sign-in link",
       magicSending: "Sending…",

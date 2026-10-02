@@ -5,7 +5,12 @@
  * (`en.ts`) doit avoir exactement les mêmes clés, ce que TypeScript vérifie à la
  * compilation et le test de parité vérifie à l'exécution.
  */
+import { domainFr } from "./domain.fr";
+import { landingFr } from "./landing.fr";
+
 export const fr = {
+  ...domainFr,
+  landing: landingFr,
   app: {
     name: "MissionOps",
     tagline: "Le système d'exploitation des missions terrain",
@@ -16,12 +21,23 @@ export const fr = {
     loading: "Chargement…",
   },
   nav: {
+    help: "Aide",
     dashboard: "Tableau de bord",
     missions: "Missions",
     expenses: "Dépenses",
     reports: "Rapports",
+    terrain: "Terrain",
+    approvals: "À valider",
+    finance: "Finance",
+    notifications: "Notifications",
+    locations: "Lieux",
+    approvalFlow: "Circuit de validation",
+    audit: "Journal d'audit",
+    settings: "Paramètres",
+    admin: "Administration",
   },
   routes: {
+    detail: "Fiche",
     organization: "Organisation",
     newOrganization: "Nouvelle organisation",
     members: "Membres",
@@ -29,6 +45,10 @@ export const fr = {
     profile: "Profil",
   },
   shell: {
+    groupOperations: "Opérations",
+    groupManagement: "Pilotage",
+    notifications: "Notifications",
+    skipToContent: "Aller au contenu",
     mainNav: "Navigation principale",
     breadcrumb: "Fil d'Ariane",
     searchLabel: "Recherche globale",
@@ -54,10 +74,17 @@ export const fr = {
     admin: "Administrateur",
   },
   auth: {
+    backHome: "Retour à l'accueil",
+    panelTitle: "De la demande au dossier de clôture, sans rien perdre en route.",
+    panelPoint1: "Saisie des dépenses hors ligne, sur le terrain",
+    panelPoint2: "Multi-devises GNF, EUR et USD à taux figé",
+    panelPoint3: "Dossier de clôture auditable en un clic",
+    panelFoot: "Hébergé dans l'Union européenne · données cloisonnées par organisation",
     tagline: "Le système d'exploitation des missions terrain",
     emailLabel: "Adresse e-mail",
     emailPlaceholder: "vous@organisation.org",
     login: {
+      subtitle: "Heureux de vous revoir. Connectez-vous pour retrouver vos missions.",
       title: "Se connecter",
       magicSubmit: "Recevoir un lien de connexion",
       magicSending: "Envoi…",

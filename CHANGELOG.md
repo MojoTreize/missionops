@@ -85,3 +85,63 @@ conformément à la définition de « terminé » du plan (section 4.3).
   déploiement sur fusion dans `main`), documentation des secrets dans
   `.env.example`. Le déploiement reste inactif tant que la facturation CI et les
   secrets Fly ne sont pas configurés.
+- Correctif outillage : `allowBuilds` (esbuild, sharp) pour pnpm 11 ; `db:reset`
+  supprime aussi le journal des migrations Drizzle.
+- Phase 2 — Missions et validation : référentiel géographique national embarqué
+  et recherche insensible aux accents, lieux d'organisation (B2.1) ; machine à
+  états explicite à erreurs nommées (B2.2) ; demande de mission (B2.3) ;
+  participants (B2.4) ; circuit de validation configurable à seuils et
+  séparation des tâches (B2.5) ; file de validation (B2.6) ; liste et calendrier
+  (B2.7) ; modification avec revalidation, annulation motivée (B2.8) ;
+  notifications enfilées dans la transaction (B2.9).
+- Phase 3 — L'argent : type `Money` en bigint et taux figés à l'échelle 10^10
+  (B3.1, B3.2) ; budget prévisionnel multi-devises (B3.3) ; avances à écriture
+  inverse et plafond de 120 % (B3.4) ; dépenses idempotentes (B3.5) ;
+  justificatifs avec somme de contrôle (B3.6) ; suivi budgétaire (B3.7) ;
+  réconciliation (B3.8) ; écarts justifiés (B3.9) ; validation financière et
+  clôture (B3.10).
+- Phase 4 — Terrain et hors ligne : PWA installable et service worker (B4.1) ;
+  IndexedDB via Dexie (B4.2) ; file de synchronisation idempotente (B4.3) ;
+  dépense et photo compressée hors ligne (B4.4, B4.5) ; événements de mission
+  (B4.6) ; indicateur réseau (B4.7) ; parcours E2E hors ligne (B4.8).
+- Phase 5 — Documents : moteur PDF déterministe (B5.1) ; modèles par
+  organisation (B5.2) ; ordre de mission (B5.3) ; Mission Pack (B5.5) ; rapport
+  de mission (B5.6) ; Closure Pack avec empreintes SHA-256 et annexe des
+  justificatifs, versions immuables (B5.7).
+- Phase 6 — Rapports, audit, exports : journal d'audit consultable (B6.1) ;
+  tableau de bord par rôle (B6.2) ; rapports de coûts (B6.3) ; export comptable
+  CSV (B6.4) ; recherche globale (B6.5) ; archivage (B6.6) ; export intégral
+  JSON (B6.7).
+- Phase 7 — Communication : abstraction des canaux (B7.1) ; e-mail
+  transactionnel via Resend (B7.2) ; WhatsApp Business par modèle (B7.3) ;
+  préférences (B7.4) ; rappels automatiques et tâche planifiée (B7.5).
+- Phase 8 — Durcissement : en-têtes de sécurité et limitation de débit partagée
+  (B8.3) ; lien d'évitement (B8.2) ; journaux JSON et sonde de santé (B8.4) ;
+  scripts de sauvegarde et de restauration (B8.5) ; runbooks (B8.6) ;
+  documentation de conformité (B8.7) ; script de charge (B8.8).
+- Phase 9 — Échelle commerciale : inscription en libre-service et essai (B9.1) ;
+  paramétrage de l'organisation (B9.2) ; imports CSV (B9.3) ; abonnements et
+  places (B9.4) ; aide (B9.5) ; console d'administration interne (B9.6) et
+  indicateurs d'usage (B9.7).
+- Tests : 600+ tests unitaires du domaine, tests d'intégration PGlite de la
+  boucle complète sous RLS, 7 parcours Playwright dont la boucle complète hors
+  ligne ; job E2E en CI.
+- Compléments : bande de mission à l'écran et dans les documents (B5.4) ;
+  demande de modification et validation par lot (B2.6) ; recherche insensible
+  aux accents (B6.5) ; couverture 100 % bloquante et tests de propriétés sur
+  l'argent, règle ESLint « jamais de number pour un montant » (B3.1) ;
+  axe-core bloquant et contrastes AA (B8.2) ; budget JavaScript bloquant
+  (B8.1) ; campagne hors ligne automatisée (B4.8).
+- Sécurité : Next.js 15.5.27, drizzle-orm 0.45, surcharges sharp, postcss,
+  nanoid (`pnpm audit --prod` propre) ; CodeQL et audit en CI ; limitation de
+  débit des routes de synchronisation ; remontée d'erreurs Sentry sans SDK ;
+  tâche planifiée déclenchée par GitHub Actions.
+- Refonte visuelle : nouveau logo et icônes, typographies Inter et Source Serif
+  4, barre latérale sombre groupée, tableau de bord à indicateurs, connexion en
+  deux panneaux, cartes et titres harmonisés ; page d'accueil publique
+  bilingue sans JavaScript client ; corrections issues du test en direct
+  (fiche mission à 375 px, calendrier mobile, libellés du journal d'audit,
+  contrastes AA) ; contrôle axe-core de la page d'accueil (16 parcours
+  Playwright).
+- Démarrage local en une commande sans Docker : `scripts/demarrer.cmd`
+  (Windows) et `scripts/demarrer.sh` (macOS, Linux).

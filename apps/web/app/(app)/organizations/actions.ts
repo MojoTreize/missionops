@@ -3,6 +3,10 @@
 import { redirect } from "next/navigation";
 
 import { isRole } from "@missionops/core";
+import { assertSeatAvailable } from "@missionops/services";
+
+import { getDb } from "@/lib/db";
+import { errorState } from "@/lib/server/context";
 
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { baseUrl, normalizeEmail } from "@/lib/auth/server";
@@ -74,6 +78,16 @@ export async function inviteMemberAction(
 
   const requestedRole = String(formData.get("role") ?? "collaborateur");
   const role = isRole(requestedRole) ? requestedRole : "collaborateur";
+
+  try {
+    await assertSeatAvailable(getDb(), {
+      organisationId: actor.organisationId,
+      actor: { userId: actor.userId, role: actor.role },
+      now: new Date(),
+    });
+  } catch (error) {
+    return errorState(error);
+  }
 
   const rawToken = generateToken();
   await createInvitation({

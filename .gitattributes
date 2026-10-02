@@ -13,3 +13,7 @@
 
 # Lockfile : ne pas générer de diff bruyant
 pnpm-lock.yaml -diff linguist-generated=true
+
+# Scripts Windows : fins de ligne CRLF
+*.ps1 text eol=crlf
+*.cmd text eol=crlf

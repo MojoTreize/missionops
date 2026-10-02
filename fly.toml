@@ -24,6 +24,19 @@ primary_region = "cdg"
   auto_start_machines = true
   min_machines_running = 0
 
+  # Sonde de santé (B8.4) : la base doit répondre.
+  [[http_service.checks]]
+    grace_period = "20s"
+    interval = "30s"
+    method = "GET"
+    path = "/api/health"
+    timeout = "5s"
+
+# Volume persistant des fichiers (justificatifs, documents) — B3.6, B5.
+[mounts]
+  source = "missionops_data"
+  destination = "/data"
+
 [[vm]]
   size = "shared-cpu-1x"
   memory = "512mb"

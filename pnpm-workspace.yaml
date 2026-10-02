@@ -2,6 +2,17 @@ packages:
   - "apps/*"
   - "packages/*"
 
+# pnpm 11 exige une autorisation explicite des scripts de build.
+allowBuilds:
+  esbuild: true
+  sharp: true
+
 onlyBuiltDependencies:
   - esbuild
   - sharp
+
+# Correctifs de sécurité des dépendances transitives (B8.3, `pnpm audit`).
+overrides:
+  postcss: ^8.5.28
+  nanoid: ^3.3.18
+  sharp: ^0.35.5

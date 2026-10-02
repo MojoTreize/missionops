@@ -21,11 +21,14 @@
     "db:reset": "pnpm --filter @missionops/db db:reset",
     "db:check": "pnpm --filter @missionops/db db:check",
     "db:seed": "pnpm --filter @missionops/db db:seed",
-    "db:seed:demo": "pnpm --filter @missionops/db db:seed:demo",
-    "db:studio": "pnpm --filter @missionops/db db:studio"
+    "db:seed:demo": "pnpm --filter @missionops/db db:seed:demo && pnpm --filter @missionops/services seed:demo",
+    "db:studio": "pnpm --filter @missionops/db db:studio",
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@eslint/js": "^9.15.0",
+    "@playwright/test": "1.56.1",
     "@types/node": "^22.9.0",
     "eslint": "^9.15.0",
     "eslint-config-prettier": "^9.1.0",
