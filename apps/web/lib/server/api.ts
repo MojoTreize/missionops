@@ -2,7 +2,9 @@ import "server-only";
 
 import { NextResponse } from "next/server";
 
-import { ServiceError, type ServiceContext } from "@missionops/services";
+import { DbRateLimiter, ServiceError, type ServiceContext } from "@missionops/services";
+
+import { getDb } from "@/lib/db";
 
 import { clientIp } from "@/lib/auth/server";
 import { getActor } from "@/lib/policy";
@@ -22,6 +24,33 @@ export async function apiContext(): Promise<ServiceContext | null> {
     now: new Date(),
     ip: await clientIp(),
   };
+}
+
+/**
+ * Limitation de débit des routes de mutation (B8.3) : par utilisateur, fenêtre
+ * d'une minute. Partagée entre instances (table `rate_limits`).
+ */
+const limiters = new Map<string, DbRateLimiter>();
+
+export async function rateLimited(
+  ctx: ServiceContext,
+  bucket: string,
+  max: number,
+): Promise<NextResponse | null> {
+  let limiter = limiters.get(bucket);
+  if (!limiter) {
+    limiter = new DbRateLimiter(getDb(), { max, windowMs: 60_000 });
+    limiters.set(bucket, limiter);
+  }
+  const key = `${bucket}:${ctx.actor.userId}`;
+  if (await limiter.isLimited(key)) {
+    return NextResponse.json(
+      { error: "rate_limited" },
+      { status: 429, headers: { "retry-after": "60" } },
+    );
+  }
+  await limiter.record(key);
+  return null;
 }
 
 export function unauthorized() {

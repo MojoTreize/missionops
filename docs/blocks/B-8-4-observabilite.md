@@ -1,6 +1,7 @@
 # B8.4 — Observabilité
 
-> **Statut : partiel.**
+> **Statut : partiel** : remontée d'erreurs livrée ; tableaux de bord et
+> alertes à configurer chez l'hébergeur.
 
 ## Objectif
 
@@ -31,9 +32,10 @@ Une alerte a réellement prévenu d'un incident avant le client.
 
 ## Hors périmètre de ce bloc
 
-À faire : Sentry en région UE avec l'organisation concernée, métriques
-applicatives, tableau de bord de disponibilité, alertes sur taux d'erreur,
-latence et échecs de synchronisation.
+À faire : métriques applicatives, tableau de bord de disponibilité, alertes
+sur taux d'erreur, latence et échecs de synchronisation. Livré : remontée des
+erreurs serveur vers Sentry (région UE) par l'API d'enveloppes, sans SDK,
+activée par `SENTRY_DSN` (`apps/web/lib/server/log.ts`).
 
 ## Dépend de
 

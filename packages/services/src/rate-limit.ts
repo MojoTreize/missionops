@@ -29,7 +29,10 @@ export class DbRateLimiter {
   /** Enregistre une tentative ; ouvre une nouvelle fenêtre si l'ancienne a expiré. */
   async record(key: string): Promise<void> {
     const now = this.now();
-    const windowStart = new Date(now.getTime() - this.policy.windowMs);
+    // Chaînes ISO typées : le pilote postgres-js refuse les `Date` brutes dans
+    // un fragment `sql` (PGlite les accepte, d'où un test d'intégration dédié).
+    const nowIso = sql`${now.toISOString()}::timestamptz`;
+    const windowStart = sql`${new Date(now.getTime() - this.policy.windowMs).toISOString()}::timestamptz`;
     await this.db
       .insert(rateLimits)
       .values({ key, count: 1, windowStartedAt: now })
@@ -37,7 +40,7 @@ export class DbRateLimiter {
         target: rateLimits.key,
         set: {
           count: sql`case when ${rateLimits.windowStartedAt} <= ${windowStart} then 1 else ${rateLimits.count} + 1 end`,
-          windowStartedAt: sql`case when ${rateLimits.windowStartedAt} <= ${windowStart} then ${now} else ${rateLimits.windowStartedAt} end`,
+          windowStartedAt: sql`case when ${rateLimits.windowStartedAt} <= ${windowStart} then ${nowIso} else ${rateLimits.windowStartedAt} end`,
         },
       });
   }

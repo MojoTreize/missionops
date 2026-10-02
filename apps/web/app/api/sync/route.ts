@@ -1,7 +1,7 @@
 import { processSyncBatch } from "@missionops/services";
 
 import { getDb } from "@/lib/db";
-import { apiContext, apiError, json, unauthorized } from "@/lib/server/api";
+import { apiContext, apiError, json, rateLimited, unauthorized } from "@/lib/server/api";
 
 /**
  * Synchronisation hors ligne (B4.3, ADR-003) : un lot de créations (dépenses,
@@ -10,6 +10,8 @@ import { apiContext, apiError, json, unauthorized } from "@/lib/server/api";
 export async function POST(request: Request) {
   const ctx = await apiContext();
   if (!ctx) return unauthorized();
+  const limited = await rateLimited(ctx, "sync", 120);
+  if (limited) return limited;
   try {
     const results = await processSyncBatch(getDb(), ctx, await request.json());
     return json({ results });

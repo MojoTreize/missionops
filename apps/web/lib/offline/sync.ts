@@ -57,6 +57,20 @@ async function pushOutbox(organisationId: string) {
       );
       throw new Error("offline");
     }
+    if (response.status === 400 || response.status === 422) {
+      // Lot refusé en bloc (format invalide) : retenter n'y changerait rien.
+      await db.outbox.bulkUpdate(
+        batch.map((e) => ({
+          key: e.id,
+          changes: {
+            status: "rejected" as const,
+            attempts: e.attempts + 1,
+            error: "invalid_input",
+          },
+        })),
+      );
+      continue;
+    }
     if (!response.ok) {
       await db.outbox.bulkUpdate(
         batch.map((e) => ({

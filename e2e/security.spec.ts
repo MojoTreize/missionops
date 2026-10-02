@@ -53,3 +53,21 @@ test("l'interface bascule en anglais sans texte en dur", async ({ page }) => {
   await page.goto("/dashboard");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Hello");
 });
+
+test("la connexion est bloquée après cinq échecs (limitation partagée en base)", async ({
+  page,
+}) => {
+  const email = `inconnu-${Date.now()}@demo.gn`;
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    await page.goto("/login");
+    await page.locator('input[name="email"]').last().fill(email);
+    await page.locator('input[name="password"]').fill("mauvais-mot-de-passe");
+    await page.getByRole("button", { name: "Se connecter" }).click();
+    await expect(page.getByText("Adresse e-mail ou mot de passe incorrect.")).toBeVisible();
+  }
+  await page.goto("/login");
+  await page.locator('input[name="email"]').last().fill(email);
+  await page.locator('input[name="password"]').fill("mauvais-mot-de-passe");
+  await page.getByRole("button", { name: "Se connecter" }).click();
+  await expect(page.getByText("Trop de tentatives", { exact: false })).toBeVisible();
+});

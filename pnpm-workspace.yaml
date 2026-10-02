@@ -10,3 +10,9 @@ allowBuilds:
 onlyBuiltDependencies:
   - esbuild
   - sharp
+
+# Correctifs de sécurité des dépendances transitives (B8.3, `pnpm audit`).
+overrides:
+  postcss: ^8.5.28
+  nanoid: ^3.3.18
+  sharp: ^0.35.5

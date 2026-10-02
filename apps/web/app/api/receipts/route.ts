@@ -1,7 +1,7 @@
 import { attachReceipt } from "@missionops/services";
 
 import { getDb } from "@/lib/db";
-import { apiContext, apiError, json, unauthorized } from "@/lib/server/api";
+import { apiContext, apiError, json, rateLimited, unauthorized } from "@/lib/server/api";
 import { getStore } from "@/lib/server/storage";
 
 const MAX_BYTES = 8 * 1024 * 1024;
@@ -14,6 +14,8 @@ const MAX_BYTES = 8 * 1024 * 1024;
 export async function POST(request: Request) {
   const ctx = await apiContext();
   if (!ctx) return unauthorized();
+  const limited = await rateLimited(ctx, "receipts", 60);
+  if (limited) return limited;
   try {
     const form = await request.formData();
     const file = form.get("file");
