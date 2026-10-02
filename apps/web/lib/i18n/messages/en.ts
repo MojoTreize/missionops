@@ -1,4 +1,5 @@
 import { domainEn } from "./domain.en";
+import { landingEn } from "./landing.en";
 import type { Messages } from "./fr";
 
 /**
@@ -8,6 +9,7 @@ import type { Messages } from "./fr";
  */
 export const en: Messages = {
   ...domainEn,
+  landing: landingEn,
   app: {
     name: "MissionOps",
     tagline: "The operating system for field missions",

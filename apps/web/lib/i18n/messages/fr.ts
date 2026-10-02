@@ -6,9 +6,11 @@
  * compilation et le test de parité vérifie à l'exécution.
  */
 import { domainFr } from "./domain.fr";
+import { landingFr } from "./landing.fr";
 
 export const fr = {
   ...domainFr,
+  landing: landingFr,
   app: {
     name: "MissionOps",
     tagline: "Le système d'exploitation des missions terrain",
