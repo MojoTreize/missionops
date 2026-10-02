@@ -171,3 +171,17 @@ input[type="file"]::file-selector-button {
   color: var(--color-ink);
   cursor: pointer;
 }
+
+/* Cases à cocher et boutons radio : taille tactile confortable (375 px). */
+input[type="checkbox"],
+input[type="radio"] {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex-shrink: 0;
+  accent-color: var(--color-field);
+}
+label:has(> input[type="checkbox"]),
+label:has(> input[type="radio"]) {
+  min-height: 2.75rem;
+  cursor: pointer;
+}

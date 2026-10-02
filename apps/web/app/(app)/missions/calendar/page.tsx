@@ -39,6 +39,18 @@ export default async function CalendarPage({
   const weekdays = t("missions.calendar.weekdays").split(",");
   const title = formatDate(`${month}-01T12:00:00Z`, locale, { month: "long", year: "numeric" });
   const today = new Date().toISOString().slice(0, 10);
+  // Regroupement d'affichage : chaque mission une seule fois, du premier au
+  // dernier jour où elle apparaît dans le mois.
+  type CalendarMission = (typeof days)[number]["missions"][number];
+  const byMission = new Map<string, { mission: CalendarMission; first: string; last: string }>();
+  for (const d of days) {
+    for (const mission of d.missions) {
+      const span = byMission.get(mission.id);
+      if (span) span.last = d.date;
+      else byMission.set(mission.id, { mission, first: d.date, last: d.date });
+    }
+  }
+  const spans = [...byMission.values()];
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-4">
@@ -71,31 +83,41 @@ export default async function CalendarPage({
         </div>
       </div>
 
-      {/* Mobile : jours ayant des missions */}
-      <ol className="flex flex-col gap-2 md:hidden">
-        {days
-          .filter((d) => d.missions.length > 0)
-          .map((d) => (
-            <li key={d.date} className="rounded-xl border border-border bg-surface shadow-xs p-3">
-              <p className="mb-2 text-sm font-semibold">
-                {formatDate(`${d.date}T12:00:00Z`, locale, { weekday: "long", day: "numeric" })}
-              </p>
-              <ul className="flex flex-col gap-1">
-                {d.missions.map((mission) => (
-                  <li key={mission.id}>
-                    <Link
-                      href={`/missions/${mission.id}`}
-                      className="flex items-center justify-between gap-2 text-sm"
-                    >
-                      <span className="truncate">{mission.title}</span>
-                      <StatusBadge status={mission.status} t={t} />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+      {/* Mobile : une carte par mission (et non par jour), avec ses dates dans le mois */}
+      {spans.length === 0 ? (
+        <p className="text-sm text-muted md:hidden">{t("dashboardPage.none")}</p>
+      ) : (
+        <ol className="flex flex-col gap-2 md:hidden">
+          {spans.map(({ mission, first, last }) => (
+            <li key={mission.id}>
+              <Link
+                href={`/missions/${mission.id}`}
+                className="flex flex-col gap-1 rounded-xl border border-border bg-surface p-3 shadow-xs"
+              >
+                <span className="flex items-center justify-between gap-2">
+                  <span className="font-mono text-xs text-muted">{mission.reference}</span>
+                  <StatusBadge status={mission.status} t={t} />
+                </span>
+                <span className="font-medium text-ink">{mission.title}</span>
+                <span className="text-sm capitalize text-muted">
+                  {first === last
+                    ? formatDate(`${first}T12:00:00Z`, locale, { weekday: "long", day: "numeric" })
+                    : t("missions.dates", {
+                        start: formatDate(`${first}T12:00:00Z`, locale, {
+                          weekday: "short",
+                          day: "numeric",
+                        }),
+                        end: formatDate(`${last}T12:00:00Z`, locale, {
+                          weekday: "short",
+                          day: "numeric",
+                        }),
+                      })}
+                </span>
+              </Link>
             </li>
           ))}
-      </ol>
+        </ol>
+      )}
 
       {/* Ordinateur : grille */}
       <div className="hidden grid-cols-7 gap-px overflow-hidden rounded-lg border border-border bg-border md:grid">

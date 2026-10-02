@@ -21,6 +21,9 @@ export default async function ResetPasswordPage({
   if (!token) {
     return (
       <div className="flex flex-col gap-4">
+        <h1 className="text-[1.75rem] font-semibold leading-tight tracking-tight text-ink">
+          {t("auth.reset.title")}
+        </h1>
         <p role="alert" className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger">
           {t("auth.reset.incomplete")}
         </p>

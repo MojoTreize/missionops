@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { getDb } from "@/lib/db";
 import { formatDate } from "@/lib/i18n/format";
 import { getT } from "@/lib/i18n/server";
+import type { MessageKey } from "@/lib/i18n/translate";
 import { requireCan } from "@/lib/policy";
 import { serviceContext } from "@/lib/server/context";
 
@@ -51,6 +52,12 @@ export default async function AuditPage({
     page,
   };
   const { entries, hasMore, tables } = await auditLogPage(getDb(), ctx, filters);
+  // Libellé lisible d'une table ; le nom technique reste en info-bulle.
+  const tableLabel = (name: string) => {
+    const key = `audit.tables.${name}` as MessageKey;
+    const label = t(key);
+    return label === key ? name : label;
+  };
   const link = (p: number) => {
     const search = new URLSearchParams();
     if (filters.table) search.set("table", filters.table);
@@ -82,7 +89,7 @@ export default async function AuditPage({
             <option value="">{t("audit.allTables")}</option>
             {tables.map((name) => (
               <option key={name} value={name}>
-                {name}
+                {tableLabel(name)}
               </option>
             ))}
           </NativeSelect>
@@ -119,7 +126,9 @@ export default async function AuditPage({
                 >
                   {t(`audit.action.${e.action as "insert"}`)}
                 </Badge>
-                <span className="font-mono text-xs">{e.tableName}</span>
+                <span className="text-xs font-semibold text-ink" title={e.tableName}>
+                  {tableLabel(e.tableName)}
+                </span>
                 <Link
                   href={`/audit?row=${e.rowId}`}
                   className="font-mono text-xs text-field hover:underline"

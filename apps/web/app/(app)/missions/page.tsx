@@ -179,7 +179,7 @@ export default async function MissionsPage({
               <TableBody>
                 {missions.map((m) => (
                   <TableRow key={m.id}>
-                    <TableCell className="font-mono text-xs">
+                    <TableCell className="whitespace-nowrap font-mono text-xs">
                       <Link href={`/missions/${m.id}`} className="text-field hover:underline">
                         {m.reference}
                       </Link>

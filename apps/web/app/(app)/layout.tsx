@@ -99,7 +99,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
             </Link>
           </div>
           <div className="mx-3 mb-4 rounded-xl border border-white/10 bg-white/[0.04] p-3">
-            <p className="mb-1 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-field-200/50">
+            <p className="mb-1 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-field-200/80">
               {t("shell.organization")}
             </p>
             {active ? (

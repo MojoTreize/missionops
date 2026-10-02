@@ -21,6 +21,7 @@ export default async function NotFound() {
     <main className="flex min-h-dvh items-center justify-center bg-paper px-4">
       <div className="w-full max-w-md">
         <EmptyState
+          as="h1"
           icon={<Compass aria-hidden />}
           title={t("notFound.title")}
           description={t("notFound.description")}

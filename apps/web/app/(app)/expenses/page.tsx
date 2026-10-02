@@ -93,7 +93,10 @@ export default async function ExpensesPage({
                 <div className="flex flex-col">
                   <span className="font-medium">{e.description}</span>
                   <span className="text-sm text-muted">
-                    <Link href={`/missions/${e.missionId}`} className="text-field hover:underline">
+                    <Link
+                      href={`/missions/${e.missionId}`}
+                      className="text-field underline underline-offset-2"
+                    >
                       {e.missionReference}
                     </Link>{" "}
                     · {formatDate(e.spentOn, locale)} · {t(`category.${e.category}`)} ·{" "}

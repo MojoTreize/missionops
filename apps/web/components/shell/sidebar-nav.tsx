@@ -47,14 +47,14 @@ export function SidebarNav({ secondary = [] }: { secondary?: string[] }) {
   return (
     <nav aria-label={t("shell.mainNav")} className="flex flex-col gap-6">
       <div className="flex flex-col gap-0.5">
-        <p className="px-3 pb-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-field-200/50">
+        <p className="px-3 pb-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-field-200/80">
           {t("shell.groupOperations")}
         </p>
         {NAV_ITEMS.map(link)}
       </div>
       {extra.length > 0 ? (
         <div className="flex flex-col gap-0.5">
-          <p className="px-3 pb-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-field-200/50">
+          <p className="px-3 pb-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-field-200/80">
             {t("shell.groupManagement")}
           </p>
           {extra.map(link)}

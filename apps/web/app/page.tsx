@@ -205,151 +205,154 @@ export default async function LandingPage() {
         {t("shell.skipToContent")}
       </a>
 
-      {/* ------------------------------------------------------------ Héros */}
-      <div className="relative isolate overflow-hidden bg-field-950 text-white">
-        <div aria-hidden className="bg-grid absolute inset-0 -z-10 opacity-[0.07]" />
-        <div
-          aria-hidden
-          className="absolute -top-40 right-[-10%] -z-10 size-[38rem] rounded-full bg-field-400/25 blur-[120px]"
-        />
-        <div
-          aria-hidden
-          className="absolute bottom-[-12rem] left-[-8rem] -z-10 size-[28rem] rounded-full bg-ledger/20 blur-[120px]"
-        />
+      <main>
+        {/* ------------------------------------------------------------ Héros */}
+        <div className="relative isolate overflow-hidden bg-field-950 text-white">
+          <div aria-hidden className="bg-grid absolute inset-0 -z-10 opacity-[0.07]" />
+          <div
+            aria-hidden
+            className="absolute -top-40 right-[-10%] -z-10 size-[38rem] rounded-full bg-field-400/25 blur-[120px]"
+          />
+          <div
+            aria-hidden
+            className="absolute bottom-[-12rem] left-[-8rem] -z-10 size-[28rem] rounded-full bg-ledger/20 blur-[120px]"
+          />
 
-        <header className="mx-auto flex h-18 max-w-7xl items-center gap-4 px-5 py-4 sm:px-8">
-          <Link href="/" className="rounded-md">
-            <Logo tone="light" />
-          </Link>
-          <nav
-            aria-label={t("landing.nav.menu")}
-            className="ml-8 hidden items-center gap-1 xl:flex"
-          >
-            {NAV.map((item) => (
-              <a
-                key={item.key}
-                href={item.href}
-                className="rounded-lg px-3 py-2 text-sm font-medium text-field-100/75 transition-colors hover:bg-white/5 hover:text-white"
-              >
-                {t(`landing.nav.${item.key}`)}
-              </a>
-            ))}
-          </nav>
-          <div className="ml-auto hidden items-center gap-1.5 md:flex">
-            <LanguageToggle t={t} locale={locale} />
-            {signedIn ? (
-              <CtaLink href="/dashboard" variant="light" className="ml-2 min-h-10 px-4 text-sm">
-                {t("landing.nav.openApp")}
-                <ArrowRight className="size-4" aria-hidden />
-              </CtaLink>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-white hover:bg-white/10"
-                >
-                  {t("landing.nav.login")}
-                </Link>
-                <CtaLink href="/signup" variant="light" className="ml-1 min-h-10 px-4 text-sm">
-                  {t("landing.nav.start")}
-                </CtaLink>
-              </>
-            )}
-          </div>
-          {/* Menu mobile sans JavaScript */}
-          <details className="group relative ml-auto md:hidden">
-            <summary
+          <header className="mx-auto flex h-18 max-w-7xl items-center gap-4 px-5 py-4 sm:px-8">
+            <Link href="/" className="rounded-md">
+              <Logo tone="light" />
+            </Link>
+            <nav
               aria-label={t("landing.nav.menu")}
-              className="flex size-11 cursor-pointer list-none items-center justify-center rounded-lg text-white hover:bg-white/10 [&::-webkit-details-marker]:hidden"
+              className="ml-8 hidden items-center gap-1 xl:flex"
             >
-              <Menu className="size-5" aria-hidden />
-            </summary>
-            <div className="absolute right-0 top-13 z-40 w-[min(20rem,calc(100vw-2.5rem))] rounded-2xl border border-white/10 bg-field-900 p-2 shadow-lg">
               {NAV.map((item) => (
                 <a
                   key={item.key}
                   href={item.href}
-                  className="flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-field-100 hover:bg-white/10"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-field-100/75 transition-colors hover:bg-white/5 hover:text-white"
                 >
                   {t(`landing.nav.${item.key}`)}
                 </a>
               ))}
-              <div className="my-2 border-t border-white/10" />
+            </nav>
+            <div className="ml-auto hidden items-center gap-1.5 md:flex">
               <LanguageToggle t={t} locale={locale} />
-              <div className="mt-2 grid gap-2 p-1">
-                {signedIn ? (
-                  <CtaLink href="/dashboard" variant="light">
-                    {t("landing.nav.openApp")}
-                  </CtaLink>
-                ) : (
-                  <>
-                    <CtaLink href="/signup" variant="light">
-                      {t("landing.nav.start")}
-                    </CtaLink>
-                    <CtaLink href="/login" variant="ghostDark">
-                      {t("landing.nav.login")}
-                    </CtaLink>
-                  </>
-                )}
-              </div>
-            </div>
-          </details>
-        </header>
-
-        <section
-          id="contenu"
-          className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-14 px-5 pb-24 pt-10 sm:px-8 sm:pb-52 sm:pt-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-12 lg:pb-48 lg:pt-20"
-        >
-          <div>
-            <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-field-100 sm:text-sm">
-              <span className="size-1.5 rounded-full bg-field-400" aria-hidden />
-              {t("landing.hero.badge")}
-            </p>
-            <h1 className="font-display text-balance mt-6 text-[2.5rem] font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.6rem]">
-              {t("landing.hero.title")}
-            </h1>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-field-100/80 sm:text-lg">
-              {t("landing.hero.subtitle")}
-            </p>
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <CtaLink href={signedIn ? "/dashboard" : "/signup"}>
-                {signedIn ? t("landing.nav.openApp") : t("landing.hero.primary")}
-                <ArrowRight className="size-4" aria-hidden />
-              </CtaLink>
-              {signedIn ? null : (
-                <CtaLink href="/login" variant="ghostDark">
-                  {t("landing.hero.secondary")}
+              {signedIn ? (
+                <CtaLink href="/dashboard" variant="light" className="ml-2 min-h-10 px-4 text-sm">
+                  {t("landing.nav.openApp")}
+                  <ArrowRight className="size-4" aria-hidden />
                 </CtaLink>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-white hover:bg-white/10"
+                  >
+                    {t("landing.nav.login")}
+                  </Link>
+                  <CtaLink href="/signup" variant="light" className="ml-1 min-h-10 px-4 text-sm">
+                    {t("landing.nav.start")}
+                  </CtaLink>
+                </>
               )}
             </div>
-            <p className="mt-5 text-sm text-field-100/60">{t("landing.hero.note")}</p>
-          </div>
-          <HeroMock t={t} locale={locale} />
-        </section>
-      </div>
+            {/* Menu mobile sans JavaScript */}
+            <details className="group relative ml-auto md:hidden">
+              <summary
+                aria-label={t("landing.nav.menu")}
+                className="flex size-11 cursor-pointer list-none items-center justify-center rounded-lg text-white hover:bg-white/10 [&::-webkit-details-marker]:hidden"
+              >
+                <Menu className="size-5" aria-hidden />
+              </summary>
+              <div className="absolute right-0 top-13 z-40 w-[min(20rem,calc(100vw-2.5rem))] rounded-2xl border border-white/10 bg-field-900 p-2 shadow-lg">
+                {NAV.map((item) => (
+                  <a
+                    key={item.key}
+                    href={item.href}
+                    className="flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-field-100 hover:bg-white/10"
+                  >
+                    {t(`landing.nav.${item.key}`)}
+                  </a>
+                ))}
+                <div className="my-2 border-t border-white/10" />
+                <LanguageToggle t={t} locale={locale} />
+                <div className="mt-2 grid gap-2 p-1">
+                  {signedIn ? (
+                    <CtaLink href="/dashboard" variant="light">
+                      {t("landing.nav.openApp")}
+                    </CtaLink>
+                  ) : (
+                    <>
+                      <CtaLink href="/signup" variant="light">
+                        {t("landing.nav.start")}
+                      </CtaLink>
+                      <CtaLink href="/login" variant="ghostDark">
+                        {t("landing.nav.login")}
+                      </CtaLink>
+                    </>
+                  )}
+                </div>
+              </div>
+            </details>
+          </header>
 
-      {/* ------------------------------------------------------- Preuves */}
-      <section aria-label={t("landing.nav.product")} className="border-b border-border bg-surface">
-        <dl className="mx-auto grid max-w-7xl grid-cols-2 divide-border px-5 sm:px-8 lg:grid-cols-4 lg:divide-x">
-          {(
-            [
-              ["offline", "offlineHint"],
-              ["currencies", "currenciesHint"],
-              ["audit", "auditHint"],
-              ["mobile", "mobileHint"],
-            ] as const
-          ).map(([value, hint]) => (
-            <div key={value} className="px-2 py-7 text-center lg:px-6">
-              <dt className="tabular text-lg font-semibold text-ink sm:text-xl">
-                {t(`landing.proof.${value}`)}
-              </dt>
-              <dd className="mt-1 text-sm text-muted">{t(`landing.proof.${hint}`)}</dd>
+          <section
+            id="contenu"
+            className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-14 px-5 pb-24 pt-10 sm:px-8 sm:pb-52 sm:pt-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-12 lg:pb-48 lg:pt-20"
+          >
+            <div>
+              <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-field-100 sm:text-sm">
+                <span className="size-1.5 rounded-full bg-field-400" aria-hidden />
+                {t("landing.hero.badge")}
+              </p>
+              <h1 className="font-display text-balance mt-6 text-[2.5rem] font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.6rem]">
+                {t("landing.hero.title")}
+              </h1>
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-field-100/80 sm:text-lg">
+                {t("landing.hero.subtitle")}
+              </p>
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                <CtaLink href={signedIn ? "/dashboard" : "/signup"}>
+                  {signedIn ? t("landing.nav.openApp") : t("landing.hero.primary")}
+                  <ArrowRight className="size-4" aria-hidden />
+                </CtaLink>
+                {signedIn ? null : (
+                  <CtaLink href="/login" variant="ghostDark">
+                    {t("landing.hero.secondary")}
+                  </CtaLink>
+                )}
+              </div>
+              <p className="mt-5 text-sm text-field-100/60">{t("landing.hero.note")}</p>
             </div>
-          ))}
-        </dl>
-      </section>
+            <HeroMock t={t} locale={locale} />
+          </section>
+        </div>
 
-      <main>
+        {/* ------------------------------------------------------- Preuves */}
+        <section
+          aria-label={t("landing.nav.product")}
+          className="border-b border-border bg-surface"
+        >
+          <dl className="mx-auto grid max-w-7xl grid-cols-2 divide-border px-5 sm:px-8 lg:grid-cols-4 lg:divide-x">
+            {(
+              [
+                ["offline", "offlineHint"],
+                ["currencies", "currenciesHint"],
+                ["audit", "auditHint"],
+                ["mobile", "mobileHint"],
+              ] as const
+            ).map(([value, hint]) => (
+              <div key={value} className="px-2 py-7 text-center lg:px-6">
+                <dt className="tabular text-lg font-semibold text-ink sm:text-xl">
+                  {t(`landing.proof.${value}`)}
+                </dt>
+                <dd className="mt-1 text-sm text-muted">{t(`landing.proof.${hint}`)}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
         {/* ------------------------------------------------------- Boucle */}
         <section id="boucle" className="scroll-mt-6 px-5 py-20 sm:px-8 sm:py-28">
           <SectionHeading

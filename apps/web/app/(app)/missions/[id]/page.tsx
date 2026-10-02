@@ -1,4 +1,4 @@
-import { ArrowLeft, FileText, Pencil } from "lucide-react";
+import { ArrowLeft, ChevronDown, FileText, Pencil } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -171,10 +171,9 @@ export default async function MissionPage({
 
       {/* Bande de mission (B5.4) : SVG produit par le domaine, sans script ni
           contenu saisi par l'utilisateur (libellés traduits, texte échappé). */}
-      <div
-        className="rounded-xl border border-border bg-surface shadow-xs px-2 py-3"
-        dangerouslySetInnerHTML={{ __html: bandSvg }}
-      />
+      <div className="overflow-x-auto rounded-xl border border-border bg-surface px-2 py-3 shadow-xs">
+        <div className="min-w-[34rem]" dangerouslySetInnerHTML={{ __html: bandSvg }} />
+      </div>
 
       {/* Actions du cycle de vie */}
       {mission.actions.length > 0 ? (
@@ -533,95 +532,116 @@ export default async function MissionPage({
                           (<MoneyDisplay money={a.amountBase} locale={locale} />)
                         </span>
                       ) : null}
-                      {canPayAdvance && !a.isReversal && !a.cancelled ? (
+                    </span>
+                    {canPayAdvance && !a.isReversal && !a.cancelled ? (
+                      <details className="group w-full">
+                        <summary className="inline-flex min-h-9 cursor-pointer list-none items-center text-xs font-medium text-muted underline-offset-2 hover:text-danger hover:underline [&::-webkit-details-marker]:hidden">
+                          {t("advances.cancelOpen")}
+                        </summary>
                         <ActionForm
                           action={cancelAdvanceAction}
                           submitLabel={t("advances.cancel")}
-                          variant="ghost"
+                          variant="danger"
                           size="sm"
-                          className="flex items-center gap-1"
+                          className="mt-1 flex flex-wrap items-center gap-2"
                         >
                           <input type="hidden" name="advanceId" value={a.id} />
                           <input type="hidden" name="missionId" value={id} />
                           <Input
                             name="reason"
                             required
-                            className="h-9 w-36"
+                            className="h-9 min-w-0 flex-1"
                             placeholder={t("advances.cancelReason")}
                             aria-label={t("advances.cancelReason")}
                           />
                         </ActionForm>
-                      ) : null}
-                    </span>
+                      </details>
+                    ) : null}
                   </li>
                 ))}
               </ul>
             )}
             {canPayAdvance ? (
-              <ActionForm
-                action={createAdvanceAction}
-                submitLabel={t("advances.add")}
-                pendingLabel={t("advances.adding")}
-                variant="ledger"
-                size="sm"
-                className="grid grid-cols-2 items-end gap-2 sm:grid-cols-4"
+              <details
+                open={advances.items.length === 0}
+                className="group mt-2 rounded-lg border border-border bg-surface-2 px-3 open:pb-3"
               >
-                <input type="hidden" name="missionId" value={id} />
-                <div className="col-span-2 flex flex-col gap-1">
-                  <Label htmlFor="a-ben">{t("advances.beneficiary")}</Label>
-                  <NativeSelect id="a-ben" name="beneficiaryId" defaultValue={mission.requesterId}>
-                    {members.map((m) => (
-                      <option key={m.userId} value={m.userId}>
-                        {m.fullName ?? m.email}
-                      </option>
-                    ))}
-                  </NativeSelect>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <Label htmlFor="a-amount">{t("advances.amount")}</Label>
-                  <Input id="a-amount" name="amount" required inputMode="decimal" />
-                </div>
-                <div className="flex flex-col gap-1">
-                  <Label htmlFor="a-cur">{t("budget.currency")}</Label>
-                  <NativeSelect id="a-cur" name="currency" defaultValue={base}>
-                    {CURRENCIES.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </NativeSelect>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <Label htmlFor="a-date">{t("advances.paidOn")}</Label>
-                  <Input
-                    id="a-date"
-                    name="paidOn"
-                    type="date"
-                    required
-                    defaultValue={new Date().toISOString().slice(0, 10)}
+                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between text-sm font-semibold text-ledger [&::-webkit-details-marker]:hidden">
+                  {t("advances.newAdvance")}
+                  <ChevronDown
+                    className="size-4 transition-transform group-open:rotate-180"
+                    aria-hidden
                   />
-                </div>
-                <div className="flex flex-col gap-1">
-                  <Label htmlFor="a-method">{t("advances.method")}</Label>
-                  <NativeSelect id="a-method" name="paymentMethod" defaultValue="especes">
-                    {PAYMENT_METHODS.map((m) => (
-                      <option key={m} value={m}>
-                        {t(`paymentMethod.${m}`)}
-                      </option>
-                    ))}
-                  </NativeSelect>
-                </div>
-                <div className="col-span-2 flex flex-col gap-1">
-                  <Label htmlFor="a-ref">{t("advances.reference")}</Label>
-                  <Input id="a-ref" name="reference" />
-                </div>
-                {role.role === "directeur_pays" || role.role === "admin" ? (
-                  <label className="col-span-2 flex items-center gap-2 text-sm sm:col-span-4">
-                    <input type="checkbox" name="directorApproved" />
-                    {t("advances.directorApproved")}
-                  </label>
-                ) : null}
-              </ActionForm>
+                </summary>
+                <ActionForm
+                  action={createAdvanceAction}
+                  submitLabel={t("advances.add")}
+                  pendingLabel={t("advances.adding")}
+                  variant="ledger"
+                  size="sm"
+                  className="grid grid-cols-2 items-end gap-2 sm:grid-cols-4"
+                >
+                  <input type="hidden" name="missionId" value={id} />
+                  <div className="col-span-2 flex flex-col gap-1">
+                    <Label htmlFor="a-ben">{t("advances.beneficiary")}</Label>
+                    <NativeSelect
+                      id="a-ben"
+                      name="beneficiaryId"
+                      defaultValue={mission.requesterId}
+                    >
+                      {members.map((m) => (
+                        <option key={m.userId} value={m.userId}>
+                          {m.fullName ?? m.email}
+                        </option>
+                      ))}
+                    </NativeSelect>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <Label htmlFor="a-amount">{t("advances.amount")}</Label>
+                    <Input id="a-amount" name="amount" required inputMode="decimal" />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <Label htmlFor="a-cur">{t("budget.currency")}</Label>
+                    <NativeSelect id="a-cur" name="currency" defaultValue={base}>
+                      {CURRENCIES.map((c) => (
+                        <option key={c} value={c}>
+                          {c}
+                        </option>
+                      ))}
+                    </NativeSelect>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <Label htmlFor="a-date">{t("advances.paidOn")}</Label>
+                    <Input
+                      id="a-date"
+                      name="paidOn"
+                      type="date"
+                      required
+                      defaultValue={new Date().toISOString().slice(0, 10)}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <Label htmlFor="a-method">{t("advances.method")}</Label>
+                    <NativeSelect id="a-method" name="paymentMethod" defaultValue="especes">
+                      {PAYMENT_METHODS.map((m) => (
+                        <option key={m} value={m}>
+                          {t(`paymentMethod.${m}`)}
+                        </option>
+                      ))}
+                    </NativeSelect>
+                  </div>
+                  <div className="col-span-2 flex flex-col gap-1">
+                    <Label htmlFor="a-ref">{t("advances.reference")}</Label>
+                    <Input id="a-ref" name="reference" />
+                  </div>
+                  {role.role === "directeur_pays" || role.role === "admin" ? (
+                    <label className="col-span-2 flex items-center gap-2 text-sm sm:col-span-4">
+                      <input type="checkbox" name="directorApproved" />
+                      {t("advances.directorApproved")}
+                    </label>
+                  ) : null}
+                </ActionForm>
+              </details>
             ) : null}
           </Section>
 
@@ -632,9 +652,9 @@ export default async function MissionPage({
               <ul className="flex flex-col gap-2">
                 {tracking.tracking.map((row) => (
                   <li key={row.category} className="flex flex-col gap-1 text-sm">
-                    <div className="flex items-center justify-between gap-2">
+                    <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
                       <span className="font-medium">{t(`category.${row.category}`)}</span>
-                      <span className="flex items-center gap-2">
+                      <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
                         <MoneyDisplay money={row.actual} locale={locale} />
                         <span className="text-muted">/</span>
                         <MoneyDisplay money={row.planned} locale={locale} className="text-muted" />
