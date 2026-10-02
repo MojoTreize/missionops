@@ -243,7 +243,7 @@ export function TerrainApp({
 
           <form
             onSubmit={submitExpense}
-            className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4"
+            className="flex flex-col gap-3 rounded-xl border border-border bg-surface shadow-xs p-4"
             noValidate
           >
             <h2 className="font-semibold">{t("terrain.expenseTitle")}</h2>
@@ -343,7 +343,7 @@ export function TerrainApp({
         {sync.outbox.length === 0 ? (
           <p className="text-sm text-muted">{t("terrain.queueEmpty")}</p>
         ) : (
-          <ul className="flex flex-col divide-y divide-border rounded-lg border border-border bg-surface">
+          <ul className="flex flex-col divide-y divide-border rounded-xl border border-border bg-surface shadow-xs">
             {sync.outbox.map((item) => (
               <li key={item.id} className="flex flex-col gap-1 px-3 py-2 text-sm">
                 <div className="flex items-center justify-between gap-2">
@@ -407,7 +407,7 @@ function EventForm({
   const t = useT();
   const [note, setNote] = useState("");
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
+    <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface shadow-xs p-4">
       <h2 className="font-semibold">{t("terrain.eventTitle")}</h2>
       <p className="rounded-md bg-paper p-2 text-xs text-muted">{t("terrain.noTracking")}</p>
       <Field id="t-note" label={t("terrain.eventNote")}>

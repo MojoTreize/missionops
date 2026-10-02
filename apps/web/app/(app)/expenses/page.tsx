@@ -54,8 +54,10 @@ export default async function ExpensesPage({
     <div className="mx-auto flex max-w-4xl flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold text-ink">{t("expenses.title")}</h1>
-          <p className="text-sm text-muted">{t("expenses.subtitle")}</p>
+          <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+            {t("expenses.title")}
+          </h1>
+          <p className="mt-1.5 text-[0.95rem] text-muted">{t("expenses.subtitle")}</p>
         </div>
         <Button asChild size="sm">
           <Link href="/terrain">
@@ -85,7 +87,7 @@ export default async function ExpensesPage({
           {expenses.map((e) => (
             <li
               key={e.id}
-              className="flex flex-col gap-2 rounded-lg border border-border bg-surface p-3"
+              className="flex flex-col gap-2 rounded-xl border border-border bg-surface shadow-xs p-3"
             >
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="flex flex-col">

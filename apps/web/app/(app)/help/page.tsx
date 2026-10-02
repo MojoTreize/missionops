@@ -15,13 +15,15 @@ export default async function HelpPage() {
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-5">
       <div>
-        <h1 className="text-2xl font-semibold text-ink">{t("help.title")}</h1>
-        <p className="text-sm text-muted">{t("help.subtitle")}</p>
+        <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+          {t("help.title")}
+        </h1>
+        <p className="mt-1.5 text-[0.95rem] text-muted">{t("help.subtitle")}</p>
       </div>
       {GUIDES.map((g) => (
         <details
           key={g}
-          className="rounded-lg border border-border bg-surface p-4"
+          className="rounded-xl border border-border bg-surface shadow-xs p-4"
           open={g === "field"}
         >
           <summary className="cursor-pointer font-semibold">{t(`help.guides.${g}Title`)}</summary>

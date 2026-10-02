@@ -14,15 +14,19 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function SignupPage() {
   const { t } = await getT();
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       <div>
-        <h2 className="text-lg font-semibold text-ink">{t("signup.title")}</h2>
-        <p className="text-sm text-muted">{t("signup.description")}</p>
+        <h1 className="text-[1.75rem] font-semibold leading-tight tracking-tight text-ink">
+          {t("signup.title")}
+        </h1>
+        <p className="mt-1.5 text-[0.95rem] text-muted">{t("signup.description")}</p>
       </div>
       <SignupForm />
-      <Link href="/login" className="text-sm text-field hover:underline">
-        {t("signup.haveAccount")}
-      </Link>
+      <p className="border-t border-border pt-5 text-center text-sm">
+        <Link href="/login" className="font-medium text-field hover:underline">
+          {t("signup.haveAccount")}
+        </Link>
+      </p>
     </div>
   );
 }

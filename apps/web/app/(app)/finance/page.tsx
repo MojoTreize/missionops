@@ -28,8 +28,10 @@ export default async function FinancePage() {
     <div className="mx-auto flex max-w-3xl flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold text-ink">{t("finance.title")}</h1>
-          <p className="text-sm text-muted">{t("finance.subtitle")}</p>
+          <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+            {t("finance.title")}
+          </h1>
+          <p className="mt-1.5 text-[0.95rem] text-muted">{t("finance.subtitle")}</p>
         </div>
         <div className="flex gap-2">
           <Button asChild variant="secondary" size="sm">
@@ -50,7 +52,7 @@ export default async function FinancePage() {
           {queue.reconciliations.map((r) => (
             <li
               key={r.missionId}
-              className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border bg-surface p-3"
+              className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-surface shadow-xs p-3"
             >
               <div className="flex flex-col">
                 <span className="font-mono text-xs text-muted">{r.reference}</span>

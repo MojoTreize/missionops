@@ -14,8 +14,10 @@ export default async function OfflinePage() {
   return (
     <main className="mx-auto flex min-h-dvh max-w-sm flex-col items-center justify-center gap-4 p-6 text-center">
       <CloudOff className="size-10 text-muted" aria-hidden />
-      <h1 className="text-xl font-semibold">{t("offline.title")}</h1>
-      <p className="text-sm text-muted">{t("offline.description")}</p>
+      <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+        {t("offline.title")}
+      </h1>
+      <p className="mt-1.5 text-[0.95rem] text-muted">{t("offline.description")}</p>
       <Link href="/terrain" className="font-medium text-field underline">
         {t("offline.terrain")}
       </Link>

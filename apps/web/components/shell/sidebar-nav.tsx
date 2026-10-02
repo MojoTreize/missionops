@@ -29,8 +29,16 @@ export function SidebarNav({ secondary = [] }: { secondary?: string[] }) {
           active ? "bg-white/10 text-white" : "text-field-200/80 hover:bg-white/5 hover:text-white",
         )}
       >
-        {active ? <span className="absolute inset-y-2 left-0 w-0.5 rounded-full bg-field-400" aria-hidden /> : null}
-        <Icon className={cn("size-[1.1rem] shrink-0", active ? "text-field-200" : "text-field-200/60 group-hover:text-field-200")} aria-hidden />
+        {active ? (
+          <span className="absolute inset-y-2 left-0 w-0.5 rounded-full bg-field-400" aria-hidden />
+        ) : null}
+        <Icon
+          className={cn(
+            "size-[1.1rem] shrink-0",
+            active ? "text-field-200" : "text-field-200/60 group-hover:text-field-200",
+          )}
+          aria-hidden
+        />
         {t(item.labelKey)}
       </Link>
     );

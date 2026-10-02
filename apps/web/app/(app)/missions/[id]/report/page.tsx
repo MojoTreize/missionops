@@ -51,7 +51,9 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
         <ArrowLeft className="size-4" aria-hidden />
         {mission.reference}
       </Link>
-      <h1 className="text-2xl font-semibold text-ink">{t("report.title")}</h1>
+      <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+        {t("report.title")}
+      </h1>
       {report?.submittedAt ? (
         <p className="rounded-md bg-success-soft p-2 text-sm text-success">
           {t("report.submitted", { date: formatDate(report.submittedAt, locale) })}

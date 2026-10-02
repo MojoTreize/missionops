@@ -77,7 +77,9 @@ export default async function MissionsPage({
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold text-ink">{t("missions.title")}</h1>
+        <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+          {t("missions.title")}
+        </h1>
         <div className="flex gap-2">
           <Button asChild variant="secondary" size="sm">
             <Link href="/missions/calendar">
@@ -143,7 +145,7 @@ export default async function MissionsPage({
               <li key={m.id}>
                 <Link
                   href={`/missions/${m.id}`}
-                  className="flex flex-col gap-1 rounded-lg border border-border bg-surface p-3"
+                  className="flex flex-col gap-1 rounded-xl border border-border bg-surface shadow-xs p-3"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="font-mono text-xs text-muted">{m.reference}</span>

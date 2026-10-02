@@ -65,7 +65,9 @@ export default async function ReconciliationPage({ params }: { params: Promise<{
         {mission.reference}
       </Link>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h1 className="text-2xl font-semibold text-ink">{t("reconciliation.title")}</h1>
+        <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+          {t("reconciliation.title")}
+        </h1>
         <Badge
           variant={
             rec.status === "validee" ? "success" : rec.status === "soumise" ? "warning" : "muted"
@@ -75,7 +77,7 @@ export default async function ReconciliationPage({ params }: { params: Promise<{
         </Badge>
       </div>
 
-      <section className="rounded-lg border border-border bg-surface p-4">
+      <section className="rounded-xl border border-border bg-surface shadow-xs p-4">
         <div className="divide-y divide-border">
           {row(t("reconciliation.advances"), <MoneyDisplay money={c.advances} locale={locale} />)}
           {row(
@@ -112,7 +114,7 @@ export default async function ReconciliationPage({ params }: { params: Promise<{
         ) : null}
       </section>
 
-      <section className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
+      <section className="flex flex-col gap-3 rounded-xl border border-border bg-surface shadow-xs p-4">
         <h2 className="font-semibold">{t("reconciliation.variances")}</h2>
         {rec.variances.length === 0 ? (
           <p className="text-sm text-muted">{t("reconciliation.noVariances")}</p>
@@ -188,7 +190,7 @@ export default async function ReconciliationPage({ params }: { params: Promise<{
       ) : null}
 
       {isFinance && rec.status === "soumise" ? (
-        <section className="flex flex-col gap-4 rounded-lg border border-border bg-surface p-4">
+        <section className="flex flex-col gap-4 rounded-xl border border-border bg-surface shadow-xs p-4">
           <h2 className="font-semibold">{t("reconciliation.settlement")}</h2>
           {c.direction !== "solde" ? (
             <ActionForm

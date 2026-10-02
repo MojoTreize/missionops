@@ -27,7 +27,9 @@ export default async function EditMissionPage({ params }: { params: Promise<{ id
   const locations = await searchableLocations(getDb(), ctx);
   return (
     <div className="mx-auto flex max-w-xl flex-col gap-5">
-      <h1 className="text-2xl font-semibold text-ink">{t("missions.form.editTitle")}</h1>
+      <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+        {t("missions.form.editTitle")}
+      </h1>
       {mission.status === "VALIDEE" ? (
         <p className="rounded-md bg-warning-soft p-3 text-sm text-warning">
           {t("missions.form.editWarning")}

@@ -17,7 +17,9 @@ export default async function ProfilePage() {
   const { t } = await getT();
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-8">
-      <h1 className="text-xl font-semibold text-field">{t("profile.title")}</h1>
+      <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+        {t("profile.title")}
+      </h1>
 
       <section className="flex flex-col gap-3">
         <div className="flex flex-col gap-1">

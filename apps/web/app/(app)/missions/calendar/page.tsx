@@ -43,7 +43,9 @@ export default async function CalendarPage({
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h1 className="text-2xl font-semibold capitalize text-ink">{title}</h1>
+        <h1 className="text-[1.65rem] font-semibold capitalize leading-tight tracking-tight text-ink sm:text-3xl">
+          {title}
+        </h1>
         <div className="flex items-center gap-2">
           <Button
             asChild
@@ -74,7 +76,7 @@ export default async function CalendarPage({
         {days
           .filter((d) => d.missions.length > 0)
           .map((d) => (
-            <li key={d.date} className="rounded-lg border border-border bg-surface p-3">
+            <li key={d.date} className="rounded-xl border border-border bg-surface shadow-xs p-3">
               <p className="mb-2 text-sm font-semibold">
                 {formatDate(`${d.date}T12:00:00Z`, locale, { weekday: "long", day: "numeric" })}
               </p>

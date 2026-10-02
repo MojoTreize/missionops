@@ -47,8 +47,12 @@ export default async function ReportsPage({
     <div className="mx-auto flex max-w-4xl flex-col gap-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold text-ink">{t("reportsPage.title")}</h1>
-          <p className="text-sm text-muted">{t("reportsPage.subtitle", { base: report.base })}</p>
+          <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+            {t("reportsPage.title")}
+          </h1>
+          <p className="mt-1.5 text-[0.95rem] text-muted">
+            {t("reportsPage.subtitle", { base: report.base })}
+          </p>
         </div>
         <div className="flex flex-wrap gap-2">
           {canExport ? (
@@ -88,12 +92,12 @@ export default async function ReportsPage({
         <EmptyState icon={<BarChart3 aria-hidden />} title={t("reportsPage.empty")} />
       ) : (
         <>
-          <section className="rounded-lg border border-border bg-surface p-4">
+          <section className="rounded-xl border border-border bg-surface shadow-xs p-4">
             <p className="text-sm text-muted">{t("reportsPage.total")}</p>
             <MoneyDisplay money={report.total} accent locale={locale} className="text-3xl" />
           </section>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <section className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
+            <section className="flex flex-col gap-3 rounded-xl border border-border bg-surface shadow-xs p-4">
               <h2 className="font-semibold">{t("reportsPage.byCategory")}</h2>
               <BarList
                 caption={t("reportsPage.byCategory")}
@@ -106,7 +110,7 @@ export default async function ReportsPage({
                 }))}
               />
             </section>
-            <section className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
+            <section className="flex flex-col gap-3 rounded-xl border border-border bg-surface shadow-xs p-4">
               <h2 className="font-semibold">{t("reportsPage.byMonth")}</h2>
               <BarList
                 caption={t("reportsPage.byMonth")}
@@ -122,7 +126,7 @@ export default async function ReportsPage({
                 }))}
               />
             </section>
-            <section className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4 md:col-span-2">
+            <section className="flex flex-col gap-3 rounded-xl border border-border bg-surface shadow-xs p-4 md:col-span-2">
               <h2 className="font-semibold">{t("reportsPage.byDestination")}</h2>
               <BarList
                 caption={t("reportsPage.byDestination")}
@@ -137,7 +141,7 @@ export default async function ReportsPage({
               />
             </section>
           </div>
-          <section className="flex flex-col gap-2 rounded-lg border border-border bg-surface p-4">
+          <section className="flex flex-col gap-2 rounded-xl border border-border bg-surface shadow-xs p-4">
             <h2 className="font-semibold">{t("reportsPage.byMission")}</h2>
             <ul className="flex flex-col divide-y divide-border">
               {report.byMission.map((m) => (

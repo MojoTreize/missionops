@@ -33,14 +33,16 @@ export default async function LocationsPage() {
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-5">
       <div>
-        <h1 className="text-2xl font-semibold text-ink">{t("locations.title")}</h1>
-        <p className="text-sm text-muted">{t("locations.subtitle")}</p>
+        <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+          {t("locations.title")}
+        </h1>
+        <p className="mt-1.5 text-[0.95rem] text-muted">{t("locations.subtitle")}</p>
       </div>
       {canCreate ? (
         <ActionForm
           action={addLocationAction}
           submitLabel={t("locations.add")}
-          className="grid grid-cols-1 items-end gap-2 rounded-lg border border-border bg-surface p-4 sm:grid-cols-3"
+          className="grid grid-cols-1 items-end gap-2 rounded-xl border border-border bg-surface shadow-xs p-4 sm:grid-cols-3"
         >
           <div className="flex flex-col gap-1">
             <Label htmlFor="l-name">{t("locations.name")}</Label>
@@ -71,7 +73,7 @@ export default async function LocationsPage() {
       {items.length === 0 ? (
         <p className="text-sm text-muted">{t("locations.empty")}</p>
       ) : (
-        <ul className="flex flex-col divide-y divide-border rounded-lg border border-border bg-surface">
+        <ul className="flex flex-col divide-y divide-border rounded-xl border border-border bg-surface shadow-xs">
           {items.map((l) => (
             <li key={l.id} className="flex items-center justify-between gap-2 px-4 py-2 text-sm">
               <span>

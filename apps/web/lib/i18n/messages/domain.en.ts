@@ -613,6 +613,10 @@ export const domainEn: DomainMessages = {
     empty: "No entries.",
   },
   dashboardPage: {
+    viewAll: "View all",
+    queues: "To handle",
+    indicators: "This month",
+    total: "{count} missions in total",
     greeting: "Hello {name}",
     organisation: "{name}",
     onField: "In the field",

@@ -35,8 +35,10 @@ export default async function TerrainPage({
   return (
     <div className="mx-auto flex max-w-md flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold text-ink">{t("terrain.title")}</h1>
-        <p className="text-sm text-muted">{t("terrain.subtitle")}</p>
+        <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+          {t("terrain.title")}
+        </h1>
+        <p className="mt-1.5 text-[0.95rem] text-muted">{t("terrain.subtitle")}</p>
       </div>
       <TerrainApp
         preselectedMission={mission ?? null}

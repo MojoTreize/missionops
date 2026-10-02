@@ -105,7 +105,12 @@ function SectionHeading({
 }) {
   return (
     <div className="mx-auto max-w-2xl text-center">
-      <p className={cn("text-sm font-semibold uppercase tracking-[0.12em]", dark ? "text-field-200" : "text-field")}>
+      <p
+        className={cn(
+          "text-sm font-semibold uppercase tracking-[0.12em]",
+          dark ? "text-field-200" : "text-field",
+        )}
+      >
         {eyebrow}
       </p>
       <h2
@@ -117,7 +122,12 @@ function SectionHeading({
         {title}
       </h2>
       {subtitle ? (
-        <p className={cn("text-balance mt-4 text-base sm:text-lg", dark ? "text-field-100/75" : "text-muted")}>
+        <p
+          className={cn(
+            "text-balance mt-4 text-base sm:text-lg",
+            dark ? "text-field-100/75" : "text-muted",
+          )}
+        >
           {subtitle}
         </p>
       ) : null}
@@ -153,7 +163,15 @@ function CtaLink({
   );
 }
 
-function LanguageToggle({ t, locale, className }: { t: Translator; locale: string; className?: string }) {
+function LanguageToggle({
+  t,
+  locale,
+  className,
+}: {
+  t: Translator;
+  locale: string;
+  className?: string;
+}) {
   return (
     <form action={setLandingLocaleAction} className={className}>
       <input type="hidden" name="locale" value={locale === "fr" ? "en" : "fr"} />
@@ -200,10 +218,13 @@ export default async function LandingPage() {
         />
 
         <header className="mx-auto flex h-18 max-w-7xl items-center gap-4 px-5 py-4 sm:px-8">
-          <Link href="/" aria-label="MissionOps" className="rounded-md">
+          <Link href="/" className="rounded-md">
             <Logo tone="light" />
           </Link>
-          <nav aria-label={t("landing.nav.menu")} className="ml-8 hidden items-center gap-1 xl:flex">
+          <nav
+            aria-label={t("landing.nav.menu")}
+            className="ml-8 hidden items-center gap-1 xl:flex"
+          >
             {NAV.map((item) => (
               <a
                 key={item.key}
@@ -319,7 +340,9 @@ export default async function LandingPage() {
             ] as const
           ).map(([value, hint]) => (
             <div key={value} className="px-2 py-7 text-center lg:px-6">
-              <dt className="tabular text-lg font-semibold text-ink sm:text-xl">{t(`landing.proof.${value}`)}</dt>
+              <dt className="tabular text-lg font-semibold text-ink sm:text-xl">
+                {t(`landing.proof.${value}`)}
+              </dt>
               <dd className="mt-1 text-sm text-muted">{t(`landing.proof.${hint}`)}</dd>
             </div>
           ))}
@@ -350,12 +373,16 @@ export default async function LandingPage() {
                       <span className="flex size-11 items-center justify-center rounded-xl bg-field-softer text-field">
                         <Icon className="size-5" aria-hidden />
                       </span>
-                      <span className="tabular font-display text-3xl font-semibold text-border-strong">
+                      <span className="tabular font-display text-3xl font-semibold text-field-400">
                         {String(index + 1).padStart(2, "0")}
                       </span>
                     </div>
-                    <h3 className="mt-5 text-lg font-semibold">{t(`landing.loop.${step}.title`)}</h3>
-                    <p className="mt-2 text-[0.95rem] leading-relaxed text-muted">{t(`landing.loop.${step}.text`)}</p>
+                    <h3 className="mt-5 text-lg font-semibold">
+                      {t(`landing.loop.${step}.title`)}
+                    </h3>
+                    <p className="mt-2 text-[0.95rem] leading-relaxed text-muted">
+                      {t(`landing.loop.${step}.text`)}
+                    </p>
                   </li>
                 );
               })}
@@ -364,7 +391,10 @@ export default async function LandingPage() {
         </section>
 
         {/* ------------------------------------------------ Fonctionnalités */}
-        <section id="produit" className="scroll-mt-6 border-y border-border bg-surface px-5 py-20 sm:px-8 sm:py-28">
+        <section
+          id="produit"
+          className="scroll-mt-6 border-y border-border bg-surface px-5 py-20 sm:px-8 sm:py-28"
+        >
           <SectionHeading
             eyebrow={t("landing.features.eyebrow")}
             title={t("landing.features.title")}
@@ -382,7 +412,9 @@ export default async function LandingPage() {
                   <Icon className="size-5" aria-hidden />
                 </span>
                 <h3 className="mt-5 text-lg font-semibold">{t(`landing.features.${key}.title`)}</h3>
-                <p className="mt-2 text-[0.95rem] leading-relaxed text-muted">{t(`landing.features.${key}.text`)}</p>
+                <p className="mt-2 text-[0.95rem] leading-relaxed text-muted">
+                  {t(`landing.features.${key}.text`)}
+                </p>
               </div>
             ))}
           </div>
@@ -416,8 +448,14 @@ export default async function LandingPage() {
         </section>
 
         {/* ------------------------------------------------------- Publics */}
-        <section id="publics" className="scroll-mt-6 border-y border-border bg-surface-2 px-5 py-20 sm:px-8 sm:py-28">
-          <SectionHeading eyebrow={t("landing.audiences.eyebrow")} title={t("landing.audiences.title")} />
+        <section
+          id="publics"
+          className="scroll-mt-6 border-y border-border bg-surface-2 px-5 py-20 sm:px-8 sm:py-28"
+        >
+          <SectionHeading
+            eyebrow={t("landing.audiences.eyebrow")}
+            title={t("landing.audiences.title")}
+          />
           <div className="mx-auto mt-14 grid max-w-6xl gap-5 md:grid-cols-3">
             {AUDIENCES.map(({ key, icon: Icon }) => (
               <div
@@ -427,15 +465,22 @@ export default async function LandingPage() {
                 <span className="flex size-12 items-center justify-center rounded-2xl bg-field-softer text-field transition-colors group-hover:bg-field group-hover:text-white">
                   <Icon className="size-6" aria-hidden />
                 </span>
-                <h3 className="mt-6 text-xl font-semibold">{t(`landing.audiences.${key}.title`)}</h3>
-                <p className="mt-3 text-[0.95rem] leading-relaxed text-muted">{t(`landing.audiences.${key}.text`)}</p>
+                <h3 className="mt-6 text-xl font-semibold">
+                  {t(`landing.audiences.${key}.title`)}
+                </h3>
+                <p className="mt-3 text-[0.95rem] leading-relaxed text-muted">
+                  {t(`landing.audiences.${key}.text`)}
+                </p>
               </div>
             ))}
           </div>
         </section>
 
         {/* ------------------------------------------------------ Sécurité */}
-        <section id="securite" className="relative isolate scroll-mt-6 overflow-hidden bg-field-950 px-5 py-20 text-white sm:px-8 sm:py-28">
+        <section
+          id="securite"
+          className="relative isolate scroll-mt-6 overflow-hidden bg-field-950 px-5 py-20 text-white sm:px-8 sm:py-28"
+        >
           <div aria-hidden className="bg-grid absolute inset-0 -z-10 opacity-[0.06]" />
           <SectionHeading
             dark
@@ -448,7 +493,9 @@ export default async function LandingPage() {
               <div key={key} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
                 <Icon className="size-6 text-field-200" aria-hidden />
                 <h3 className="mt-5 font-semibold">{t(`landing.security.${key}.title`)}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-field-100/70">{t(`landing.security.${key}.text`)}</p>
+                <p className="mt-2 text-sm leading-relaxed text-field-100/70">
+                  {t(`landing.security.${key}.text`)}
+                </p>
               </div>
             ))}
           </div>
@@ -471,7 +518,9 @@ export default async function LandingPage() {
                 key={key}
                 className={cn(
                   "relative flex flex-col rounded-2xl border p-7",
-                  featured ? "border-field bg-field-950 text-white shadow-lg" : "border-border bg-surface shadow-xs",
+                  featured
+                    ? "border-field bg-field-950 text-white shadow-lg"
+                    : "border-border bg-surface shadow-xs",
                 )}
               >
                 {featured ? (
@@ -479,7 +528,9 @@ export default async function LandingPage() {
                     {t("landing.pricing.popular")}
                   </span>
                 ) : null}
-                <h3 className={cn("text-lg font-semibold", featured ? "text-field-100" : "text-ink")}>
+                <h3
+                  className={cn("text-lg font-semibold", featured ? "text-field-100" : "text-ink")}
+                >
                   {t(`landing.pricing.${key}.name`)}
                 </h3>
                 <p className="mt-4 flex items-baseline gap-2">
@@ -490,21 +541,33 @@ export default async function LandingPage() {
                     {t(`landing.pricing.${key}.period`)}
                   </span>
                 </p>
-                <p className={cn("mt-3 text-[0.95rem]", featured ? "text-field-100/80" : "text-muted")}>
+                <p
+                  className={cn(
+                    "mt-3 text-[0.95rem]",
+                    featured ? "text-field-100/80" : "text-muted",
+                  )}
+                >
                   {t(`landing.pricing.${key}.text`)}
                 </p>
                 <ul className="mt-6 flex flex-1 flex-col gap-3 text-[0.95rem]">
                   {(["f1", "f2", "f3"] as const).map((f) => (
                     <li key={f} className="flex gap-2.5">
                       <Check
-                        className={cn("mt-0.5 size-4 shrink-0", featured ? "text-field-200" : "text-field")}
+                        className={cn(
+                          "mt-0.5 size-4 shrink-0",
+                          featured ? "text-field-200" : "text-field",
+                        )}
                         aria-hidden
                       />
                       {t(`landing.pricing.${key}.${f}`)}
                     </li>
                   ))}
                 </ul>
-                <CtaLink href={href} variant={featured ? "primary" : "outline"} className="mt-8 w-full">
+                <CtaLink
+                  href={href}
+                  variant={featured ? "primary" : "outline"}
+                  className="mt-8 w-full"
+                >
                   {t(`landing.pricing.${key}.cta`)}
                 </CtaLink>
               </div>
@@ -513,7 +576,10 @@ export default async function LandingPage() {
         </section>
 
         {/* ----------------------------------------------------------- FAQ */}
-        <section id="faq" className="scroll-mt-6 border-t border-border bg-surface px-5 py-20 sm:px-8 sm:py-28">
+        <section
+          id="faq"
+          className="scroll-mt-6 border-t border-border bg-surface px-5 py-20 sm:px-8 sm:py-28"
+        >
           <SectionHeading eyebrow={t("landing.faq.eyebrow")} title={t("landing.faq.title")} />
           <div className="mx-auto mt-12 max-w-3xl divide-y divide-border rounded-2xl border border-border bg-surface">
             {FAQ.map((n) => (
@@ -525,7 +591,9 @@ export default async function LandingPage() {
                     aria-hidden
                   />
                 </summary>
-                <p className="pb-5 text-[0.95rem] leading-relaxed text-muted">{t(`landing.faq.a${n}`)}</p>
+                <p className="pb-5 text-[0.95rem] leading-relaxed text-muted">
+                  {t(`landing.faq.a${n}`)}
+                </p>
               </details>
             ))}
           </div>
@@ -542,7 +610,9 @@ export default async function LandingPage() {
             <h2 className="font-display text-balance mx-auto max-w-3xl text-3xl font-semibold leading-tight tracking-tight sm:text-[2.6rem]">
               {t("landing.cta.title")}
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-base text-field-50/85 sm:text-lg">{t("landing.cta.subtitle")}</p>
+            <p className="mx-auto mt-4 max-w-xl text-base text-field-50/85 sm:text-lg">
+              {t("landing.cta.subtitle")}
+            </p>
             <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
               <CtaLink href={signedIn ? "/dashboard" : "/signup"} variant="light">
                 {signedIn ? t("landing.nav.openApp") : t("landing.cta.primary")}

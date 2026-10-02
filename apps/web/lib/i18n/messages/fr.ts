@@ -74,10 +74,17 @@ export const fr = {
     admin: "Administrateur",
   },
   auth: {
+    backHome: "Retour à l'accueil",
+    panelTitle: "De la demande au dossier de clôture, sans rien perdre en route.",
+    panelPoint1: "Saisie des dépenses hors ligne, sur le terrain",
+    panelPoint2: "Multi-devises GNF, EUR et USD à taux figé",
+    panelPoint3: "Dossier de clôture auditable en un clic",
+    panelFoot: "Hébergé dans l'Union européenne · données cloisonnées par organisation",
     tagline: "Le système d'exploitation des missions terrain",
     emailLabel: "Adresse e-mail",
     emailPlaceholder: "vous@organisation.org",
     login: {
+      subtitle: "Heureux de vous revoir. Connectez-vous pour retrouver vos missions.",
       title: "Se connecter",
       magicSubmit: "Recevoir un lien de connexion",
       magicSending: "Envoi…",

@@ -32,9 +32,13 @@ export default async function NotificationsPage() {
     <div className="mx-auto flex max-w-2xl flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h1 className="text-2xl font-semibold text-ink">{t("notifications.title")}</h1>
+          <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+            {t("notifications.title")}
+          </h1>
           {unread > 0 ? (
-            <p className="text-sm text-muted">{t("notifications.unread", { count: unread })}</p>
+            <p className="mt-1.5 text-[0.95rem] text-muted">
+              {t("notifications.unread", { count: unread })}
+            </p>
           ) : null}
         </div>
         {unread > 0 ? (
@@ -48,7 +52,7 @@ export default async function NotificationsPage() {
       {items.length === 0 ? (
         <EmptyState icon={<Bell aria-hidden />} title={t("notifications.empty")} />
       ) : (
-        <ul className="flex flex-col divide-y divide-border rounded-lg border border-border bg-surface">
+        <ul className="flex flex-col divide-y divide-border rounded-xl border border-border bg-surface shadow-xs">
           {items.map((n) => (
             <li
               key={n.id}
@@ -74,7 +78,7 @@ export default async function NotificationsPage() {
           ))}
         </ul>
       )}
-      <section className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
+      <section className="flex flex-col gap-3 rounded-xl border border-border bg-surface shadow-xs p-4">
         <h2 className="font-semibold">{t("notifications.preferences")}</h2>
         <p className="text-sm text-muted">{t("notifications.preferencesDescription")}</p>
         <ActionForm

@@ -6,7 +6,10 @@ import { cn } from "@/lib/cn";
 export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("rounded-xl border border-border bg-surface shadow-xs", className)}
+      className={cn(
+        "overflow-hidden rounded-xl border border-border bg-surface shadow-xs",
+        className,
+      )}
       {...props}
     />
   );
@@ -26,7 +29,12 @@ export function CardHeader({
   className?: string;
 }) {
   return (
-    <div className={cn("flex items-start justify-between gap-3 border-b border-border/70 px-5 py-4", className)}>
+    <div
+      className={cn(
+        "flex items-start justify-between gap-3 border-b border-border/70 px-5 py-4",
+        className,
+      )}
+    >
       <div className="flex min-w-0 items-start gap-3">
         {icon ? (
           <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-field-softer text-field [&_svg]:size-4">
@@ -65,10 +73,16 @@ export function PageHeader({
     <div className={cn("flex flex-wrap items-end justify-between gap-4", className)}>
       <div className="min-w-0">
         {eyebrow ? (
-          <p className="mb-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-field">{eyebrow}</p>
+          <p className="mb-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-field">
+            {eyebrow}
+          </p>
         ) : null}
-        <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">{title}</h1>
-        {description ? <p className="mt-1.5 max-w-2xl text-[0.95rem] text-muted">{description}</p> : null}
+        <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+          {title}
+        </h1>
+        {description ? (
+          <p className="mt-1.5 max-w-2xl text-[0.95rem] text-muted">{description}</p>
+        ) : null}
       </div>
       {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
     </div>
@@ -102,10 +116,19 @@ export function StatCard({
       <div className="flex items-center justify-between gap-2">
         <span className="text-sm font-medium text-muted">{label}</span>
         {icon ? (
-          <span className={cn("flex size-8 items-center justify-center rounded-lg [&_svg]:size-4", tones[tone])}>{icon}</span>
+          <span
+            className={cn(
+              "flex size-8 items-center justify-center rounded-lg [&_svg]:size-4",
+              tones[tone],
+            )}
+          >
+            {icon}
+          </span>
         ) : null}
       </div>
-      <span className="tabular text-2xl font-semibold tracking-tight text-ink sm:text-[1.7rem]">{value}</span>
+      <span className="tabular text-2xl font-semibold tracking-tight text-ink sm:text-[1.7rem]">
+        {value}
+      </span>
       {hint ? <span className="text-xs text-muted">{hint}</span> : null}
     </div>
   );

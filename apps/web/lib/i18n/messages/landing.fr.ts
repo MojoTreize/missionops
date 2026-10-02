@@ -160,8 +160,7 @@ const raw = {
   security: {
     eyebrow: "Sécurité et conformité",
     title: "Vos données restent les vôtres, et elles restent intactes.",
-    subtitle:
-      "MissionOps est construit pour passer un audit, pas seulement pour le survivre.",
+    subtitle: "MissionOps est construit pour passer un audit, pas seulement pour le survivre.",
     hosting: {
       title: "Hébergement en Europe",
       text: "Base de données et fichiers hébergés dans l'Union européenne, sauvegardes chiffrées quotidiennes.",

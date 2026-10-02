@@ -1,4 +1,19 @@
-import { Plus, Smartphone } from "lucide-react";
+import {
+  ArrowRight,
+  CalendarDays,
+  ClipboardCheck,
+  FileCheck2,
+  FilePen,
+  HandCoins,
+  LayoutGrid,
+  MapPin,
+  Plus,
+  Receipt,
+  Scale,
+  Smartphone,
+  Timer,
+  Wallet,
+} from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -8,6 +23,7 @@ import { dashboard, type MissionSummary } from "@missionops/services";
 
 import { StatusBadge } from "@/components/mission/status-badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardHeader, PageHeader, StatCard } from "@/components/ui/card";
 import { MoneyDisplay } from "@/components/ui/money-display";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { getDb } from "@/lib/db";
@@ -33,45 +49,45 @@ export default async function DashboardPage() {
   const stats = await dashboard(getDb(), ctx);
   const role = ctx.actor;
 
-  const Tile = ({
-    label,
-    value,
+  const List = ({
+    title,
+    items,
+    icon,
     href,
   }: {
-    label: string;
-    value: React.ReactNode;
-    href?: string;
-  }) => {
-    const body = (
-      <div className="flex h-full flex-col gap-1 rounded-lg border border-border bg-surface p-4">
-        <span className="text-sm text-muted">{label}</span>
-        <span className="text-2xl font-semibold text-ink">{value}</span>
-      </div>
-    );
-    return href ? (
-      <Link href={href} className="block hover:opacity-90">
-        {body}
-      </Link>
-    ) : (
-      body
-    );
-  };
-
-  const List = ({ title, items }: { title: string; items: MissionSummary[] }) => (
-    <section className="flex flex-col gap-2 rounded-lg border border-border bg-surface p-4">
-      <h2 className="font-semibold">{title}</h2>
+    title: string;
+    items: MissionSummary[];
+    icon: React.ReactNode;
+    href: string;
+  }) => (
+    <Card className="flex flex-col">
+      <CardHeader
+        title={title}
+        icon={icon}
+        action={
+          items.length > 0 ? (
+            <Link
+              href={href}
+              className="inline-flex items-center gap-1 text-sm font-medium text-field hover:underline"
+            >
+              {t("dashboardPage.viewAll")}
+              <ArrowRight className="size-3.5" aria-hidden />
+            </Link>
+          ) : null
+        }
+      />
       {items.length === 0 ? (
-        <p className="text-sm text-muted">{t("dashboardPage.none")}</p>
+        <p className="px-5 py-6 text-sm text-muted">{t("dashboardPage.none")}</p>
       ) : (
-        <ul className="flex flex-col divide-y divide-border">
+        <ul className="flex flex-col divide-y divide-border/70">
           {items.slice(0, 6).map((m) => (
-            <li key={m.id} className="py-2">
+            <li key={m.id}>
               <Link
                 href={`/missions/${m.id}`}
-                className="flex items-center justify-between gap-2 text-sm"
+                className="flex items-center justify-between gap-3 px-5 py-3 text-sm transition-colors hover:bg-surface-2"
               >
                 <span className="min-w-0">
-                  <span className="block truncate font-medium">{m.title}</span>
+                  <span className="block truncate font-medium text-ink">{m.title}</span>
                   <span className="text-xs text-muted">
                     {m.destination} · {formatDate(m.startDate, locale)}
                   </span>
@@ -82,118 +98,172 @@ export default async function DashboardPage() {
           ))}
         </ul>
       )}
-    </section>
+    </Card>
   );
 
+  const total = MISSION_STATUSES.reduce((n, status) => n + stats.byStatus[status], 0);
+  const showReports = canForRole(role, "read", "report");
+
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-5">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold text-ink">
-            {t("dashboardPage.greeting", { name: user.fullName ?? user.email })}
-          </h1>
-          <p className="text-sm text-muted">
-            {t("dashboardPage.organisation", { name: active.name })}
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button asChild variant="secondary" size="sm">
-            <Link href="/terrain">
-              <Smartphone aria-hidden />
-              {t("dashboardPage.terrain")}
-            </Link>
-          </Button>
-          {canForRole(role, "create", "mission") ? (
-            <Button asChild size="sm">
-              <Link href="/missions/new">
-                <Plus aria-hidden />
-                {t("dashboardPage.newMission")}
+    <div className="mx-auto flex max-w-6xl flex-col gap-7">
+      <PageHeader
+        eyebrow={formatDate(new Date(), locale, { weekday: "long", day: "numeric", month: "long" })}
+        title={t("dashboardPage.greeting", { name: user.fullName ?? user.email })}
+        description={t("dashboardPage.organisation", { name: active.name })}
+        actions={
+          <>
+            <Button asChild variant="secondary" size="sm">
+              <Link href="/terrain">
+                <Smartphone aria-hidden />
+                {t("dashboardPage.terrain")}
               </Link>
             </Button>
-          ) : null}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        {role.role !== "collaborateur" ? (
-          <Tile
-            label={t("dashboardPage.approvals")}
-            value={stats.approvalsWaiting}
-            href="/approvals"
-          />
-        ) : null}
-        {role.role === "finance" || role.role === "admin" ? (
-          <>
-            <Tile
-              label={t("dashboardPage.expensesToReview")}
-              value={stats.expensesToReview}
-              href="/expenses?view=pending"
-            />
-            <Tile
-              label={t("dashboardPage.reconciliations")}
-              value={stats.reconciliationsToValidate}
-              href="/finance"
-            />
+            {canForRole(role, "create", "mission") ? (
+              <Button asChild size="sm">
+                <Link href="/missions/new">
+                  <Plus aria-hidden />
+                  {t("dashboardPage.newMission")}
+                </Link>
+              </Button>
+            ) : null}
           </>
-        ) : null}
-        <Tile
-          label={t("dashboardPage.onField")}
-          value={stats.onField.length}
-          href="/missions?status=EN_COURS"
-        />
-        {canForRole(role, "read", "report") ? (
-          <>
-            <Tile
+        }
+      />
+
+      <section className="flex flex-col gap-3">
+        <h2 className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
+          {t("dashboardPage.queues")}
+        </h2>
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {role.role !== "collaborateur" ? (
+            <StatCard
+              label={t("dashboardPage.approvals")}
+              value={stats.approvalsWaiting}
+              href="/approvals"
+              icon={<ClipboardCheck aria-hidden />}
+              tone="warning"
+            />
+          ) : null}
+          {role.role === "finance" || role.role === "admin" ? (
+            <>
+              <StatCard
+                label={t("dashboardPage.expensesToReview")}
+                value={stats.expensesToReview}
+                href="/expenses?view=pending"
+                icon={<Receipt aria-hidden />}
+                tone="ledger"
+              />
+              <StatCard
+                label={t("dashboardPage.reconciliations")}
+                value={stats.reconciliationsToValidate}
+                href="/finance"
+                icon={<Scale aria-hidden />}
+                tone="info"
+              />
+            </>
+          ) : null}
+          <StatCard
+            label={t("dashboardPage.onField")}
+            value={stats.onField.length}
+            href="/missions?status=EN_COURS"
+            icon={<MapPin aria-hidden />}
+          />
+        </div>
+      </section>
+
+      {showReports ? (
+        <section className="flex flex-col gap-3">
+          <h2 className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
+            {t("dashboardPage.indicators")}
+          </h2>
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            <StatCard
               label={t("dashboardPage.monthSpend")}
-              value={<MoneyDisplay money={stats.monthSpend} locale={locale} />}
+              value={
+                <MoneyDisplay money={stats.monthSpend} locale={locale} className="font-semibold" />
+              }
               href="/reports"
+              icon={<Wallet aria-hidden />}
+              tone="ledger"
             />
-            <Tile
+            <StatCard
               label={t("dashboardPage.monthAdvances")}
-              value={<MoneyDisplay money={stats.monthAdvances} locale={locale} />}
+              value={
+                <MoneyDisplay
+                  money={stats.monthAdvances}
+                  locale={locale}
+                  className="font-semibold"
+                />
+              }
+              icon={<HandCoins aria-hidden />}
+              tone="ledger"
             />
-            <Tile
+            <StatCard
               label={t("dashboardPage.receiptCoverage")}
               value={
                 stats.receiptCoverageBp === null
                   ? "—"
                   : `${Math.round(stats.receiptCoverageBp / 100)} %`
               }
+              icon={<FileCheck2 aria-hidden />}
             />
-            <Tile
+            <StatCard
               label={t("dashboardPage.medianClosure")}
               value={
                 stats.medianClosureDays === null
                   ? "—"
                   : t("dashboardPage.days", { days: stats.medianClosureDays })
               }
+              icon={<Timer aria-hidden />}
+              tone="info"
             />
-          </>
-        ) : null}
+          </div>
+        </section>
+      ) : null}
+
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <List
+          title={t("dashboardPage.onField")}
+          items={stats.onField}
+          icon={<MapPin aria-hidden />}
+          href="/missions?status=EN_COURS"
+        />
+        <List
+          title={t("dashboardPage.upcoming")}
+          items={stats.upcoming}
+          icon={<CalendarDays aria-hidden />}
+          href="/missions/calendar"
+        />
+        <List
+          title={t("dashboardPage.drafts")}
+          items={stats.myDrafts}
+          icon={<FilePen aria-hidden />}
+          href="/missions?status=BROUILLON"
+        />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <List title={t("dashboardPage.onField")} items={stats.onField} />
-        <List title={t("dashboardPage.upcoming")} items={stats.upcoming} />
-        <List title={t("dashboardPage.drafts")} items={stats.myDrafts} />
-      </div>
-
-      <section className="flex flex-col gap-2 rounded-lg border border-border bg-surface p-4">
-        <h2 className="font-semibold">{t("dashboardPage.byStatus")}</h2>
-        <ul className="flex flex-wrap gap-2">
+      <Card>
+        <CardHeader
+          title={t("dashboardPage.byStatus")}
+          description={t("dashboardPage.total", { count: total })}
+          icon={<LayoutGrid aria-hidden />}
+        />
+        <ul className="grid grid-cols-2 gap-px bg-border/70 sm:grid-cols-4">
           {MISSION_STATUSES.map((status) => (
-            <li key={status}>
+            <li key={status} className="bg-surface">
               <Link
                 href={`/missions?status=${status}`}
-                className="flex items-center gap-2 rounded-full border border-border px-3 py-1 text-sm"
+                className="flex h-full items-center justify-between gap-2 px-5 py-4 transition-colors hover:bg-surface-2"
               >
                 <StatusBadge status={status} t={t} />
-                <span className="font-medium tabular-nums">{stats.byStatus[status]}</span>
+                <span className="tabular text-xl font-semibold text-ink">
+                  {stats.byStatus[status]}
+                </span>
               </Link>
             </li>
           ))}
         </ul>
-      </section>
+      </Card>
     </div>
   );
 }

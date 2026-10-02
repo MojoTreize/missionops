@@ -27,7 +27,9 @@ export function OrgSwitcher({
   if (memberships.length <= 1) {
     const only = memberships[0];
     return (
-      <span className={`block truncate text-sm font-medium ${tone === "dark" ? "text-white" : "text-field"}`}>
+      <span
+        className={`block truncate text-sm font-medium ${tone === "dark" ? "text-white" : "text-field"}`}
+      >
         {only?.name ?? ""}
       </span>
     );

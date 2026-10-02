@@ -614,6 +614,10 @@ const raw = {
     empty: "Aucune entrée.",
   },
   dashboardPage: {
+    viewAll: "Tout voir",
+    queues: "À traiter",
+    indicators: "Indicateurs du mois",
+    total: "{count} missions au total",
     greeting: "Bonjour {name}",
     organisation: "{name}",
     onField: "Sur le terrain",

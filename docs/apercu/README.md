@@ -11,11 +11,33 @@ base PostgreSQL 16 amorcée par `pnpm db:reset && pnpm db:seed:demo`
 | Phases du plan livrées    | 1 à 9 (Phase 0 : terrain ; Phase 10 : sur demande client) |
 | Écrans                    | 32 pages, 12 routes d'API                                 |
 | Code applicatif           | ~23 500 lignes TypeScript                                 |
-| Tests                     | 600 unitaires · 17 d'intégration · 15 parcours Playwright |
+| Tests                     | 600 unitaires · 17 d'intégration · 16 parcours Playwright |
 | Couverture du domaine     | 99,6 % (argent : 100 %, bloquant)                         |
 | JavaScript initial (max.) | 197 Ko gzippés (écran Terrain), budget 200 Ko bloquant    |
 | Vulnérabilités (prod)     | 0 (`pnpm audit --prod`)                                   |
 | Langues                   | français (par défaut), anglais                            |
+
+## Identité visuelle (refonte du 2 octobre 2026)
+
+Nouveau logo (un « M » tracé comme un itinéraire entre des étapes, qui se
+termine sur le point orange de la clôture), typographies Inter et Source Serif 4,
+vert institutionnel profond, accent orange réservé aux montants. Barre latérale
+sombre groupée (Opérations / Pilotage), cartes et indicateurs avec icônes,
+connexion en deux panneaux. Contraste WCAG AA vérifié par axe-core, y compris sur
+la page d'accueil.
+
+## Page d'accueil publique
+
+![](accueil-1440.png)
+
+| Mobile (375 px)      | Connexion                    |
+| -------------------- | ---------------------------- |
+| ![](accueil-375.png) | ![](bureau-00-connexion.png) |
+
+Page complète : [accueil-1440-complete.png](accueil-1440-complete.png). Elle
+présente la boucle en six étapes, les fonctionnalités, les publics, la sécurité,
+les tarifs et une FAQ, en français et en anglais. Elle est rendue côté serveur,
+sans JavaScript propre à la page (128 Ko au total, socle Next.js compris).
 
 ## Sur le téléphone de l'agent (375 px)
 

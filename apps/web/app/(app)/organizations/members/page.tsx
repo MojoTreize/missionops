@@ -45,10 +45,10 @@ export default async function MembersPage() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-8">
       <div className="flex flex-col gap-1">
-        <h1 className="text-xl font-semibold text-field">
+        <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
           {t("organizations.members.title", { name: actor.organisationName })}
         </h1>
-        <p className="text-sm text-muted">{t("organizations.members.subtitle")}</p>
+        <p className="mt-1.5 text-[0.95rem] text-muted">{t("organizations.members.subtitle")}</p>
       </div>
 
       <section className="flex flex-col gap-3">

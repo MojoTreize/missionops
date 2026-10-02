@@ -38,10 +38,12 @@ export default async function SettingsPage() {
     getOrganisation(db, ctx.organisationId),
     getSubscription(db, ctx),
   ]);
-  const section = "flex flex-col gap-3 rounded-lg border border-border bg-surface p-4";
+  const section = "flex flex-col gap-3 rounded-xl border border-border bg-surface shadow-xs p-4";
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-5">
-      <h1 className="text-2xl font-semibold text-ink">{t("settings.title")}</h1>
+      <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+        {t("settings.title")}
+      </h1>
 
       <section className={section}>
         <h2 className="font-semibold">{t("settings.subscription")}</h2>

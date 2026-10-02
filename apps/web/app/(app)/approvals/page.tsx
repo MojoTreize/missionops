@@ -36,14 +36,16 @@ export default async function ApprovalsPage() {
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-5">
       <div>
-        <h1 className="text-2xl font-semibold text-ink">{t("approvals.title")}</h1>
-        <p className="text-sm text-muted">{t("approvals.subtitle")}</p>
+        <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+          {t("approvals.title")}
+        </h1>
+        <p className="mt-1.5 text-[0.95rem] text-muted">{t("approvals.subtitle")}</p>
       </div>
       {queue.some((q) => q.budgetBaseMinor <= lowStakeMinor(org.baseCurrency)) ? (
         <ActionForm
           action={approveManyAction}
           submitLabel={t("approvals.batchSubmit")}
-          className="flex flex-col gap-2 rounded-lg border border-border bg-surface p-4"
+          className="flex flex-col gap-2 rounded-xl border border-border bg-surface shadow-xs p-4"
         >
           <h2 className="font-semibold">{t("approvals.batchTitle")}</h2>
           <p className="text-sm text-muted">
@@ -90,7 +92,7 @@ export default async function ApprovalsPage() {
           {queue.map((item) => (
             <li
               key={item.id}
-              className="flex flex-col gap-2 rounded-lg border border-border bg-surface p-4"
+              className="flex flex-col gap-2 rounded-xl border border-border bg-surface shadow-xs p-4"
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="font-mono text-xs text-muted">{item.reference}</span>

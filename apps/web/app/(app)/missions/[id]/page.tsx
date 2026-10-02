@@ -74,7 +74,7 @@ function Section({
   action?: React.ReactNode;
 }) {
   return (
-    <section className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
+    <section className="flex flex-col gap-3 rounded-xl border border-border bg-surface shadow-xs p-4">
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-base font-semibold text-ink">{title}</h2>
         {action}
@@ -137,7 +137,9 @@ export default async function MissionPage({
           <StatusBadge status={mission.status} t={t} />
         </div>
         <div className="flex flex-wrap items-start justify-between gap-3">
-          <h1 className="text-2xl font-semibold text-ink">{mission.title}</h1>
+          <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+            {mission.title}
+          </h1>
           {mission.canEdit ? (
             <Button asChild variant="secondary" size="sm">
               <Link href={`/missions/${id}/edit`}>
@@ -170,7 +172,7 @@ export default async function MissionPage({
       {/* Bande de mission (B5.4) : SVG produit par le domaine, sans script ni
           contenu saisi par l'utilisateur (libellés traduits, texte échappé). */}
       <div
-        className="rounded-lg border border-border bg-surface px-2 py-3"
+        className="rounded-xl border border-border bg-surface shadow-xs px-2 py-3"
         dangerouslySetInnerHTML={{ __html: bandSvg }}
       />
 

@@ -50,3 +50,14 @@ test("l'écran de connexion respecte WCAG 2.1 AA", async ({ page }) => {
       .map((v) => v.id),
   ).toEqual([]);
 });
+
+test("la page d'accueil publique respecte WCAG 2.1 AA", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
+  expect(
+    results.violations
+      .filter((v) => v.impact === "serious" || v.impact === "critical")
+      .map((v) => `${v.id} : ${v.nodes.map((n) => n.target.join(" ")).join(" | ")}`),
+  ).toEqual([]);
+});

@@ -16,8 +16,10 @@ export default async function ForbiddenPage() {
   const { t } = await getT();
   return (
     <div className="mx-auto flex max-w-md flex-col gap-3 py-12 text-center">
-      <h1 className="text-xl font-semibold text-field">{t("forbidden.title")}</h1>
-      <p className="text-sm text-muted">{t("forbidden.description")}</p>
+      <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+        {t("forbidden.title")}
+      </h1>
+      <p className="mt-1.5 text-[0.95rem] text-muted">{t("forbidden.description")}</p>
       <p className="mt-2 text-sm">
         <Link href="/dashboard" className="text-field hover:underline">
           {t("common.backToDashboard")}

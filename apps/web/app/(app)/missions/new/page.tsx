@@ -22,7 +22,9 @@ export default async function NewMissionPage() {
   const locations = await searchableLocations(getDb(), ctx);
   return (
     <div className="mx-auto flex max-w-xl flex-col gap-5">
-      <h1 className="text-2xl font-semibold text-ink">{t("missions.form.createTitle")}</h1>
+      <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+        {t("missions.form.createTitle")}
+      </h1>
       <MissionForm mode="create" action={createMissionAction} locations={locations} />
     </div>
   );

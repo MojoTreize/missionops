@@ -37,14 +37,16 @@ export default async function ApprovalFlowPage() {
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-5">
       <div>
-        <h1 className="text-2xl font-semibold text-ink">{t("approvalFlow.title")}</h1>
-        <p className="text-sm text-muted">{t("approvalFlow.subtitle")}</p>
+        <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+          {t("approvalFlow.title")}
+        </h1>
+        <p className="mt-1.5 text-[0.95rem] text-muted">{t("approvalFlow.subtitle")}</p>
         <p className="mt-1 text-xs text-muted">{t("approvalFlow.default")}</p>
       </div>
       <ActionForm
         action={saveFlowAction}
         submitLabel={t("approvalFlow.save")}
-        className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4"
+        className="flex flex-col gap-3 rounded-xl border border-border bg-surface shadow-xs p-4"
       >
         {slots.map((step, i) => (
           <fieldset

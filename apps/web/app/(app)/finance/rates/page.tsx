@@ -36,14 +36,16 @@ export default async function RatesPage() {
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-5">
       <div>
-        <h1 className="text-2xl font-semibold text-ink">{t("rates.title")}</h1>
-        <p className="text-sm text-muted">{t("rates.subtitle")}</p>
+        <h1 className="text-[1.65rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl">
+          {t("rates.title")}
+        </h1>
+        <p className="mt-1.5 text-[0.95rem] text-muted">{t("rates.subtitle")}</p>
       </div>
       {canAdd ? (
         <ActionForm
           action={addRateAction}
           submitLabel={t("rates.add")}
-          className="grid grid-cols-2 items-end gap-2 rounded-lg border border-border bg-surface p-4 sm:grid-cols-5"
+          className="grid grid-cols-2 items-end gap-2 rounded-xl border border-border bg-surface shadow-xs p-4 sm:grid-cols-5"
         >
           <div className="flex flex-col gap-1">
             <Label htmlFor="fx-from">{t("rates.from")}</Label>

@@ -73,10 +73,17 @@ export const en: Messages = {
     admin: "Administrator",
   },
   auth: {
+    backHome: "Back to home",
+    panelTitle: "From request to closure pack, with nothing lost along the way.",
+    panelPoint1: "Offline expense capture in the field",
+    panelPoint2: "Multi-currency GNF, EUR and USD at locked rates",
+    panelPoint3: "Auditable closure pack in one click",
+    panelFoot: "Hosted in the European Union · data isolated per organisation",
     tagline: "The operating system for field missions",
     emailLabel: "Email address",
     emailPlaceholder: "you@organization.org",
     login: {
+      subtitle: "Welcome back. Sign in to get back to your missions.",
       title: "Sign in",
       magicSubmit: "Get a sign-in link",
       magicSending: "Sending…",
