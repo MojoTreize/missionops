@@ -136,3 +136,12 @@ conformément à la définition de « terminé » du plan (section 4.3).
   nanoid (`pnpm audit --prod` propre) ; CodeQL et audit en CI ; limitation de
   débit des routes de synchronisation ; remontée d'erreurs Sentry sans SDK ;
   tâche planifiée déclenchée par GitHub Actions.
+- Refonte visuelle : nouveau logo et icônes, typographies Inter et Source Serif
+  4, barre latérale sombre groupée, tableau de bord à indicateurs, connexion en
+  deux panneaux, cartes et titres harmonisés ; page d'accueil publique
+  bilingue sans JavaScript client ; corrections issues du test en direct
+  (fiche mission à 375 px, calendrier mobile, libellés du journal d'audit,
+  contrastes AA) ; contrôle axe-core de la page d'accueil (16 parcours
+  Playwright).
+- Démarrage local en une commande sans Docker : `scripts/demarrer.cmd`
+  (Windows) et `scripts/demarrer.sh` (macOS, Linux).
