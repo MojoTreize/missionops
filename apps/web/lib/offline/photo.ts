@@ -23,7 +23,14 @@ export async function compressPhoto(file: File): Promise<CompressedPhoto> {
   if (file.type === "application/pdf") {
     return { blob: file, width: 1, height: 1, sha256: await sha256(file) };
   }
-  const bitmap = await createImageBitmap(file);
+  let bitmap: ImageBitmap;
+  try {
+    bitmap = await createImageBitmap(file);
+  } catch {
+    // Format non décodable par ce navigateur (HEIC…) : on garde l'original,
+    // le serveur borne la taille à 8 Mo.
+    return { blob: file, width: 1, height: 1, sha256: await sha256(file) };
+  }
   const size = targetSize(bitmap.width, bitmap.height);
   const canvas = document.createElement("canvas");
   canvas.width = size.width;

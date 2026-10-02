@@ -19,6 +19,7 @@ export const fr = {
     loading: "Chargement…",
   },
   nav: {
+    help: "Aide",
     dashboard: "Tableau de bord",
     missions: "Missions",
     expenses: "Dépenses",
@@ -41,6 +42,7 @@ export const fr = {
     profile: "Profil",
   },
   shell: {
+    skipToContent: "Aller au contenu",
     mainNav: "Navigation principale",
     breadcrumb: "Fil d'Ariane",
     searchLabel: "Recherche globale",

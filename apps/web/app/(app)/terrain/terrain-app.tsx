@@ -202,7 +202,7 @@ export function TerrainApp({
     sync.trigger();
   }
 
-  const photosByExpense = new Set(sync.photos.map((p) => p.expenseId));
+  const photosByExpense = new Map(sync.photos.map((p) => [p.expenseId, p.status]));
 
   if (!data) {
     return (
@@ -361,7 +361,9 @@ export function TerrainApp({
                   </Badge>
                 </div>
                 {item.type === "expense" && photosByExpense.has(item.id) ? (
-                  <span className="text-xs text-muted">{t("terrain.photo")}</span>
+                  <span className="text-xs text-muted">
+                    {t("terrain.photo")} · {t(`terrain.status.${photosByExpense.get(item.id)!}`)}
+                  </span>
                 ) : null}
                 {item.status === "rejected" ? (
                   <div className="flex flex-wrap items-center gap-2">

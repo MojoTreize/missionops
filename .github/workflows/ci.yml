@@ -75,3 +75,68 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+  e2e:
+    name: Parcours critiques (Playwright)
+    runs-on: ubuntu-latest
+    needs: verifications
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: missionops
+          POSTGRES_PASSWORD: missionops
+          POSTGRES_DB: missionops_e2e
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U missionops"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgres://missionops:missionops@localhost:5432/missionops_e2e
+      CRON_SECRET: ci-cron-secret
+      E2E_BASE_URL: http://localhost:3000
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Installer les dépendances
+        run: pnpm install --frozen-lockfile
+
+      - name: Installer Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Base de démonstration
+        run: pnpm db:migrate && pnpm db:seed:demo
+
+      - name: Build
+        run: pnpm --filter @missionops/web build
+
+      - name: Démarrer l'application
+        run: |
+          pnpm --filter @missionops/web start &
+          for i in $(seq 1 60); do curl -sf http://localhost:3000/api/health && exit 0; sleep 1; done
+          echo "L'application n'a pas démarré" && exit 1
+
+      - name: Tests E2E
+        run: pnpm test:e2e
+
+      - name: Traces en cas d'échec
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: test-results/
+          retention-days: 7

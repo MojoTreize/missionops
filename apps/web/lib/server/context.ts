@@ -36,7 +36,7 @@ export async function errorState(error: unknown): Promise<FormState> {
   if (error instanceof ServiceError) {
     const fields: Record<string, string> = {};
     for (const [field, code] of Object.entries(error.details)) {
-      fields[field] = translateError(t, code);
+      fields[field] = translateError(t, code, "errors.field");
     }
     return { status: "error", message: translateError(t, error.code), fields };
   }
@@ -46,8 +46,12 @@ export async function errorState(error: unknown): Promise<FormState> {
 
 type T = Awaited<ReturnType<typeof getT>>["t"];
 
-export function translateError(t: T, code: string): string {
+export function translateError(
+  t: T,
+  code: string,
+  fallback: "errors.generic" | "errors.field" = "errors.generic",
+): string {
   const key = `errors.${code}` as Parameters<T>[0];
   const text = t(key);
-  return text === key ? t("errors.generic") : text;
+  return text === key ? t(fallback) : text;
 }

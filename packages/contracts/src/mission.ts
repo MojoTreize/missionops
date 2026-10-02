@@ -81,7 +81,8 @@ export const budgetLineInput = z.object({
   quantity: z.coerce.number().int().min(1).max(10_000),
   unitAmount: z.string().trim().min(1),
   currency,
-  rate: rateString.optional().nullable(),
+  // Champ de formulaire vide = taux en vigueur (résolu par le service).
+  rate: z.preprocess((v) => (v === "" ? null : v), rateString.nullable().optional()),
 });
 
 export const missionFilterInput = z.object({

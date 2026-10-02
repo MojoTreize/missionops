@@ -59,11 +59,8 @@ const store: BlobStore = {
   },
 };
 
-// Petite image PNG (reçu de démonstration).
-const RECEIPT_PNG = Buffer.from(
-  "iVBORw0KGgoAAAANSUhEUgAAABAAAAAUCAIAAAD6E2rTAAAAMklEQVR4nGP8//8/AymAiSTVoxpGNYxqGNUwqmFUw6iGUQ2jGkY1jGoY1TCqYVTDqIZRDQBfDgQkuRQmpwAAAABJRU5ErkJggg==",
-  "base64",
-);
+// Image de reçu de démonstration (PNG valide, 240 × 320).
+const RECEIPT_PNG = await readFile(join(here, "recu-demo.png"));
 
 function day(offset: number): string {
   const d = new Date();

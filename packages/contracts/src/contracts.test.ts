@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  budgetLineInput,
   expenseInput,
   fieldErrors,
   formDataToObject,
@@ -79,6 +80,20 @@ describe("contrats partagés", () => {
     expect(
       orgLocationInput.safeParse({ name: "Entrepôt", parentCode: "XX", kind: "site" }).success,
     ).toBe(false);
+  });
+
+  it("traite un taux vide comme absent", () => {
+    const line = {
+      missionId: UUID,
+      category: "transport",
+      label: "Taxi",
+      quantity: "1",
+      unitAmount: "1000",
+      currency: "GNF",
+    };
+    expect(budgetLineInput.parse({ ...line, rate: "" }).rate).toBeNull();
+    expect(budgetLineInput.parse({ ...line, rate: "9350" }).rate).toBe("9350");
+    expect(budgetLineInput.safeParse({ ...line, rate: "abc" }).success).toBe(false);
   });
 
   it("exige l'identité d'un participant", () => {

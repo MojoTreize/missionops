@@ -2,14 +2,22 @@ import "server-only";
 
 import { headers } from "next/headers";
 
+import { DbRateLimiter } from "@missionops/services";
+
+import { getDb } from "@/lib/db";
+
 import { LOGIN_RATE_LIMIT } from "./config";
-import { InMemoryRateLimiter } from "./rate-limit";
 
 /**
- * Limiteur de connexion partagé (instance unique). Suffisant pour un
- * déploiement mono-instance ; remplaçable par un magasin partagé plus tard.
+ * Limiteur de connexion partagé entre instances (B8.3), adossé à la base :
+ * il survit aux redémarrages et protège toutes les instances à la fois.
  */
-export const loginRateLimiter = new InMemoryRateLimiter(LOGIN_RATE_LIMIT);
+let limiter: DbRateLimiter | undefined;
+
+export function loginRateLimiter(): DbRateLimiter {
+  limiter ??= new DbRateLimiter(getDb(), LOGIN_RATE_LIMIT);
+  return limiter;
+}
 
 /** Normalise une adresse e-mail (espaces retirés, minuscules). */
 export function normalizeEmail(email: string): string {

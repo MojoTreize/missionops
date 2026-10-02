@@ -1,4 +1,4 @@
-import { isRole } from "@missionops/core";
+import { ROLES, isRole } from "@missionops/core";
 import type { Metadata } from "next";
 
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +16,9 @@ import { getMembers, getPendingInvitations } from "@/lib/org/queries";
 import { can, requireCan } from "@/lib/policy";
 
 import { InviteMemberForm } from "./invite-member-form";
+import { ActionForm } from "@/components/forms/action-form";
+import { NativeSelect } from "@/components/forms/controls";
+import { changeRoleAction, removeMemberAction } from "../settings/actions";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getT();
@@ -31,6 +34,7 @@ export default async function MembersPage() {
   // vers l'accueil / la connexion via la garde.
   const actor = await requireCan("read", "member");
   const canInvite = await can("create", "member");
+  const canManage = await can("update", "member");
   const { t } = await getT();
 
   const [members, pending] = await Promise.all([
@@ -63,9 +67,44 @@ export default async function MembersPage() {
               <TableRow key={m.userId}>
                 <TableCell>{m.fullName ?? m.email}</TableCell>
                 <TableCell>
-                  <Badge variant={m.role === "admin" ? "ledger" : "muted"}>
-                    {roleLabel(t, m.role)}
-                  </Badge>
+                  {canManage && m.userId !== actor.userId ? (
+                    <div className="flex flex-wrap items-center gap-2">
+                      <ActionForm
+                        action={changeRoleAction}
+                        submitLabel={t("membersAdmin.changeRole")}
+                        variant="secondary"
+                        size="sm"
+                        className="flex items-center gap-2"
+                      >
+                        <input type="hidden" name="userId" value={m.userId} />
+                        <NativeSelect
+                          name="role"
+                          defaultValue={m.role}
+                          aria-label={t("organizations.members.roleColumn")}
+                          className="h-9 w-40"
+                        >
+                          {ROLES.map((r) => (
+                            <option key={r} value={r}>
+                              {t(`roles.${r}`)}
+                            </option>
+                          ))}
+                        </NativeSelect>
+                      </ActionForm>
+                      <ActionForm
+                        action={removeMemberAction}
+                        submitLabel={t("membersAdmin.remove")}
+                        variant="ghost"
+                        size="sm"
+                      >
+                        <input type="hidden" name="userId" value={m.userId} />
+                      </ActionForm>
+                    </div>
+                  ) : (
+                    <Badge variant={m.role === "admin" ? "ledger" : "muted"}>
+                      {roleLabel(t, m.role)}
+                      {m.userId === actor.userId ? ` (${t("membersAdmin.you")})` : ""}
+                    </Badge>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

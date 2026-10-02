@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 
 import { TRANSPORT_MODES } from "@missionops/core";
 
@@ -37,6 +37,11 @@ export function MissionForm({
 }) {
   const t = useT();
   const [state, formAction, pending] = useActionState(action, idleState);
+  // Navigation complète vers la fiche : la navigation client enchaînée sur
+  // l'action est parfois annulée par le routeur (constaté avec Next 15.5).
+  useEffect(() => {
+    if (state.redirectTo) window.location.assign(state.redirectTo);
+  }, [state]);
   const err = (field: string) => state.fields?.[field];
 
   return (

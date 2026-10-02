@@ -22,6 +22,11 @@ pnpm dev
 
 L'application est alors disponible sur http://localhost:3000.
 
+Base locale : `docker compose up -d`, puis `pnpm db:reset && pnpm db:seed:demo`.
+Comptes de démonstration : `awa.diallo@croix-rouge-guinee.demo` (administratrice),
+`fatoumata.camara@…` (manager), `aissatou.bah@…` (finance),
+`kadiatou.balde@…` (collaboratrice) — mot de passe commun `motdepasse-demo`.
+
 ## Structure du monorepo
 
 ```
@@ -32,6 +37,7 @@ missionops/
 │   ├── core/           # domaine métier pur (argent, missions, réconciliation)
 │   ├── db/             # Drizzle : schéma, migrations, requêtes
 │   ├── contracts/      # schémas Zod partagés client ↔ serveur
+│   ├── services/       # services applicatifs : domaine + base + audit + notifications
 │   ├── ui/             # design system
 │   ├── documents/      # génération PDF (Mission Pack, Closure Pack)
 │   ├── notifications/  # abstraction e-mail / WhatsApp / SMS
@@ -42,14 +48,16 @@ missionops/
 
 ## Commandes principales
 
-| Commande         | Effet                                |
-| ---------------- | ------------------------------------ |
-| `pnpm dev`       | Lance l'application en développement |
-| `pnpm build`     | Compile tous les paquets             |
-| `pnpm lint`      | Analyse ESLint                       |
-| `pnpm typecheck` | Vérification des types               |
-| `pnpm test`      | Tests unitaires                      |
-| `pnpm format`    | Formatage Prettier                   |
+| Commande                             | Effet                                                      |
+| ------------------------------------ | ---------------------------------------------------------- |
+| `pnpm dev`                           | Lance l'application en développement                       |
+| `pnpm build`                         | Compile tous les paquets                                   |
+| `pnpm lint`                          | Analyse ESLint                                             |
+| `pnpm typecheck`                     | Vérification des types                                     |
+| `pnpm test`                          | Tests unitaires                                            |
+| `pnpm format`                        | Formatage Prettier                                         |
+| `pnpm test:e2e`                      | Parcours Playwright (application démarrée, `E2E_BASE_URL`) |
+| `pnpm db:reset && pnpm db:seed:demo` | Base de démonstration complète                             |
 
 ## Méthode
 

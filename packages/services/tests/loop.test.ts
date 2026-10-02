@@ -422,3 +422,95 @@ describe("rapports, audit, exports et documents (Phases 5-6)", () => {
     expect(exported.auditLog.length).toBeGreaterThan(10);
   });
 });
+
+describe("limitation de débit partagée (B8.3)", () => {
+  it("bloque au-delà du maximum et rouvre après la fenêtre", async () => {
+    const { DbRateLimiter } = await import("../src");
+    let now = new Date("2026-10-02T10:00:00Z");
+    const limiter = new DbRateLimiter(t.db, { max: 2, windowMs: 60_000 }, () => now);
+    expect(await limiter.isLimited("login:a")).toBe(false);
+    await limiter.record("login:a");
+    await limiter.record("login:a");
+    expect(await limiter.isLimited("login:a")).toBe(true);
+    now = new Date("2026-10-02T10:01:01Z");
+    expect(await limiter.isLimited("login:a")).toBe(false);
+    await limiter.record("login:a");
+    expect(await limiter.isLimited("login:a")).toBe(false);
+    await limiter.reset("login:a");
+    expect(await limiter.isLimited("login:a")).toBe(false);
+  });
+});
+
+describe("plateforme (Phase 9)", () => {
+  it("essai, places, rôles, imports, paramètres et console", async () => {
+    const s = await import("../src");
+    const admin = {
+      ...ctx("director"),
+      actor: { userId: people.director!.id, role: "admin" as const },
+    };
+    await s.startTrial(t.db, ORG, people.director!.id, now);
+    const sub = await s.getSubscription(t.db, admin);
+    expect(sub.plan).toBe("essai");
+    expect(sub.seatsUsed).toBe(5);
+    await s.assertSeatAvailable(t.db, admin, 5);
+    await expect(s.assertSeatAvailable(t.db, admin, 6)).rejects.toMatchObject({
+      code: "plan_limit",
+    });
+
+    // Rôles : changement journalisé, dernier administrateur protégé.
+    await s.changeMemberRole(t.db, admin, people.manager!.id, "logisticien");
+    const audit = (await t.admin(
+      `select count(*)::int as n from audit_log where table_name = 'memberships' and action = 'update'`,
+    )) as { n: number }[];
+    expect(audit[0]?.n).toBe(1);
+    await expect(s.removeMember(t.db, admin, admin.actor.userId)).rejects.toMatchObject({
+      code: "cannot_remove_self",
+    });
+
+    // Import de lieux.
+    const report = await s.importLocations(
+      t.db,
+      admin,
+      "nom;code_parent;type\nEntrepôt Kindia;GN-KD;site\nInconnu;GN-ZZ;site\nEntrepôt Kindia;GN-KD;site",
+    );
+    expect(report.imported).toBe(1);
+    expect(report.errors.map((e) => [e.line, e.code])).toEqual([
+      [3, "invalid_input"],
+      [4, "duplicate"],
+    ]);
+    const members = await s.prepareMemberImport(
+      t.db,
+      admin,
+      "email;role\nnew@demo.gn;finance\nagent@demo.gn;manager\nbad;manager",
+    );
+    expect(members.rows.map((r) => r.email)).toEqual(["new@demo.gn"]);
+    expect(members.errors.map((e) => e.code)).toEqual(["duplicate", "invalid_input"]);
+
+    // Paramètres : devise de base verrouillée après des écritures monétaires.
+    await expect(
+      s.updateOrganisationSettings(t.db, admin, {
+        name: "CRG",
+        baseCurrency: "EUR",
+        timezone: "Africa/Conakry",
+      }),
+    ).rejects.toMatchObject({ code: "base_currency_locked" });
+    await s.updateOrganisationSettings(t.db, admin, {
+      name: "Croix-Rouge Guinée",
+      baseCurrency: "GNF",
+      timezone: "Africa/Conakry",
+      documentFooter: "Siège : Kaloum, Conakry",
+      signatureLabels: "Le demandeur; Le trésorier",
+    });
+    const org = await s.getOrganisation(t.db, ORG);
+    expect(org.settings.signatureLabels).toEqual(["Le demandeur", "Le trésorier"]);
+
+    // Console : indicateurs par organisation, sans fuite entre organisations.
+    const overview = await s.platformOverview(t.db, new Date("2026-10-20T00:00:00Z"));
+    const crg = overview.find((o) => o.id === ORG)!;
+    expect(crg.missionsClosed).toBe(1);
+    expect(crg.closurePackShareBp).toBe(10000);
+    expect(overview.find((o) => o.id === OTHER_ORG)?.missionsClosed).toBe(0);
+    await s.setSubscription(t.db, ORG, admin.actor.userId, { status: "suspendue" }, now);
+    expect((await s.getSubscription(t.db, admin)).status).toBe("suspendue");
+  });
+});

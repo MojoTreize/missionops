@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import Link from "next/link";
+
 import { getT } from "@/lib/i18n/server";
 
 import { LoginForm } from "./login-form";
@@ -30,6 +32,9 @@ export default async function LoginPage({
         </p>
       ) : null}
       <LoginForm />
+      <Link href="/signup" className="text-sm text-field hover:underline">
+        {t("signup.noAccount")}
+      </Link>
     </div>
   );
 }

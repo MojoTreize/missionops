@@ -2,9 +2,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getT } from "@/lib/i18n/server";
 
 /**
- * État de chargement de l'espace authentifié (B1.10). Affiché pendant la
- * résolution d'un segment ; réserve la place du contenu pour éviter les sauts
- * de mise en page.
+ * État de chargement (B1.10). Réservé aux pages sans action serveur : une
+ * frontière de chargement au-dessus d'une page à actions empêche son
+ * rafraîchissement après l'action (constaté avec Next 15.5).
  */
 export default async function AppLoading() {
   const { t } = await getT();

@@ -18,6 +18,7 @@ export const en: Messages = {
     loading: "Loading…",
   },
   nav: {
+    help: "Help",
     dashboard: "Dashboard",
     missions: "Missions",
     expenses: "Expenses",
@@ -40,6 +41,7 @@ export const en: Messages = {
     profile: "Profile",
   },
   shell: {
+    skipToContent: "Skip to content",
     mainNav: "Main navigation",
     breadcrumb: "Breadcrumb",
     searchLabel: "Global search",

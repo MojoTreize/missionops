@@ -14,3 +14,5 @@ export * from "./field";
 export * from "./documents";
 export * from "./reports";
 export * from "./reminders";
+export * from "./rate-limit";
+export * from "./platform";

@@ -6,6 +6,7 @@ import {
   GitBranch,
   Landmark,
   LayoutDashboard,
+  LifeBuoy,
   MapPin,
   ReceiptText,
   ScrollText,
@@ -84,6 +85,7 @@ export const SECONDARY_ITEMS: SecondaryNavItem[] = [
     icon: Settings,
     permission: ["update", "organisation"],
   },
+  { href: "/help", labelKey: "nav.help", icon: LifeBuoy, permission: null },
   { href: "/admin", labelKey: "nav.admin", icon: Shield, permission: null },
 ];
 
@@ -116,6 +118,7 @@ export const ROUTE_LABEL_KEYS: Record<string, MessageKey> = {
   "/organizations/settings": "nav.settings",
   "/audit": "nav.audit",
   "/admin": "nav.admin",
+  "/help": "nav.help",
   "/organizations": "routes.organization",
   "/organizations/new": "routes.newOrganization",
   "/organizations/members": "routes.members",

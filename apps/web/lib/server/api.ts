@@ -7,6 +7,8 @@ import { ServiceError, type ServiceContext } from "@missionops/services";
 import { clientIp } from "@/lib/auth/server";
 import { getActor } from "@/lib/policy";
 
+import { log } from "./log";
+
 /**
  * Aides des routes d'API (JSON) : contexte de service sans redirection, et
  * traduction des erreurs de service en statut HTTP.
@@ -31,7 +33,7 @@ export function apiError(error: unknown) {
     const status = error.code === "forbidden" ? 403 : error.code === "not_found" ? 404 : 422;
     return NextResponse.json({ error: error.code, details: error.details }, { status });
   }
-  console.error("[api]", error);
+  log("error", "api_error", { error });
   return NextResponse.json({ error: "server_error" }, { status: 500 });
 }
 

@@ -13,6 +13,8 @@ import { getActiveContext } from "@/lib/org/queries";
 import { SECONDARY_ITEMS } from "@/lib/nav";
 import { isPlatformAdmin } from "@/lib/admin";
 import { can, isRole } from "@missionops/core";
+import { getSubscription } from "@missionops/services";
+import { getDb } from "@/lib/db";
 
 import { logoutAction } from "../(auth)/actions";
 import { OrgSwitcher } from "./organizations/org-switcher";
@@ -43,9 +45,23 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   ).map((item) => item.href);
   const userName = user.fullName ?? user.email;
   const { t } = await getT();
+  const subscription = active
+    ? await getSubscription(getDb(), {
+        organisationId: active.id,
+        actor: { userId: user.id, role },
+        now: new Date(),
+      }).catch(() => null)
+    : null;
 
   return (
     <div className="min-h-dvh bg-paper md:grid md:grid-cols-[16rem_1fr]">
+      {/* Lien d'évitement (B8.2) : premier élément focalisable au clavier. */}
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-field focus:px-3 focus:py-2 focus:text-field-fg"
+      >
+        {t("shell.skipToContent")}
+      </a>
       {/* Barre latérale — ordinateur uniquement */}
       <aside className="sticky top-0 hidden h-dvh flex-col border-r border-border bg-surface md:flex">
         <div className="flex h-14 items-center border-b border-border px-4">
@@ -106,7 +122,16 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
         </header>
 
         {/* Marge basse sur mobile pour dégager la barre d'onglets */}
-        <main className="flex-1 px-4 py-6 pb-24 md:pb-8">{children}</main>
+        {subscription && (subscription.status !== "active" || subscription.trialExpired) ? (
+          <p role="alert" className="bg-warning-soft px-4 py-2 text-sm text-warning">
+            {subscription.status !== "active"
+              ? t("settings.suspendedBanner")
+              : t("settings.trialBanner")}
+          </p>
+        ) : null}
+        <main id="main" tabIndex={-1} className="flex-1 px-4 py-6 pb-24 outline-none md:pb-8">
+          {children}
+        </main>
       </div>
 
       {/* Barre d'onglets basse — mobile uniquement */}

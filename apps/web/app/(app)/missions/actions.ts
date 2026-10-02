@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 import { formDataToObject } from "@missionops/contracts";
 import { isMissionStatus, MISSION_EVENTS, type MissionEvent } from "@missionops/core";
@@ -54,8 +53,9 @@ export async function createMissionAction(_: FormState, form: FormData): Promise
   } catch (error) {
     return errorState(error);
   }
-  refresh();
-  redirect(`/missions/${id}`);
+  // Navigation faite côté client : un `redirect()` depuis l'action bloque
+  // parfois le routeur sur cette route (rendu en flux de la page cible).
+  return { status: "success", redirectTo: `/missions/${id}` };
 }
 
 export async function updateMissionAction(
@@ -70,8 +70,10 @@ export async function updateMissionAction(
   } catch (error) {
     return errorState(error);
   }
-  refresh(missionId);
-  redirect(`/missions/${missionId}?saved=${revalidation ? "revalidation" : "1"}`);
+  return {
+    status: "success",
+    redirectTo: `/missions/${missionId}?saved=${revalidation ? "revalidation" : "1"}`,
+  };
 }
 
 export async function missionEventAction(_: FormState, form: FormData): Promise<FormState> {

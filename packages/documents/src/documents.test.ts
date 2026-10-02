@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+
 import { PDFDocument } from "pdf-lib";
 import { describe, expect, it } from "vitest";
 
@@ -8,12 +10,7 @@ import { renderDocument, sanitize, sha256, type DocumentData } from "./index";
 const t = (key: string, params?: Record<string, string | number>) =>
   params ? `${key} ${JSON.stringify(params)}` : key;
 
-const PNG = Uint8Array.from(
-  Buffer.from(
-    "iVBORw0KGgoAAAANSUhEUgAAABAAAAAUCAIAAAD6E2rTAAAAMklEQVR4nGP8//8/AymAiSTVoxpGNYxqGNUwqmFUw6iGUQ2jGkY1jGoY1TCqYVTDqIZRDQBfDgQkuRQmpwAAAABJRU5ErkJggg==",
-    "base64",
-  ),
-);
+const PNG = new Uint8Array(readFileSync(new URL("./fixtures/recu.png", import.meta.url)));
 
 function fixture(): DocumentData {
   const gnf = (n: number) => money(n, "GNF");
@@ -147,8 +144,11 @@ describe("documents PDF", () => {
   }
 
   it("le Closure Pack paginé contient toutes les dépenses et l'annexe des justificatifs", async () => {
-    const pdf = await PDFDocument.load(await renderDocument("closure_pack", fixture(), t));
+    const bytes = await renderDocument("closure_pack", fixture(), t);
+    const pdf = await PDFDocument.load(bytes);
     expect(pdf.getPageCount()).toBeGreaterThanOrEqual(3);
+    // Le justificatif est réellement intégré comme image (et non remplacé par un texte d'erreur).
+    expect(Buffer.from(bytes).toString("latin1")).toContain("/Subtype /Image");
   });
 
   it("nettoie les caractères hors WinAnsi", () => {
