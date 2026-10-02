@@ -2,6 +2,11 @@ packages:
   - "apps/*"
   - "packages/*"
 
+# pnpm 11 exige une autorisation explicite des scripts de build.
+allowBuilds:
+  esbuild: true
+  sharp: true
+
 onlyBuiltDependencies:
   - esbuild
   - sharp
