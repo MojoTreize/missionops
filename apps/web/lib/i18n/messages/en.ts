@@ -42,6 +42,9 @@ export const en: Messages = {
     profile: "Profile",
   },
   shell: {
+    groupOperations: "Operations",
+    groupManagement: "Management",
+    notifications: "Notifications",
     skipToContent: "Skip to content",
     mainNav: "Main navigation",
     breadcrumb: "Breadcrumb",

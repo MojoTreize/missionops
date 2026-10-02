@@ -9,64 +9,78 @@
  * (B8.2, contrôle axe-core dans les tests Playwright).
  */
 @theme {
-  /* Couleurs de base */
-  --color-ink: #14201c;
-  --color-paper: #faf9f6;
+  /* Neutres chauds — tiennent à l'écran comme à l'impression (plan §8.2) */
+  --color-ink: #0f1a16;
+  --color-ink-soft: #2a3631;
+  --color-paper: #f6f5f1;
   --color-surface: #ffffff;
-  --color-muted: #606b64;
+  --color-surface-2: #fbfaf8;
+  --color-muted: #5b6660;
   --color-subtle: #6e756d;
-  --color-border: #e4e2da;
-  --color-border-strong: #cfccc0;
+  --color-border: #e6e3dc;
+  --color-border-strong: #d3cfc4;
 
-  /* Vert institutionnel (actions primaires, marque) */
-  --color-field: #1f5c4a;
-  --color-field-hover: #184a3b;
-  --color-field-active: #123729;
-  --color-field-soft: #e6efe9;
-  --color-field-fg: #faf9f6;
+  /* Vert institutionnel — échelle complète */
+  --color-field: #17594a;
+  --color-field-hover: #124a3d;
+  --color-field-active: #0e3b31;
+  --color-field-soft: #e7f0ec;
+  --color-field-softer: #f2f7f5;
+  --color-field-fg: #ffffff;
+  --color-field-50: #f0f7f4;
+  --color-field-100: #dcebe4;
+  --color-field-200: #b8d6c9;
+  --color-field-400: #4f9b81;
+  --color-field-900: #0b2a22;
+  --color-field-950: #061a15;
 
-  /* Accent « grand-livre » (argent, montants) */
+  /* Accent « grand-livre » — réservé aux montants, soldes, écarts */
   --color-ledger: #a94e18;
   --color-ledger-hover: #8f4214;
-  --color-ledger-soft: #f6e9dd;
-  --color-ledger-fg: #faf9f6;
+  --color-ledger-soft: #f7ebe0;
+  --color-ledger-fg: #ffffff;
 
-  /* États sémantiques */
+  /* Statuts */
   --color-danger: #b42318;
-  --color-danger-soft: #fbe9e7;
-  --color-danger-fg: #faf9f6;
-  --color-success: #1f7a4a;
-  --color-success-soft: #e5f2ea;
+  --color-danger-soft: #fdecea;
+  --color-danger-fg: #ffffff;
+  --color-success: #1d7348;
+  --color-success-soft: #e6f3ec;
   --color-warning: #935d0f;
-  --color-warning-soft: #f7ecd7;
+  --color-warning-soft: #fbf0dc;
+  --color-info: #1d4f91;
+  --color-info-soft: #e8eff9;
 
-  /* Anneau de focus */
-  --color-ring: #1f5c4a;
+  --color-ring: #17594a;
 
-  /* Typographie */
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Typographie : Inter (interface), Source Serif 4 (titres d'apparat) */
+  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-serif: var(--font-serif-display), Georgia, "Times New Roman", serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
   --text-lg: 1.125rem;
-  --text-xl: 1.375rem;
-  --text-2xl: 1.75rem;
-  --text-3xl: 2.25rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.5rem;
+  --text-5xl: 3.25rem;
 
-  /* Rayons */
   --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.75rem;
   --radius-full: 9999px;
 
-  /* Ombres — chaudes et discrètes */
-  --shadow-xs: 0 1px 2px rgba(20, 32, 28, 0.06);
-  --shadow-sm: 0 1px 3px rgba(20, 32, 28, 0.08), 0 1px 2px rgba(20, 32, 28, 0.06);
-  --shadow-md: 0 4px 12px rgba(20, 32, 28, 0.1), 0 2px 4px rgba(20, 32, 28, 0.06);
-  --shadow-lg: 0 12px 28px rgba(20, 32, 28, 0.14), 0 4px 10px rgba(20, 32, 28, 0.08);
+  /* Ombres — chaudes, en couches, discrètes */
+  --shadow-xs: 0 1px 2px rgba(15, 26, 22, 0.05);
+  --shadow-sm: 0 1px 2px rgba(15, 26, 22, 0.04), 0 2px 6px rgba(15, 26, 22, 0.05);
+  --shadow-md: 0 2px 4px rgba(15, 26, 22, 0.04), 0 8px 24px rgba(15, 26, 22, 0.08);
+  --shadow-lg: 0 4px 8px rgba(15, 26, 22, 0.05), 0 24px 48px rgba(15, 26, 22, 0.12);
+  --shadow-ring: 0 0 0 1px rgba(15, 26, 22, 0.06);
 }
 
 /* Réinitialisation légère et bases globales */
@@ -90,6 +104,7 @@
   body {
     min-height: 100dvh;
     font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
     color: var(--color-ink);
     background: var(--color-paper);
     -webkit-font-smoothing: antialiased;
@@ -118,5 +133,27 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Utilitaires de design MissionOps */
+@layer utilities {
+  /* Chiffres alignés : tout montant, sans exception (plan §8.2). */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+  .font-display {
+    font-family: var(--font-serif);
+    letter-spacing: -0.015em;
+  }
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgba(15, 26, 22, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(15, 26, 22, 0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .text-balance {
+    text-wrap: balance;
   }
 }

@@ -4,7 +4,7 @@ import { cn } from "@/lib/cn";
 
 export function Table({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) {
   return (
-    <div className="w-full overflow-x-auto rounded-lg border border-border">
+    <div className="w-full overflow-x-auto rounded-lg border border-border bg-surface shadow-xs">
       <table className={cn("w-full caption-bottom text-sm", className)} {...props} />
     </div>
   );
@@ -25,7 +25,7 @@ export function TableRow({ className, ...props }: React.HTMLAttributes<HTMLTable
   return (
     <tr
       className={cn(
-        "border-b border-border transition-colors hover:bg-field-soft/50 data-[state=selected]:bg-field-soft",
+        "border-b border-border/70 transition-colors hover:bg-surface-2 data-[state=selected]:bg-field-softer",
         className,
       )}
       {...props}
@@ -37,7 +37,7 @@ export function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTa
   return (
     <th
       className={cn(
-        "h-11 bg-paper px-4 text-left align-middle text-xs font-semibold uppercase tracking-wide text-muted",
+        "h-10 bg-surface-2 px-4 text-left align-middle text-[0.7rem] font-semibold uppercase tracking-[0.06em] text-muted",
         className,
       )}
       {...props}
@@ -46,7 +46,7 @@ export function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTa
 }
 
 export function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTableCellElement>) {
-  return <td className={cn("px-4 py-3 align-middle", className)} {...props} />;
+  return <td className={cn("px-4 py-3.5 align-middle text-ink-soft", className)} {...props} />;
 }
 
 export function TableCaption({

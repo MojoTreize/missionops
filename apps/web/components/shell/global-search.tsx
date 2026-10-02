@@ -66,7 +66,7 @@ export function GlobalSearch() {
         onClick={() => setOpen(true)}
         aria-label={t("shell.searchLabel")}
         aria-keyshortcuts="Control+K"
-        className="flex h-9 items-center gap-2 rounded-md border border-border bg-surface px-2.5 text-sm text-muted transition-colors hover:text-ink md:min-w-56"
+        className="flex h-9 items-center gap-2 rounded-lg border border-border bg-surface px-2.5 text-sm text-muted shadow-xs transition-colors hover:border-border-strong hover:text-ink md:min-w-64"
       >
         <Search className="size-4 shrink-0" aria-hidden />
         <span className="hidden md:inline">{t("shell.searchButton")}</span>

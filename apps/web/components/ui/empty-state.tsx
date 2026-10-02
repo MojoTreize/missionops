@@ -22,13 +22,13 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border bg-surface px-6 py-12 text-center",
+        "flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border-strong bg-surface-2 px-6 py-14 text-center",
         className,
       )}
       {...props}
     >
       {icon ? (
-        <div className="flex size-12 items-center justify-center rounded-full bg-field-soft text-field [&_svg]:size-6">
+        <div className="flex size-12 items-center justify-center rounded-xl bg-surface text-field shadow-sm ring-1 ring-border [&_svg]:size-6">
           {icon}
         </div>
       ) : null}

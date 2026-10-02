@@ -43,6 +43,9 @@ export const fr = {
     profile: "Profil",
   },
   shell: {
+    groupOperations: "Opérations",
+    groupManagement: "Pilotage",
+    notifications: "Notifications",
     skipToContent: "Aller au contenu",
     mainNav: "Navigation principale",
     breadcrumb: "Fil d'Ariane",

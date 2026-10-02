@@ -8,7 +8,7 @@ import { cn } from "@/lib/cn";
  * adapté aux téléphones d'entrée de gamme.
  */
 const fieldClass =
-  "w-full rounded-md border border-border bg-surface px-3 text-base text-ink shadow-xs transition-colors focus-visible:border-field focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-danger";
+  "w-full rounded-md border border-border bg-surface px-3.5 text-base text-ink shadow-xs transition-[border-color,box-shadow] hover:border-border-strong focus-visible:border-field focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-field/12 disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-danger";
 
 export const NativeSelect = React.forwardRef<
   HTMLSelectElement,

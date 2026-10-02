@@ -14,9 +14,11 @@ import { switchOrganisationAction } from "./actions";
 export function OrgSwitcher({
   memberships,
   activeId,
+  tone = "light",
 }: {
   memberships: MembershipView[];
   activeId: string;
+  tone?: "light" | "dark";
 }) {
   const t = useT();
   const formRef = useRef<HTMLFormElement>(null);
@@ -24,7 +26,11 @@ export function OrgSwitcher({
 
   if (memberships.length <= 1) {
     const only = memberships[0];
-    return <span className="text-sm font-medium text-field">{only?.name ?? ""}</span>;
+    return (
+      <span className={`block truncate text-sm font-medium ${tone === "dark" ? "text-white" : "text-field"}`}>
+        {only?.name ?? ""}
+      </span>
+    );
   }
 
   return (
@@ -38,7 +44,11 @@ export function OrgSwitcher({
         defaultValue={activeId}
         disabled={pending}
         onChange={() => startTransition(() => formRef.current?.requestSubmit())}
-        className="rounded-md border border-border bg-surface px-2 py-1 text-sm text-field focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className={
+          tone === "dark"
+            ? "w-full truncate rounded-md border border-white/10 bg-white/5 px-2 py-1.5 text-sm font-medium text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-field-400 [&>option]:text-ink"
+            : "w-full rounded-md border border-border bg-surface px-2 py-1.5 text-sm text-field focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        }
       >
         {memberships.map((m) => (
           <option key={m.organisationId} value={m.organisationId}>

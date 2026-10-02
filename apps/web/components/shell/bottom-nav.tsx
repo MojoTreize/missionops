@@ -8,9 +8,8 @@ import { useT } from "@/lib/i18n/client";
 import { isActivePath, NAV_ITEMS } from "@/lib/nav";
 
 /**
- * Barre d'onglets basse (mobile) — quatre entrées, cibles tactiles larges,
- * fixée en bas de l'écran. Masquée à partir de l'ordinateur (`md:`), où la
- * barre latérale prend le relais.
+ * Barre d'onglets basse (mobile) — quatre entrées, cibles tactiles de 56 px,
+ * pastille sur l'onglet actif. Masquée à partir de l'ordinateur.
  */
 export function BottomNav() {
   const pathname = usePathname();
@@ -19,7 +18,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label={t("shell.mainNav")}
-      className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-border bg-surface pb-[env(safe-area-inset-bottom)] md:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-border bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
     >
       {NAV_ITEMS.map((item) => {
         const active = isActivePath(pathname, item.href);
@@ -30,11 +29,18 @@ export function BottomNav() {
             href={item.href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "flex min-h-14 flex-col items-center justify-center gap-1 px-1 py-2 text-xs font-medium transition-colors",
+              "flex min-h-14 flex-col items-center justify-center gap-1 px-1 py-1.5 text-[0.7rem] font-medium transition-colors",
               active ? "text-field" : "text-muted hover:text-ink",
             )}
           >
-            <Icon className="size-5 shrink-0" aria-hidden />
+            <span
+              className={cn(
+                "flex h-7 w-12 items-center justify-center rounded-full transition-colors",
+                active ? "bg-field-soft" : "",
+              )}
+            >
+              <Icon className="size-5 shrink-0" aria-hidden />
+            </span>
             <span className="truncate">{t(item.labelKey)}</span>
           </Link>
         );
