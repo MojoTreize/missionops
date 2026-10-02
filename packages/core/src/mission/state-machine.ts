@@ -130,8 +130,10 @@ function isAuthorized(event: MissionEvent, subject: TransitionSubject, actor: Tr
   const isRequester = subject.requesterId === actor.userId;
   switch (event) {
     case "submit":
-    case "rework":
       return isRequester || can(actor, "update", "mission");
+    case "rework":
+      // Le validateur peut aussi renvoyer la demande pour modification (B2.6).
+      return isRequester || can(actor, "update", "mission") || can(actor, "approve", "mission");
     case "approve":
     case "reject":
       // Le demandeur ne valide jamais sa propre mission.

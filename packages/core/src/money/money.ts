@@ -138,7 +138,7 @@ export function allocate(a: Money, weights: readonly number[]): Money[] {
   let remainder = a.amountMinor - parts.reduce((acc, p) => acc + p, 0n);
   const step = remainder < 0n ? -1n : 1n;
   for (let i = 0; remainder !== 0n; i = (i + 1) % parts.length) {
-    parts[i] = (parts[i] ?? 0n) + step;
+    parts[i] = parts[i]! + step;
     remainder -= step;
   }
   return parts.map((p) => ({ amountMinor: p, currency: a.currency }));

@@ -163,6 +163,7 @@ export const domainEn: DomainMessages = {
       decideTitle: "Your decision",
       approveAction: "Approve",
       rejectAction: "Reject",
+      changesAction: "Request changes",
       decisionComment: "Comment (required to reject)",
       reasonLabel: "Reason",
       reasonRequired: "Reason required",
@@ -209,6 +210,12 @@ export const domainEn: DomainMessages = {
     submittedAt: "Submitted on {date}",
     budget: "Budget",
     open: "Review",
+    batchTitle: "Batch approval",
+    batchHint:
+      "Low-stake missions (budget up to {limit}): tick them and approve at once. Others are reviewed one by one.",
+    batchSubmit: "Approve selection",
+    batchDone: "{count} mission(s) approved.",
+    select: "Select {reference}",
   },
   budget: {
     title: "Planned budget",
@@ -396,6 +403,7 @@ export const domainEn: DomainMessages = {
       mission_submitted: "Mission {reference} submitted",
       mission_approved: "Your mission {reference} is approved",
       mission_rejected: "Your mission {reference} was rejected: {reason}",
+      mission_changes_requested: "Changes requested on {reference}: {reason}",
       mission_cancelled: "Mission {reference} is cancelled",
       approval_needed: "Mission {reference} is waiting for your approval",
       advance_paid: "An advance was paid to you for {reference}",
@@ -466,6 +474,8 @@ export const domainEn: DomainMessages = {
     invalidAmount: "Invalid amount.",
     required: "Required field.",
     install: "Install the app",
+    noTracking:
+      "These reports are voluntary. MissionOps does not track your position continuously and does not ensure your safety: in an emergency, follow your organisation's procedures.",
   },
   offline: {
     title: "No network",
@@ -734,6 +744,16 @@ export const domainEn: DomainMessages = {
     apply: "Apply",
     forbidden: "Restricted to platform administrators.",
   },
+  band: {
+    title: "Mission band {reference}",
+    demande: "Request",
+    validation: "Approval",
+    avance: "Advance",
+    terrain: "Field",
+    reconciliation: "Reconciliation",
+    cloture: "Closure",
+    balance: "Advance balance: {amount}",
+  },
   errors: {
     generic: "The operation failed. Check your input and try again.",
     field: "Invalid field.",
@@ -808,6 +828,7 @@ export const domainEn: DomainMessages = {
     base_currency_locked: "The base currency can no longer change: amounts are already recorded.",
     last_admin: "The organisation must keep at least one administrator.",
     cannot_remove_self: "You cannot remove yourself.",
+    batch_limit: "Budget too high for batch approval: review this mission on its own.",
     import_invalid: "Invalid import file.",
   },
 };

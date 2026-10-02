@@ -1,6 +1,8 @@
 import { approvalDecisionInput, missionInput, participantInput } from "@missionops/contracts";
 import {
   DEFAULT_FLOW,
+  SEARCHABLE_NATIONAL,
+  searchLocations,
   MissionTransitionError,
   approvalState,
   availableEvents,
@@ -38,6 +40,7 @@ import { and, asc, desc, eq, gte, ilike, inArray, isNull, lte, or, sql } from "d
 
 import { ServiceError, authorize, first, parse, tenant, type ServiceContext } from "./context";
 import { destinationLabel } from "./locations";
+import { folded, foldedPattern } from "./sql";
 import { enqueue, type NotificationRequest } from "./notifications";
 import { getOrganisation, listMembers } from "./organisation";
 
@@ -190,8 +193,20 @@ export async function listMissions(
       }
     }
     if (filters.q) {
-      const pattern = `%${filters.q.replace(/[%_]/g, "")}%`;
-      conditions.push(or(ilike(missions.title, pattern), ilike(missions.reference, pattern)));
+      // Insensible aux accents (B6.5) : « nzerekore » trouve « Nzérékoré ».
+      const pattern = foldedPattern(filters.q);
+      // Destination : la requête est traduite en codes du référentiel national.
+      const codes = searchLocations(SEARCHABLE_NATIONAL, filters.q, 20)
+        .filter((r) => r.score >= 75)
+        .map((r) => r.location.id);
+      conditions.push(
+        or(
+          ilike(folded(missions.title), pattern),
+          ilike(folded(missions.purpose), pattern),
+          ilike(missions.reference, pattern),
+          codes.length > 0 ? inArray(missions.destinationCode, codes) : undefined,
+        ),
+      );
     }
     if (filters.from) conditions.push(gte(missions.endDate, filters.from));
     if (filters.to) conditions.push(lte(missions.startDate, filters.to));
@@ -620,10 +635,25 @@ export async function decideMission(
     const error = checkDecision(approval.state, ctx.actor, mission.requesterId, approval.records);
     if (error) throw new ServiceError(error);
     if (approval.state.kind !== "pending") throw new ServiceError("not_pending");
-    if (value.decision === "rejected" && !value.comment) {
+    if (value.decision !== "approved" && !value.comment) {
       throw new ServiceError("MOTIF_OBLIGATOIRE");
     }
     const step = approval.state.step;
+    const payload0 = { missionId: mission.id, reference: mission.reference, title: mission.title };
+    if (value.decision === "changes_requested") {
+      // Demande de modification : la mission revient en brouillon, le cycle
+      // de validation recommencera à la prochaine soumission.
+      await recordTransition(tx, ctx, mission, "rework", value.comment, {});
+      await enqueue(tx, ctx, [
+        {
+          recipientId: mission.requesterId,
+          template: "mission_changes_requested",
+          payload: { ...payload0, reason: value.comment ?? "" },
+          dedupeKey: `changes:${mission.id}:${approval.cycle}`,
+        },
+      ]);
+      return "BROUILLON";
+    }
     await tx.insert(approvals).values({
       organisationId: ctx.organisationId,
       createdBy: ctx.actor.userId,
@@ -634,7 +664,7 @@ export async function decideMission(
       decision: value.decision,
       comment: value.comment,
     });
-    const records = [
+    const records: ApprovalRecord[] = [
       ...approval.records,
       { position: step.position, decision: value.decision, decidedBy: ctx.actor.userId },
     ];
@@ -669,6 +699,47 @@ export async function decideMission(
     await notifyApprovers(tx, ctx, mission, next.step);
     return "SOUMISE";
   });
+}
+
+/** Plafond « faible enjeu » pour la validation par lot (B2.6), devise de base. */
+export function lowStakeMinor(currency: Currency): bigint {
+  return currency === "GNF" ? 2_000_000n : 20_000n;
+}
+
+/**
+ * Validation par lot des missions à faible enjeu (B2.6) : chaque mission passe
+ * par la même décision unitaire (droits, séparation des tâches, audit) ; les
+ * missions au-delà du plafond sont refusées et doivent être examinées une à une.
+ */
+export async function approveMany(
+  db: Db,
+  ctx: ServiceContext,
+  missionIds: readonly string[],
+): Promise<{ approved: string[]; refused: { id: string; code: string }[] }> {
+  authorize(ctx, "approve", "mission");
+  const queue = await approvalQueue(db, ctx);
+  const org = await getOrganisation(db, ctx.organisationId);
+  const limit = lowStakeMinor(org.baseCurrency);
+  const approved: string[] = [];
+  const refused: { id: string; code: string }[] = [];
+  for (const id of missionIds.slice(0, 50)) {
+    const item = queue.find((q) => q.id === id);
+    if (!item) {
+      refused.push({ id, code: "not_pending" });
+      continue;
+    }
+    if (item.budgetBaseMinor > limit) {
+      refused.push({ id, code: "batch_limit" });
+      continue;
+    }
+    try {
+      await decideMission(db, ctx, { missionId: id, decision: "approved" });
+      approved.push(id);
+    } catch (error) {
+      refused.push({ id, code: error instanceof ServiceError ? error.code : "server_error" });
+    }
+  }
+  return { approved, refused };
 }
 
 export interface QueueItem extends MissionSummary {

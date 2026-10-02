@@ -9,6 +9,7 @@ import {
   addBudgetLine,
   addParticipant,
   applyMissionEvent,
+  approveMany,
   cancelAdvance,
   createAdvance,
   createMission,
@@ -110,6 +111,25 @@ export async function decideMissionAction(_: FormState, form: FormData): Promise
     refresh(missionId);
     const { t } = await getT();
     return { status: "success", message: t(`missionStatus.${status}`) };
+  } catch (error) {
+    return errorState(error);
+  }
+}
+
+export async function approveManyAction(_: FormState, form: FormData): Promise<FormState> {
+  const ctx = await serviceContext();
+  const ids = form.getAll("missionId").map(String);
+  const { t } = await getT();
+  try {
+    const result = await approveMany(getDb(), ctx, ids);
+    refresh();
+    const refused = result.refused.map((r) => t(`errors.${r.code}` as "errors.generic")).join(" ");
+    return {
+      status: result.refused.length ? "error" : "success",
+      message: [t("approvals.batchDone", { count: result.approved.length }), refused]
+        .filter(Boolean)
+        .join(" "),
+    };
   } catch (error) {
     return errorState(error);
   }

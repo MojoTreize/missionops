@@ -37,6 +37,7 @@ import { and, desc, eq, gte, ilike, inArray, isNull, lt, lte, or, sql } from "dr
 
 import { ServiceError, authorize, tenant, type ServiceContext } from "./context";
 import { destinationLabel } from "./locations";
+import { folded, foldedPattern } from "./sql";
 import { approvalQueue, listMissions, type MissionSummary } from "./missions";
 import { getOrganisation } from "./organisation";
 
@@ -478,7 +479,7 @@ export interface SearchHit {
 export async function globalSearch(db: Db, ctx: ServiceContext, raw: string): Promise<SearchHit[]> {
   const q = raw.trim().slice(0, 80);
   if (q.length < 2) return [];
-  const pattern = `%${q.replace(/[%_\\]/g, "")}%`;
+  const pattern = foldedPattern(q);
   const missionHits = (await listMissions(db, ctx, { q, limit: 8 })).map((m) => ({
     type: "mission" as const,
     id: m.id,
@@ -499,7 +500,7 @@ export async function globalSearch(db: Db, ctx: ServiceContext, raw: string): Pr
       .where(
         and(
           isNull(expenses.deletedAt),
-          ilike(expenses.description, pattern),
+          ilike(folded(expenses.description), pattern),
           ctx.actor.role === "collaborateur" ? eq(expenses.createdBy, ctx.actor.userId) : undefined,
         ),
       )
@@ -517,7 +518,7 @@ export async function globalSearch(db: Db, ctx: ServiceContext, raw: string): Pr
         and(
           eq(memberships.organisationId, ctx.organisationId),
           isNull(memberships.deletedAt),
-          or(ilike(users.fullName, pattern), ilike(users.email, pattern)),
+          or(ilike(folded(users.fullName), pattern), ilike(folded(users.email), pattern)),
         ),
       )
       .limit(6);

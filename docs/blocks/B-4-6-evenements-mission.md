@@ -30,12 +30,13 @@ Contrat Zod du lot de synchronisation ; E2E hors ligne de la boucle.
 
 ## Fini quand
 
-La chronologie de la mission est lisible sur la fiche.
+La chronologie de la mission est lisible sur la fiche, et l'écran terrain dit
+explicitement que les signalements sont volontaires, sans suivi continu ni
+promesse de sécurité (`terrain.noTracking`).
 
 ## Hors périmètre de ce bloc
 
-**Texte explicite dans l'interface** rappelant l'absence de suivi et de
-garantie de sécurité (à ajouter) · déclaration et suivi d'incidents (B10.7).
+Déclaration et suivi d'incidents (B10.7).
 
 ## Dépend de
 

@@ -1,5 +1,14 @@
-import { abs, durationDays, formatMoney, type MissionStatus } from "@missionops/core";
 import {
+  BAND_STEPS,
+  abs,
+  durationDays,
+  formatMoney,
+  missionBand,
+  type MissionStatus,
+} from "@missionops/core";
+import {
+  bandShape,
+  bandToSvg,
   renderDocument,
   sha256,
   type DocumentData,
@@ -102,9 +111,22 @@ export async function documentData(
     })),
   );
 
+  const band = bandShape(
+    missionBand({
+      status: mission.status,
+      hasAdvance: advances.items.some((a) => !a.isReversal && !a.cancelled),
+      reconciliationStatus: reconciliation.status,
+      balance: advances.items.length > 0 ? reconciliation.computed.balance : null,
+    }),
+    BAND_STEPS.map((step) => t(`band.${step}`)),
+    advances.items.length > 0
+      ? t("band.balance", { amount: formatMoney(reconciliation.computed.balance, locale) })
+      : null,
+  );
   const rec = reconciliation;
   const recVisible = mission.status === "TERMINEE" || mission.status === "CLOTUREE";
   return {
+    band,
     locale,
     generatedAt: ctx.now,
     generatedByName,
@@ -341,4 +363,33 @@ export async function listMissionDocuments(
       .where(and(eq(documents.missionId, missionId), isNull(documents.deletedAt)))
       .orderBy(desc(documents.createdAt)),
   );
+}
+
+/** Bande de mission en SVG pour l'interface (B5.4), même géométrie que le PDF. */
+export async function missionBandSvg(
+  db: Db,
+  ctx: ServiceContext,
+  missionId: string,
+  t: Translate,
+  locale: "fr" | "en",
+): Promise<string> {
+  const [mission, advances, reconciliation] = await Promise.all([
+    getMission(db, ctx, missionId),
+    listAdvances(db, ctx, missionId),
+    getReconciliation(db, ctx, missionId),
+  ]);
+  const hasAdvances = advances.items.length > 0;
+  const shape = bandShape(
+    missionBand({
+      status: mission.status,
+      hasAdvance: advances.items.some((a) => !a.isReversal && !a.cancelled),
+      reconciliationStatus: reconciliation.status,
+      balance: hasAdvances ? reconciliation.computed.balance : null,
+    }),
+    BAND_STEPS.map((step) => t(`band.${step}`)),
+    hasAdvances
+      ? t("band.balance", { amount: formatMoney(reconciliation.computed.balance, locale) })
+      : null,
+  );
+  return bandToSvg(shape, t("band.title", { reference: mission.reference }));
 }

@@ -20,6 +20,7 @@ import {
   listExpenses,
   listMembers,
   listMissionEvents,
+  missionBandSvg,
   overlappingMissions,
 } from "@missionops/services";
 
@@ -34,6 +35,7 @@ import { MoneyDisplay } from "@/components/ui/money-display";
 import { getDb } from "@/lib/db";
 import { formatDate } from "@/lib/i18n/format";
 import { getT } from "@/lib/i18n/server";
+import type { MessageKey } from "@/lib/i18n/translate";
 import { serviceContext } from "@/lib/server/context";
 
 import {
@@ -111,6 +113,7 @@ export default async function MissionPage({
     moneyPhase ? listMissionEvents(db, ctx, id) : null,
   ]);
   const base = budget.totalBase.currency;
+  const bandSvg = await missionBandSvg(db, ctx, id, (key, p) => t(key as MessageKey, p), locale);
   const budgetEditable =
     mission.canEdit && (mission.status === "BROUILLON" || mission.status === "VALIDEE");
   const canPayAdvance =
@@ -163,6 +166,13 @@ export default async function MissionPage({
           </p>
         ) : null}
       </header>
+
+      {/* Bande de mission (B5.4) : SVG produit par le domaine, sans script ni
+          contenu saisi par l'utilisateur (libellés traduits, texte échappé). */}
+      <div
+        className="rounded-lg border border-border bg-surface px-2 py-3"
+        dangerouslySetInnerHTML={{ __html: bandSvg }}
+      />
 
       {/* Actions du cycle de vie */}
       {mission.actions.length > 0 ? (
@@ -246,10 +256,14 @@ export default async function MissionPage({
                 className="flex flex-col gap-2"
               >
                 <input type="hidden" name="missionId" value={id} />
-                <div className="flex gap-4 text-sm">
+                <div className="flex flex-wrap gap-4 text-sm">
                   <label className="flex items-center gap-2">
                     <input type="radio" name="decision" value="approved" defaultChecked />
                     {t("missions.detail.approveAction")}
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input type="radio" name="decision" value="changes_requested" />
+                    {t("missions.detail.changesAction")}
                   </label>
                   <label className="flex items-center gap-2">
                     <input type="radio" name="decision" value="rejected" />

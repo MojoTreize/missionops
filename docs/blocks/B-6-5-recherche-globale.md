@@ -23,15 +23,20 @@ Trouver n'importe quoi depuis n'importe où.
 
 Intégration : recherche globale.
 
+Insensibilité aux accents et à la casse livrée : repli SQL portable
+(`translate(lower(…))`, `packages/services/src/sql.ts`, sans extension
+`unaccent`) sur titres, objets, descriptions et noms ; la destination est
+retrouvée via le référentiel national (« nzerekore » trouve les missions vers
+Nzérékoré). Raccourci Ctrl/⌘ + K et résultats groupés par type.
+
 ## Fini quand
 
 La recherche remplace la navigation dans les usages quotidiens.
 
 ## Hors périmètre de ce bloc
 
-Recherche plein texte PostgreSQL et insensibilité aux accents (aujourd'hui
-`ILIKE`) · raccourci clavier · documents · mesure sous 200 ms sur le seed
-complet.
+Recherche plein texte PostgreSQL (`tsvector`) · recherche dans les documents
+· mesure sous 200 ms sur un seed volumineux.
 
 ## Dépend de
 

@@ -1,6 +1,6 @@
 # B5.4 — La bande de mission
 
-> **Statut : non commencé.**
+> **Statut : livré.**
 
 ## Objectif
 
@@ -9,24 +9,35 @@ documents.
 
 ## Contenu
 
-- À faire : composant unique rendu en SVG, réutilisé dans l'interface React et
-  dans les PDF : six étapes de la mission, état de chacune, solde d'avance.
-- Aujourd'hui, l'écran montre le statut par un badge (`status-badge.tsx`) et
-  les documents par la synthèse de mission ; aucun composant commun.
+- **Modèle pur** (`packages/core/src/mission/band.ts`) : six étapes (demande,
+  validation, avance, terrain, réconciliation, clôture), chacune `done`,
+  `current`, `upcoming` ou `stopped` (mission rejetée ou annulée), et le solde
+  de l'avance.
+- **Géométrie unique** (`packages/documents/src/band.ts`, `bandShape`) : les
+  coordonnées sont calculées une fois ; deux rendus les dessinent sans
+  recalculer :
+  - `bandToSvg` : SVG autonome, sans script, texte échappé, affiché en tête de
+    la fiche mission ;
+  - `Layout.band` : primitives pdf-lib, en tête de l'ordre de mission, du
+    Mission Pack et du Closure Pack.
+- **Service** : `missionBandSvg` (fiche web) et `documentData` (documents)
+  calculent la bande depuis la mission, ses avances et sa réconciliation.
 
 ## Décisions appliquées
 
-- Le calcul des étapes et du solde viendra de `packages/core` (machine à états,
-  réconciliation) ; le composant ne fera que dessiner.
+- Le domaine décide de l'état des étapes ; les rendus ne font que dessiner.
+- Palette : vert institutionnel (fait), accent grand-livre (en cours), rouge
+  (arrêt), gris (à venir) ; libellés en encre de texte.
 
 ## Tests
 
-Rendu dans les deux contextes, comparaison visuelle, chaque combinaison
-d'états.
+- Unitaire : chaque statut × avance versée ou non (combinaisons d'états).
+- Documents : SVG à six nœuds, texte échappé, aucun script ; PDF valide pour
+  chaque statut.
 
 ## Fini quand
 
-Le même composant produit exactement la même chose à l'écran et sur papier.
+Le même modèle produit la même bande à l'écran et sur papier.
 
 ## Hors périmètre de ce bloc
 

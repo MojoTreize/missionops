@@ -409,6 +409,7 @@ function EventForm({
   return (
     <div className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
       <h2 className="font-semibold">{t("terrain.eventTitle")}</h2>
+      <p className="rounded-md bg-paper p-2 text-xs text-muted">{t("terrain.noTracking")}</p>
       <Field id="t-note" label={t("terrain.eventNote")}>
         <Textarea id="t-note" rows={2} value={note} onChange={(e) => setNote(e.target.value)} />
       </Field>

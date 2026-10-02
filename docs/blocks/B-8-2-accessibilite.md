@@ -1,6 +1,7 @@
 # B8.2 — Accessibilité
 
-> **Statut : partiel.**
+> **Statut : livré** pour l'audit automatisé ; test au lecteur d'écran à
+> faire avec un utilisateur réel.
 
 ## Objectif
 
@@ -13,9 +14,12 @@ le vérifient.
   champ associés (`Field`), sélecteur de lieu en `combobox`, icônes décoratives
   masquées (`aria-hidden`), boutons d'icône libellés (`aria-label`), contrastes
   des jetons de design, interface utilisable à 375 px.
-- **À faire** : audit AA complet (contrastes de chaque état, ordre de focus,
-  annonces des changements dynamiques, notamment l'état de synchronisation),
-  respect de `prefers-reduced-motion`.
+- **Contrastes** : jetons `muted`, `subtle`, `warning` et `ledger` foncés pour
+  atteindre 4,5:1 sur papier, surface et fonds clairs.
+- **Clavier** : lien d'évitement « Aller au contenu », `main` focalisable.
+- **Annonces** : indicateur réseau et retours d'action en `role="status"` /
+  `role="alert"` (`aria-live`).
+- **Animations** : `prefers-reduced-motion` respecté globalement.
 
 ## Décisions appliquées
 
@@ -23,8 +27,9 @@ le vérifient.
 
 ## Tests
 
-À faire : `axe-core` dans les tests Playwright avec échec bloquant, parcours au
-clavier seul, lecteur d'écran sur les trois écrans principaux.
+`e2e/accessibility.spec.ts` : axe-core (WCAG 2.1 A/AA) sur huit écrans et la
+connexion, échec bloquant sur toute violation « serious » ou « critical ».
+Reste à faire : parcours au clavier seul et lecteur d'écran, à la main.
 
 ## Fini quand
 

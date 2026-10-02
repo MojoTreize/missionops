@@ -76,6 +76,9 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Budget JavaScript (B8.1, bloquant)
+        run: pnpm --filter @missionops/web check:bundle
+
   e2e:
     name: Parcours critiques (Playwright)
     runs-on: ubuntu-latest

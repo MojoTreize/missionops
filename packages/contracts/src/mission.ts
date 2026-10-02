@@ -42,7 +42,7 @@ export const missionTransitionInput = z.object({
 
 export const approvalDecisionInput = z.object({
   missionId: uuid,
-  decision: z.enum(["approved", "rejected"]),
+  decision: z.enum(["approved", "rejected", "changes_requested"]),
   comment: optionalText(2000),
 });
 

@@ -2,7 +2,12 @@ import { CheckCircle2 } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { approvalQueue } from "@missionops/services";
+import { approvalQueue, lowStakeMinor } from "@missionops/services";
+
+import { ActionForm } from "@/components/forms/action-form";
+import { formatMoney } from "@/lib/money";
+
+import { approveManyAction } from "../missions/actions";
 
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -34,6 +39,46 @@ export default async function ApprovalsPage() {
         <h1 className="text-2xl font-semibold text-ink">{t("approvals.title")}</h1>
         <p className="text-sm text-muted">{t("approvals.subtitle")}</p>
       </div>
+      {queue.some((q) => q.budgetBaseMinor <= lowStakeMinor(org.baseCurrency)) ? (
+        <ActionForm
+          action={approveManyAction}
+          submitLabel={t("approvals.batchSubmit")}
+          className="flex flex-col gap-2 rounded-lg border border-border bg-surface p-4"
+        >
+          <h2 className="font-semibold">{t("approvals.batchTitle")}</h2>
+          <p className="text-sm text-muted">
+            {t("approvals.batchHint", {
+              limit: formatMoney(
+                { amountMinor: lowStakeMinor(org.baseCurrency), currency: org.baseCurrency },
+                locale,
+              ),
+            })}
+          </p>
+          <ul className="flex flex-col gap-1">
+            {queue
+              .filter((q) => q.budgetBaseMinor <= lowStakeMinor(org.baseCurrency))
+              .map((q) => (
+                <li key={q.id}>
+                  <label className="flex items-center gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      name="missionId"
+                      value={q.id}
+                      aria-label={t("approvals.select", { reference: q.reference })}
+                    />
+                    <span className="font-mono text-xs text-muted">{q.reference}</span>
+                    <span className="truncate">{q.title}</span>
+                    <MoneyDisplay
+                      money={{ amountMinor: q.budgetBaseMinor, currency: org.baseCurrency }}
+                      locale={locale}
+                      className="ml-auto"
+                    />
+                  </label>
+                </li>
+              ))}
+          </ul>
+        </ActionForm>
+      ) : null}
       {queue.length === 0 ? (
         <EmptyState
           icon={<CheckCircle2 aria-hidden />}

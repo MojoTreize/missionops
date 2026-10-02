@@ -14,6 +14,7 @@ export const NOTIFICATION_TEMPLATES = [
   "mission_submitted",
   "mission_approved",
   "mission_rejected",
+  "mission_changes_requested",
   "mission_cancelled",
   "approval_needed",
   "advance_paid",

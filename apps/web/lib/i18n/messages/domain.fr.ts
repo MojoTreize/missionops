@@ -164,6 +164,7 @@ const raw = {
       decideTitle: "Votre décision",
       approveAction: "Valider",
       rejectAction: "Rejeter",
+      changesAction: "Demander une modification",
       decisionComment: "Commentaire (obligatoire pour un rejet)",
       reasonLabel: "Motif",
       reasonRequired: "Motif obligatoire",
@@ -210,6 +211,12 @@ const raw = {
     submittedAt: "Soumise le {date}",
     budget: "Budget",
     open: "Examiner",
+    batchTitle: "Validation par lot",
+    batchHint:
+      "Missions à faible enjeu (budget jusqu'à {limit}) : cochez-les puis validez en une fois. Les autres s'examinent une à une.",
+    batchSubmit: "Valider la sélection",
+    batchDone: "{count} mission(s) validée(s).",
+    select: "Sélectionner {reference}",
   },
   budget: {
     title: "Budget prévisionnel",
@@ -397,6 +404,7 @@ const raw = {
       mission_submitted: "Mission {reference} soumise",
       mission_approved: "Votre mission {reference} est validée",
       mission_rejected: "Votre mission {reference} a été rejetée : {reason}",
+      mission_changes_requested: "Modification demandée sur {reference} : {reason}",
       mission_cancelled: "La mission {reference} est annulée",
       approval_needed: "La mission {reference} attend votre validation",
       advance_paid: "Une avance vous a été versée pour {reference}",
@@ -467,6 +475,8 @@ const raw = {
     invalidAmount: "Montant invalide.",
     required: "Champ requis.",
     install: "Installer l'application",
+    noTracking:
+      "Ces signalements sont volontaires. MissionOps ne suit pas votre position en continu et n'assure pas votre sécurité : en cas d'urgence, suivez les consignes de votre organisation.",
   },
   offline: {
     title: "Pas de réseau",
@@ -736,6 +746,16 @@ const raw = {
     apply: "Appliquer",
     forbidden: "Réservé aux administrateurs de la plateforme.",
   },
+  band: {
+    title: "Bande de mission {reference}",
+    demande: "Demande",
+    validation: "Validation",
+    avance: "Avance",
+    terrain: "Terrain",
+    reconciliation: "Réconciliation",
+    cloture: "Clôture",
+    balance: "Solde de l'avance : {amount}",
+  },
   errors: {
     generic: "L'opération n'a pas abouti. Vérifiez la saisie et réessayez.",
     field: "Champ invalide.",
@@ -811,6 +831,7 @@ const raw = {
       "La devise de base ne peut plus changer : des montants sont déjà enregistrés.",
     last_admin: "L'organisation doit garder au moins un administrateur.",
     cannot_remove_self: "Vous ne pouvez pas vous retirer vous-même.",
+    batch_limit: "Budget trop élevé pour une validation par lot : examinez cette mission seule.",
     import_invalid: "Fichier d'import invalide.",
   },
 } as const;

@@ -365,6 +365,19 @@ describe("rapports, audit, exports et documents (Phases 5-6)", () => {
 
   it("recherche globale et journal d'audit", async () => {
     const hits = await globalSearch(t.db, ctx("manager"), "kindia");
+    // Insensible aux accents et à la casse (B6.5).
+    expect(
+      (await globalSearch(t.db, ctx("manager"), "HOTEL KINDIA")).some((h) => h.type === "expense"),
+    ).toBe(true);
+    expect(
+      (await listMissions(t.db, ctx("manager"), { q: "kits a kindia", status: "archivees" }))
+        .length,
+    ).toBe(0);
+    expect(
+      (await listMissions(t.db, ctx("manager"), { q: "DISTRIBUTION" })).length +
+        (await listMissions(t.db, ctx("manager"), { q: "distribution", status: "CLOTUREE" }))
+          .length,
+    ).toBeGreaterThan(0);
     expect(hits.some((h) => h.type === "mission")).toBe(true);
     expect(await globalSearch(t.db, ctx("outsider"), "kindia")).toEqual([]);
     const audit = await auditLogPage(t.db, ctx("director"), { table: "missions" });
@@ -512,5 +525,48 @@ describe("plateforme (Phase 9)", () => {
     expect(overview.find((o) => o.id === OTHER_ORG)?.missionsClosed).toBe(0);
     await s.setSubscription(t.db, ORG, admin.actor.userId, { status: "suspendue" }, now);
     expect((await s.getSubscription(t.db, admin)).status).toBe("suspendue");
+  });
+});
+
+describe("file de validation : modification demandée et lot (B2.6)", () => {
+  it("le validateur renvoie pour modification, puis valide par lot", async () => {
+    const s = await import("../src");
+    const make = async (amount: string) => {
+      const { id } = await s.createMission(t.db, ctx("agent"), {
+        title: `Petite mission ${amount}`,
+        purpose: "Visite de suivi d'un centre de santé partenaire",
+        destinationCode: "GN-CO",
+        startDate: "2026-11-02",
+        endDate: "2026-11-02",
+        transportMode: "moto",
+      });
+      await s.addBudgetLine(t.db, ctx("agent"), {
+        missionId: id,
+        category: "carburant",
+        label: "Essence",
+        quantity: 1,
+        unitAmount: amount,
+        currency: "GNF",
+      });
+      await s.applyMissionEvent(t.db, ctx("agent"), id, "submit");
+      return id;
+    };
+    const small = await make("150000");
+    const big = await make("5000000");
+    await expect(
+      s.decideMission(t.db, ctx("manager"), { missionId: small, decision: "changes_requested" }),
+    ).rejects.toMatchObject({ code: "MOTIF_OBLIGATOIRE" });
+    expect(
+      await s.decideMission(t.db, ctx("manager"), {
+        missionId: small,
+        decision: "changes_requested",
+        comment: "Préciser l'itinéraire",
+      }),
+    ).toBe("BROUILLON");
+    await s.applyMissionEvent(t.db, ctx("agent"), small, "submit");
+    const result = await s.approveMany(t.db, ctx("manager"), [small, big]);
+    expect(result.approved).toEqual([small]);
+    expect(result.refused).toEqual([{ id: big, code: "batch_limit" }]);
+    expect((await s.getMission(t.db, ctx("agent"), small)).status).toBe("VALIDEE");
   });
 });

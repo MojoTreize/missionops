@@ -1,5 +1,7 @@
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage, type RGB } from "pdf-lib";
 
+import { BAND_COLORS, type BandShape } from "./band";
+
 /**
  * Moteur de mise en page minimal au-dessus de pdf-lib (B5.1). Déterministe :
  * mêmes données, même date de génération → mêmes octets. Polices standard
@@ -322,6 +324,66 @@ export class Layout {
         color,
       });
     });
+    this.y -= height + 8;
+  }
+
+  /** Bande de mission (B5.4) : même géométrie que le rendu SVG de l'écran. */
+  band(shape: BandShape): void {
+    const scale = this.contentWidth / shape.width;
+    const height = shape.height * scale;
+    this.ensure(height + 8);
+    const top = this.y - 4;
+    const X = (x: number) => MARGIN + x * scale;
+    const Y = (y: number) => top - y * scale;
+    const color = (hex: string) =>
+      rgb(
+        parseInt(hex.slice(1, 3), 16) / 255,
+        parseInt(hex.slice(3, 5), 16) / 255,
+        parseInt(hex.slice(5, 7), 16) / 255,
+      );
+    this.page.drawLine({
+      start: { x: X(shape.line.x1), y: Y(shape.line.y) },
+      end: { x: X(shape.line.x2), y: Y(shape.line.y) },
+      thickness: 2,
+      color: color(BAND_COLORS.line),
+    });
+    this.page.drawLine({
+      start: { x: X(shape.line.x1), y: Y(shape.line.y) },
+      end: { x: X(shape.line.doneUntil), y: Y(shape.line.y) },
+      thickness: 2,
+      color: color(BAND_COLORS.done),
+    });
+    for (const n of shape.nodes) {
+      const stroke = color(BAND_COLORS[n.state]);
+      this.page.drawCircle({
+        x: X(n.x),
+        y: Y(n.y),
+        size: n.r * scale,
+        color: n.state === "upcoming" ? rgb(1, 1, 1) : stroke,
+        borderColor: stroke,
+        borderWidth: 1.5,
+      });
+      const label = sanitize(n.label);
+      const size = 8;
+      const font = n.state === "current" ? this.bold : this.font;
+      this.page.drawText(label, {
+        x: X(n.x) - font.widthOfTextAtSize(label, size) / 2,
+        y: Y(n.y + 24),
+        size,
+        font,
+        color: n.state === "upcoming" ? COLORS.muted : COLORS.ink,
+      });
+    }
+    if (shape.balance) {
+      const text = sanitize(shape.balance.text);
+      this.page.drawText(text, {
+        x: X(shape.balance.x) - this.bold.widthOfTextAtSize(text, 9) / 2,
+        y: Y(shape.balance.y),
+        size: 9,
+        font: this.bold,
+        color: COLORS.ledger,
+      });
+    }
     this.y -= height + 8;
   }
 

@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 
 import { formatMoney, type Money } from "@missionops/core";
 
+import type { BandShape } from "./band";
 import { COLORS, Layout, type Column } from "./layout";
 
 /**
@@ -101,6 +102,8 @@ export interface DocumentReconciliation {
 }
 
 export interface DocumentData {
+  /** Bande de mission déjà calculée (B5.4). */
+  band?: BandShape | null;
   locale: "fr" | "en";
   generatedAt: Date;
   generatedByName: string;
@@ -240,6 +243,7 @@ function approvalsBlock(layout: Layout, data: DocumentData, t: Translate) {
 export async function renderOrdreMission(data: DocumentData, t: Translate): Promise<Uint8Array> {
   const layout = await start(data, t, "ordre_mission");
   layout.title(t("documents.ordre_mission"), data.mission.title);
+  if (data.band) layout.band(data.band);
   layout.paragraph(t("pdf.orderIntro", { org: data.org.name }), { color: COLORS.muted, size: 9 });
   missionSummary(layout, data, t);
   participantsTable(layout, data, t);
@@ -253,6 +257,7 @@ export async function renderOrdreMission(data: DocumentData, t: Translate): Prom
 export async function renderMissionPack(data: DocumentData, t: Translate): Promise<Uint8Array> {
   const layout = await start(data, t, "mission_pack");
   layout.title(t("documents.mission_pack"), data.mission.title);
+  if (data.band) layout.band(data.band);
   missionSummary(layout, data, t);
   participantsTable(layout, data, t);
   budgetTable(layout, data, t);
@@ -305,6 +310,7 @@ export async function renderClosurePack(data: DocumentData, t: Translate): Promi
   const d = dateFormatter(data.locale);
   const layout = await start(data, t, "closure_pack");
   layout.title(t("documents.closure_pack"), data.mission.title);
+  if (data.band) layout.band(data.band);
   missionSummary(layout, data, t);
 
   const rec = data.reconciliation;

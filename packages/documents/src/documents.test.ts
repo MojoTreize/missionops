@@ -3,9 +3,9 @@ import { readFileSync } from "node:fs";
 import { PDFDocument } from "pdf-lib";
 import { describe, expect, it } from "vitest";
 
-import { money } from "@missionops/core";
+import { missionBand, money } from "@missionops/core";
 
-import { renderDocument, sanitize, sha256, type DocumentData } from "./index";
+import { bandShape, bandToSvg, renderDocument, sanitize, sha256, type DocumentData } from "./index";
 
 const t = (key: string, params?: Record<string, string | number>) =>
   params ? `${key} ${JSON.stringify(params)}` : key;
@@ -156,5 +156,44 @@ describe("documents PDF", () => {
     expect(sanitize("l’avance → validée…")).toBe("l'avance -> validée...");
     expect(sanitize("Œuvre 12 €")).toBe("Œuvre 12 €");
     expect(sanitize("漢")).toBe("?");
+  });
+});
+
+describe("bande de mission (B5.4) — deux rendus, une géométrie", () => {
+  const labels = ["Demande", "Validation", "Avance", "Terrain", "Réconciliation", "Clôture"];
+  it("rend un SVG autonome et échappé", () => {
+    const model = missionBand({
+      status: "EN_COURS",
+      hasAdvance: true,
+      reconciliationStatus: null,
+      balance: null,
+    });
+    const svg = bandToSvg(bandShape(model, labels, null), "Bande <mission>");
+    expect(svg.match(/<circle/g)).toHaveLength(6);
+    expect(svg).toContain("Bande &lt;mission&gt;");
+    expect(svg).not.toContain("<script");
+  });
+
+  it("dessine la même bande dans le PDF pour chaque statut", async () => {
+    for (const status of [
+      "BROUILLON",
+      "SOUMISE",
+      "VALIDEE",
+      "EN_COURS",
+      "TERMINEE",
+      "CLOTUREE",
+      "REJETEE",
+      "ANNULEE",
+    ] as const) {
+      const model = missionBand({
+        status,
+        hasAdvance: true,
+        reconciliationStatus: null,
+        balance: money(-200_000, "GNF"),
+      });
+      const data = { ...fixture(), band: bandShape(model, labels, "Solde : -200 000 GNF") };
+      const pdf = await renderDocument("ordre_mission", data, t);
+      expect(Buffer.from(pdf.slice(0, 5)).toString()).toBe("%PDF-");
+    }
   });
 });

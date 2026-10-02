@@ -33,9 +33,11 @@ JSON aller-retour.
 
 ## Fini quand
 
-Tout montant du produit est un `Money`. **Reste à faire** : la règle ESLint
-interdisant `number` pour les identifiants `amount`, `price`, `budget`, `cost`
-(critère du plan), et la mesure de couverture à 100 %.
+Tout montant du produit est un `Money`. La règle ESLint `no-restricted-syntax`
+interdit `number` pour les champs et variables `amount*`, `price*`, `budget*`,
+`cost*` ; la couverture du module est mesurée et bloquante à 100 %
+(`packages/core/vitest.config.ts`), avec des tests de propriétés
+(répartition, aller-retour de saisie, conversion aller-retour bornée).
 
 ## Hors périmètre de ce bloc
 

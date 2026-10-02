@@ -64,6 +64,8 @@ describe("Money — opérations de base", () => {
     expect(compare(money(2, "EUR"), money(2, "EUR"))).toBe(0);
     expect(compare(money(3, "EUR"), money(2, "EUR"))).toBe(1);
     expect(equals(money(2, "EUR"), money(2, "USD"))).toBe(false);
+    expect(equals(money(2, "EUR"), money(3, "EUR"))).toBe(false);
+    expect(equals(money(2, "EUR"), money(2, "EUR"))).toBe(true);
     expect(isZero(zero("GNF"))).toBe(true);
     expect(isNegative(money(-1, "GNF"))).toBe(true);
     expect(isPositive(money(1, "GNF"))).toBe(true);
@@ -187,5 +189,67 @@ describe("Taux de change figés", () => {
     const inverse = invertRate(parseRate("2", "EUR", "USD"));
     expect(inverse.from).toBe("USD");
     expect(rateToString(inverse)).toBe("0.5");
+  });
+});
+
+/** Générateur pseudo-aléatoire déterministe (mulberry32) : tests reproductibles. */
+function rng(seed: number) {
+  let a = seed;
+  return () => {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+describe("propriétés (B3.1)", () => {
+  const random = rng(20261002);
+  const int = (max: number) => Math.floor(random() * max);
+
+  it("la somme d'une répartition vaut toujours le montant initial", () => {
+    for (let run = 0; run < 2000; run += 1) {
+      const amount = money(BigInt(int(2_000_000_000)) - 1_000_000_000n, "GNF");
+      const weights = Array.from({ length: 1 + int(12) }, () => int(100));
+      if (!weights.some((w) => w > 0)) weights[0] = 1;
+      const parts = allocate(amount, weights);
+      expect(parts).toHaveLength(weights.length);
+      expect(sum(parts, "GNF")).toEqual(amount);
+    }
+  });
+
+  it("aucune part ne s'écarte de plus d'une unité de sa part exacte", () => {
+    for (let run = 0; run < 500; run += 1) {
+      const amount = BigInt(int(10_000_000));
+      const weights = Array.from({ length: 1 + int(8) }, () => 1 + int(50));
+      const total = weights.reduce((a, b) => a + b, 0);
+      allocate(money(amount, "EUR"), weights).forEach((part, i) => {
+        const exact = (Number(amount) * weights[i]!) / total;
+        expect(Math.abs(Number(part.amountMinor) - exact)).toBeLessThan(1.0001);
+      });
+    }
+  });
+
+  it("saisie et représentation décimale sont inverses l'une de l'autre", () => {
+    for (let run = 0; run < 1000; run += 1) {
+      for (const currency of ["GNF", "EUR", "USD"] as const) {
+        const m = money(BigInt(int(1_000_000_000)) - 500_000_000n, currency);
+        expect(parseMoney(toDecimalString(m), currency)).toEqual(m);
+      }
+    }
+  });
+
+  it("convertir puis reconvertir : écart borné par la précision du taux inverse", () => {
+    // Le taux inverse est arrondi à 10 décimales : l'aller-retour n'est exact
+    // qu'à 1 unité + 10^-6 relatif près. C'est pourquoi un montant converti est
+    // toujours figé dans sa ligne et jamais recalculé (ADR-002).
+    const rate = parseRate("9350", "EUR", "GNF");
+    for (let run = 0; run < 500; run += 1) {
+      const eur = money(BigInt(int(100_000_000)), "EUR");
+      const back = convert(convert(eur, rate), invertRate(rate));
+      const tolerance = 1 + Number(eur.amountMinor) * 1e-6;
+      expect(Math.abs(Number(back.amountMinor - eur.amountMinor))).toBeLessThanOrEqual(tolerance);
+    }
   });
 });

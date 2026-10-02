@@ -49,7 +49,7 @@ test("la boucle argent-justificatif complète, dont la saisie hors ligne", async
   // 2. Le manager valide depuis sa file.
   const m = manager.page;
   await m.goto("/approvals");
-  await expect(m.getByText(title)).toBeVisible();
+  await expect(m.getByText(title).first()).toBeVisible();
   await m.goto(missionPath);
   await submit(m, "Confirmer");
   await m.reload();
