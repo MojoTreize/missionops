@@ -11,3 +11,4 @@ export * from "./fx";
 export * from "./missions";
 export * from "./finance";
 export * from "./field";
+export * from "./documents";
