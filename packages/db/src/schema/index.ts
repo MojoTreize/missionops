@@ -7,3 +7,6 @@ export * from "./auth_tokens";
 export * from "./memberships";
 export * from "./invitations";
 export * from "./audit_log";
+export * from "./missions";
+export * from "./finance";
+export * from "./platform";

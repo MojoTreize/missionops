@@ -1,0 +1,29 @@
+{
+  "name": "@missionops/services",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@missionops/contracts": "workspace:*",
+    "@missionops/core": "workspace:*",
+    "@missionops/db": "workspace:*",
+    "drizzle-orm": "^0.36.4",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@missionops/config": "workspace:*",
+    "@types/node": "^22.9.0",
+    "typescript": "^5.6.3",
+    "vitest": "^4.1.10"
+  }
+}
